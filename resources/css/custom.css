@@ -1,0 +1,16 @@
+
+:root {
+    --primary-color: #4a90e2;
+    --bg-color: #f4f7fa;
+    --text-color: #333;
+    --sidebar-bg: #ffffff;
+    --sidebar-hover: #e6f0ff;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}

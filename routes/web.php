@@ -8,9 +8,14 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::group(['middleware' => 'auth'], function () {
 
-// Orders
-Route::get('/orders-list', [App\Http\Controllers\OrderController::class, 'order_list'])->name('orders.list');
-Route::get('/orders-store', [App\Http\Controllers\OrderController::class, 'orders_store'])->name('orders.store');
-Route::get('/order-view/{id}', [App\Http\Controllers\OrderController::class, 'order_view'])->name('orders.view');
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    // Orders
+
+    Route::group(['prefix' => 'orders' ], function () {
+        Route::get('list', [App\Http\Controllers\OrderController::class, 'order_list'])->name('orders.list');
+        Route::get('store', [App\Http\Controllers\OrderController::class, 'orders_store'])->name('orders.store');
+    });
+});

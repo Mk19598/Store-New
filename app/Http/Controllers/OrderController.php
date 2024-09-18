@@ -26,11 +26,11 @@ class OrderController extends Controller
             $woocommerce = $this->woocommerce();
             $DUKAAN =  $this->DUKAAN();
 
-            if( $woocommerce == false ){
+            if( $woocommerce['status'] == false ){
                 return response()->json( $woocommerce, $woocommerce['status_code']);
             }
             
-            if( $DUKAAN == false ){
+            if( $DUKAAN['status'] == false ){
                 return response()->json( $DUKAAN, $DUKAAN['status_code']);
             }
 
@@ -341,6 +341,7 @@ class OrderController extends Controller
         return  $result;
     }
 
+    // Order List
     public function Order_List()
     {
        

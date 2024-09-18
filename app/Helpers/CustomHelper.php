@@ -15,7 +15,11 @@ class CustomHelper
 
     public static function Get_website_logo_url()
     {
-        $website_logo_url = SiteSetting::query()->pluck('website_logo_url')->first();
-        return $website_logo_url;
+        $website_logo = SiteSetting::query()->pluck('website_logo_url')->map(function($item){
+            $item['website_logo'] = URL::to('public/uploads/logos/Standard-store-logo.webp');
+        })->first();
+
+        return $website_logo;
+
     }
 }

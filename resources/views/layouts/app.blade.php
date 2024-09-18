@@ -95,13 +95,14 @@
             </div>
         </nav> --}}
 
-        @include('layouts.sidebar')
+        @guest
+        @else
+            @include('layouts.sidebar')
+        @endif
 
-        <main id="main">
-            <div id="main">
-                @yield('content')
-            </div>
-        </main>
+        <div id="main">
+            @yield('content')
+        </div>
     </div>
 </body>
 </html>

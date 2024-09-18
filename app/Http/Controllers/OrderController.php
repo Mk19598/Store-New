@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http; 
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use App\Helpers\CustomHelper;
 use App\Models\WoocommerceOrder;
 use App\Models\WoocommerceBuyer;
 use App\Models\WoocommerceShipping;
@@ -374,10 +376,42 @@ class OrderController extends Controller
         return  $result;
     }
 
-    // Order List
-    public function Order_List()
+    // Order Lists
+
+    public function index(Request $request)
     {
-       
+        $orders = Order::query();
+
+        // Apply filters
+        if ($request->filled('date_from') && $request->filled('time_from')) {
+            $dateFrom = Carbon::parse($request->date_from . ' ' . $request->time_from);
+            $orders->where('created_at', '>=', $dateFrom);
+        }
+
+        if ($request->filled('date_to') && $request->filled('time_to')) {
+            $dateTo = Carbon::parse($request->date_to . ' ' . $request->time_to);
+            $orders->where('created_at', '<=', $dateTo);
+        }
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $orders->where('status', $request->status);
+        }
+
+        if ($request->filled('origin') && $request->origin !== 'all') {
+            $orders->where('origin', $request->origin);
+        }
+
+        $orders = $orders->get()->map(function($item){
+            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
+            $item['status_color'] = 'completed';
+            return $item ;
+        });
+
+        $data = array( 'orders' => $orders,
+                        'title'  => CustomHelper::Get_website_name() . " | Orders" ,
+                    );
+
+        return view('orders.index', $data);
     }
 
     public function order_receipt_pdf($id)

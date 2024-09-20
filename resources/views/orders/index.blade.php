@@ -209,4 +209,4 @@
             alert(`Generating ${type} for order ${orderId}.`);
         }
     </script>
-@endpush
+@endpush    

@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title')</title>
 
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
 
@@ -21,7 +21,7 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 
                         {{-- Another Source Script Links --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -33,6 +33,10 @@
 
     {{-- Site Script --}}
     <script src="{{ url('resources\js\sidebar.js') }}"></script>
+
+    @stack('styles')
+
+    @stack('scripts')
 </head>
 
 <body>

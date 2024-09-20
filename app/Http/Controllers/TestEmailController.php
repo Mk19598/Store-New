@@ -20,7 +20,7 @@ class TestEmailController extends Controller
         $data = array( 
                         'title'  => CustomHelper::Get_website_name() . " | Emails" ,
                     );
-        return view('email.test', $data);
+        return view('email.TestingContent', $data);
 
     }
 

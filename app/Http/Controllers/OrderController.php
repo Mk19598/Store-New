@@ -408,7 +408,7 @@ class OrderController extends Controller
         });
 
         $data = array( 'orders' => $orders,
-                        'title'  => CustomHelper::Get_website_name() . " | Orders" ,
+                        'title'  => CustomHelper::Get_website_name(). " | Orders" ,
                     );
 
         return view('orders.index', $data);

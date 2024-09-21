@@ -14,4 +14,11 @@ class DukaanProduct extends Model
     protected $guarded = array();
     
     public static $rules = array();
+
+    protected $casts = [
+        'sku' => 'array', 
+        'sku_weight_unit' => 'array', 
+        'variant_size' => 'array', 
+    ];
+
 }

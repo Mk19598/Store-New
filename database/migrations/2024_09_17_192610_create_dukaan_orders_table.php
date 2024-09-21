@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('dukaan_orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_id', 100)->nullable();
+            $table->longText('order_uuid', 100)->nullable();
             $table->string('order_created_at', 100)->nullable();
             $table->string('created_at_utc', 100)->nullable();
             $table->string('modified_at', 100)->nullable();

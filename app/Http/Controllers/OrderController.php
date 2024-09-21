@@ -383,28 +383,25 @@ class OrderController extends Controller
         $orders = Order::query();
 
         // Apply filters
+
         if ($request->filled('date_from') && $request->filled('time_from')) {
-            $dateFrom = Carbon::parse($request->date_from . ' ' . $request->time_from);
-            $orders->where('created_at', '>=', $dateFrom);
+            $orders->where('order_created_at', '>=', "{$request->date_from}T{$request->time_from}:00");
         }
-
+        
         if ($request->filled('date_to') && $request->filled('time_to')) {
-            $dateTo = Carbon::parse($request->date_to . ' ' . $request->time_to);
-            $orders->where('created_at', '<=', $dateTo);
+            $orders->where('order_created_at', '<=', "{$request->date_to}T{$request->time_to}:00");
         }
-
+        
         if ($request->filled('status') && $request->status !== 'all') {
             $orders->where('status', $request->status);
         }
 
-        if ($request->filled('origin') && $request->origin !== 'all') {
-            $orders->where('origin', $request->origin);
-        }
-
-        $orders = $orders->get()->map(function($item){
+        $orders = $orders->when($request->filled('date_from') || $request->filled('date_to') || ($request->filled('status') && $request->status !== 'all'), function ($query) {
+            return $query->orderBy('order_created_at', 'asc');
+        })->get()->map(function($item) {
             $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
             $item['status_color'] = 'completed';
-            return $item ;
+            return $item;
         });
 
         $data = array( 'orders' => $orders,

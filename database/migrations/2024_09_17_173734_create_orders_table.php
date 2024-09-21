@@ -25,7 +25,7 @@ return new class extends Migration
 
             $table->string('buyer_first_name', 50)->nullable();
             $table->string('buyer_last_name', 50)->nullable();
-            $table->string('buyer_email', 30)->nullable();
+            $table->LongText('buyer_email', 30)->nullable();
             $table->string('buyer_mobile_number', 20)->nullable();
 
             $table->longtext('buyer_line', 100)->nullable();

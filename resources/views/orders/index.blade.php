@@ -15,51 +15,45 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label for="date_from" class="form-label">From Date</label>
-                            <input type="date" class="form-control" id="date_from" name="date_from"
-                                value="{{ request('date_from') }}">
+                            <input type="date" class="form-control" id="date_from" name="date_from" value="{{ request('date_from') }}">
                         </div>
+
                         <div class="col-md-3">
                             <label for="time_from" class="form-label">From Time</label>
-                            <input type="time" class="form-control" id="time_from" name="time_from"
-                                value="{{ request('time_from', '00:00') }}">
+                            <input type="time" class="form-control" id="time_from" name="time_from" value="{{ request('time_from', '00:00') }}">
                         </div>
+
                         <div class="col-md-3">
                             <label for="date_to" class="form-label">To Date</label>
-                            <input type="date" class="form-control" id="date_to" name="date_to"
-                                value="{{ request('date_to') }}">
+                            <input type="date" class="form-control" id="date_to" name="date_to" value="{{ request('date_to') }}">
                         </div>
+
                         <div class="col-md-3">
                             <label for="time_to" class="form-label">To Time</label>
-                            <input type="time" class="form-control" id="time_to" name="time_to"
-                                value="{{ request('time_to', '23:59') }}">
+                            <input type="time" class="form-control" id="time_to" name="time_to" value="{{ request('time_to', '23:59') }}">
                         </div>
+
                         <div class="col-md-3">
                             <label for="status" class="form-label">Order Status</label>
                             <select class="form-select" id="status" name="status">
-                                <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>All Statuses
-                                </option>
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed
-                                </option>
-                                <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>
-                                    Processing</option>
-                                <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Shipped
-                                </option>
-                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled
-                                </option>
+                                <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>All Statuses</option>
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Processing</option>
+                                <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Shipped</option>
+                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                             </select>
                         </div>
+
                         <div class="col-md-3">
                             <label for="origin" class="form-label">Order Origin</label>
                             <select class="form-select" id="origin" name="origin">
-                                <option value="all" {{ request('origin') == 'all' ? 'selected' : '' }}>All Origins
-                                </option>
-                                <option value="website" {{ request('origin') == 'website' ? 'selected' : '' }}>Website
-                                </option>
-                                <option value="mobile app" {{ request('origin') == 'mobile app' ? 'selected' : '' }}>Mobile
-                                    App</option>
+                                <option value="all" {{ request('origin') == 'all' ? 'selected' : '' }}>All Origins</option>
+                                <option value="website" {{ request('origin') == 'website' ? 'selected' : '' }}>Website</option>
+                                <option value="mobile app" {{ request('origin') == 'mobile app' ? 'selected' : '' }}>MobileApp</option>
                                 <option value="phone" {{ request('origin') == 'phone' ? 'selected' : '' }}>Phone</option>
                             </select>
                         </div>
+
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-primary">Apply Filters</button>
                         </div>
@@ -72,22 +66,27 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
+
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="select-all">
                         <label class="form-check-label" for="select-all">
                             Select All
                         </label>
                     </div>
+
                     <div>
                         <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('print')">
                             <i class="bi bi-printer"></i> Print Selected
                         </button>
+
                         <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('invoice')">
                             <i class="bi bi-file-text"></i> Invoice Selected
                         </button>
+
                         <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('shipping')">
                             <i class="bi bi-tag"></i> Shipping Labels
                         </button>
+
                         <button class="btn btn-outline-primary btn-sm" onclick="bulkPrint('receipt')">
                             <i class="bi bi-receipt"></i> Receipts
                         </button>
@@ -119,11 +118,11 @@
                                     <td> {{ @$order->order_id }} </td>
                                     <td> {{ @$order->order_vai }} </td>
                                     <td>
-                                        <div>{{ @$order->buyer_first_name }}</div>
+                                        <div>{{ ucwords(@$order->buyer_first_name) }}</div>
                                         <div class="text-muted">{{ @$order->buyer_email }}</div>
                                     </td>
                                     <td> {{ @$order->order_created_at_format }}</td>
-                                    <td> <span class="badge bg-{{ $order->status_color }}">{{ $order->status }}</span></td>
+                                    <td> <span class="badge bg-{{ $order->status_color }}">{{ ucwords(@$order->status) }}</span></td>
                                     <td> {{ number_format($order->total_cost, 2) }}</td>
                                     <td> {{ $order->origin }}</td>
                                     <td>
@@ -151,7 +150,6 @@
 @endsection
 
 @push('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <style>
         .badge.bg-completed {
             background-color: #28a745 !important;

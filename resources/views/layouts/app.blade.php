@@ -8,6 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    
     <title>@yield('title')</title>
 
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
@@ -18,6 +19,7 @@
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">

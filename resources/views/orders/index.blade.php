@@ -5,12 +5,12 @@
 @section('content')
 
     <div class="container py-5">
-        <h4 class="mb-4">Order Print Screen</h4>
+        <h4 class="mb-4 title-header">Order Print Screen</h4>
 
                 {{-- Filter Card --}}
         <div class="card mb-4">
             <div class="card-body">
-                <h5 class="card-title mb-4">Filters</h5>
+                <h5 class="card-title mb-4" style="font-size: large;font-weight: bold;">Filters</h5>
                 <form action="{{ route('orders.index') }}" method="GET" id="filter-form">
                     <div class="row g-3">
                         <div class="col-md-3">
@@ -92,8 +92,9 @@
                         </button>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-striped">
+
+                <div class="table-responsive" >
+                    <table class="table table-striped" id="orders-list-table">
 
                         <thead>
                             <tr>
@@ -142,7 +143,7 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>
+                    </table>               
                 </div>
             </div>
         </div>
@@ -170,7 +171,13 @@
 @endpush
 
 @push('scripts')
+
     <script>
+            // Datatables
+        $(document).ready( function () {
+            $('#orders-list-table').DataTable();
+        } );
+
         document.addEventListener('DOMContentLoaded', function() {
             const selectAllCheckbox = document.getElementById('select-all');
             const orderCheckboxes = document.querySelectorAll('.order-checkbox');

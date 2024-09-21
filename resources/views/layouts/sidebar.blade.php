@@ -8,7 +8,7 @@
 
         <div class="row d-flex justify-content-center align-items-center">
             <img src="{{ CustomHelper::Get_website_logo_url() }}" style="width: 40%;" alt="{{ $Get_website_name }}">
-            <small class="text-center">  {{ ucwords(__( $Get_website_name )) }} </small>
+            <small class="text-center" style="font-weight: bold;">  {{ ucwords(__( $Get_website_name )) }} </small>
         </div>
 
         {{-- <button class="toggle-btn" onclick="toggleNav()">

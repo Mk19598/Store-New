@@ -1,6 +1,7 @@
 :root {
     --primary-color: #4a90e2;
-    --bg-color: #f4f7fa;
+    --bg-color: #e4e4e9
+    ;
     --text-color: #333;
     --sidebar-bg: #ffffff;
     --sidebar-hover: #e6f0ff;
@@ -23,5 +24,16 @@ p, a, span, div {
 }
 
 .title-header{
-    font-weight: bold;
+    font-size: 30px;
+    line-height: 40px;
+    font-weight: bolder;
+}
+
+.py-5 {
+    padding-top: 6rem !important;
+}
+
+a {
+    text-decoration: none;  
+    color: black;          
 }

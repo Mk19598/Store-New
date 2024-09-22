@@ -19,6 +19,12 @@
     </div>
     <a href="{{ route('orders.index') }}"><i class="fa-solid fa-list"></i> <span> {{ ucwords(__('Order List')) }}</span></a>
     <a href="{{ route('orders.store') }}"><i class="fas fa-cart-shopping"></i> <span> {{ ucwords(__('orders Store')) }}</span></a>
+    <a href="{{ route('home') }}"><i class="fas fa-shopping-cart"></i> <span> {{ ucwords(__('products')) }}</span></a>
+    <a href="{{ route('home') }}"><i class="fas fa-store"></i></i> <span> {{ ucwords(__('Inventary management')) }}</span></a>
+    <a href="{{ route('home') }}"><i class="fas fa-truck-fast"></i> <span> {{ ucwords(__('Shipping')) }}</span></a>
+    <a href="{{ route('email.index') }}"><i class="fas fa-envelope"></i> <span> {{ ucwords(__('Send Email')) }}</span></a>
+    <a href="{{ route('message.index') }}"><i class="fab fa-whatsapp"></i> <span> {{ ucwords(__('Send WhatsApp Message')) }}</span></a>
+</div>
     <a href="{{ route('dashboard') }}"><i class="fas fa-shopping-cart"></i> <span> {{ ucwords(__('products')) }}</span></a>
     <a href="{{ route('dashboard') }}"><i class="fas fa-store"></i></i> <span> {{ ucwords(__('Inventary management')) }}</span></a>
     <a href="{{ route('dashboard') }}"><i class="fas fa-truck-fast"></i> <span> {{ ucwords(__('Shipping')) }}</span></a>

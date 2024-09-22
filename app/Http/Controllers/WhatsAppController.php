@@ -23,7 +23,7 @@ class WhatsAppController extends Controller
     public function index()
     {
         $data = array( 
-                        'title'  => CustomHelper::Get_website_name() . " | WhatsApp" ,
+                        'title'  => CustomHelper::Get_website_name() . " WhatsApp" ,
                     );
         return view('WhatsApp.Index', $data);
 

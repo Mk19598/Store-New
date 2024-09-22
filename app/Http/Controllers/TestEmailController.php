@@ -18,7 +18,7 @@ class TestEmailController extends Controller
     public function index()
     {
         $data = array( 
-                        'title'  => CustomHelper::Get_website_name() . " | Emails" ,
+                        'title'  => CustomHelper::Get_website_name() . " Emails" ,
                     );
         return view('email.TestingContent', $data);
 

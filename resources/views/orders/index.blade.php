@@ -44,16 +44,6 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3">
-                            <label for="origin" class="form-label">Order Origin</label>
-                            <select class="form-select" id="origin" name="origin">
-                                <option value="all" {{ request('origin') == 'all' ? 'selected' : '' }}>All Origins</option>
-                                <option value="website" {{ request('origin') == 'website' ? 'selected' : '' }}>Website</option>
-                                <option value="mobile app" {{ request('origin') == 'mobile app' ? 'selected' : '' }}>MobileApp</option>
-                                <option value="phone" {{ request('origin') == 'phone' ? 'selected' : '' }}>Phone</option>
-                            </select>
-                        </div>
-
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-primary">Apply Filters</button>
                         </div>
@@ -106,7 +96,6 @@
                                 <th>{{ ucwords(__('Date & Time')) }} </th>
                                 <th>{{ ucwords(__('Status')) }}  </th>
                                 <th>{{ ucwords(__('Total')) }}   </th>
-                                <th>{{ ucwords(__('Origin')) }}  </th>
                                 <th>{{ ucwords(__('Actions')) }} </th>
                             </tr>
                         </thead>
@@ -124,12 +113,10 @@
                                     </td>
                                     <td> {{ @$order->order_created_at_format }}</td>
                                     <td> <span class="badge bg-{{ $order->status_color }}">{{ ucwords(@$order->status) }}</span></td>
-                                    <td> {{ number_format($order->total_cost, 2) }}</td>
-                                    <td> {{ $order->origin }}</td>
+                                    <td> {{ @$order->currency_symbol.number_format(@$order->total_cost, 2) }}</td>
                                     <td>
-                                        <button class="btn btn-sm " onclick="printOrder('{{ $order->id }}', 'print')">
-                                            <i class="bi bi-printer"></i>
-                                        </button>
+                                        <a href="{{ route('orders.receipt_pdf',$order->order_uuid)}}"> <i class="bi bi-receipt"></i> </a>
+
                                         <button class="btn btn-sm" onclick="printOrder('{{ $order->id }}', 'invoice')">
                                             <i class="bi bi-file-text"></i>
                                         </button>
@@ -166,6 +153,10 @@
 
         .badge.bg-cancelled {
             background-color: #dc3545;
+        }
+
+        .badge.bg-pending {
+            background-color: #5d7012;
         }
     </style>
 @endpush
@@ -209,8 +200,6 @@
         }
 
         function printOrder(orderId, type) {
-            // In a real application, you would call an API endpoint here
-            console.log(`${type} for order:`, orderId);
             alert(`Generating ${type} for order ${orderId}.`);
         }
     </script>

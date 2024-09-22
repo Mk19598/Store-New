@@ -467,48 +467,134 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
-        $orders = Order::query();
+        try {
 
-        // Apply filters
+            $orders = Order::query();
 
-        if ($request->filled('date_from') && $request->filled('time_from')) {
-            $orders->where('order_created_at', '>=', "{$request->date_from}T{$request->time_from}:00");
+                    // Apply filters
+
+            if ($request->filled('date_from') && $request->filled('time_from')) {
+                $orders->where('order_created_at', '>=', "{$request->date_from}T{$request->time_from}:00");
+            }
+            
+            if ($request->filled('date_to') && $request->filled('time_to')) {
+                $orders->where('order_created_at', '<=', "{$request->date_to}T{$request->time_to}:00");
+            }
+            
+            if ($request->filled('status') && $request->status !== 'all') {
+                $orders->where('status', $request->status);
+            }
+
+            $orders = $orders->when($request->filled('date_from') || $request->filled('date_to') || ($request->filled('status') && $request->status !== 'all'), 
+                                
+                                function ($query){
+
+                                    return $query->orderBy('order_created_at', 'asc');
+
+                                    })->get()->map(function($item) {
+
+                                        $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
+
+                                        $statusColors = [
+
+                                            'woocommerce' => [
+                                                'pending'    => 'pending',
+                                                'processing' => 'processing',
+                                                'on-hold'    => 'processing',
+                                                'completed'  => 'completed',
+                                                'cancelled'  => 'cancelled',
+                                                'refunded'   => 'cancelled',
+                                                'failed'     => 'cancelled',
+                                                'default'    => 'cancelled'
+                                            ],
+
+                                            'Dukkan' => [
+                                                '-1' => ['label' => 'ABANDONED / DRAFT', 'color' => 'cancelled'],
+                                                '0'  => ['label' => 'PENDING', 'color' => 'pending'],
+                                                '1'  => ['label' => 'ACCEPTED', 'color' => 'completed'],
+                                                '2'  => ['label' => 'REJECTED', 'color' => 'cancelled'],
+                                                '3'  => ['label' => 'SHIPPED', 'color' => 'shipped'],
+                                                '4'  => ['label' => 'CANCELLED', 'color' => 'cancelled'],
+                                                '5'  => ['label' => 'DELIVERED', 'color' => 'completed'],
+                                                '6'  => ['label' => 'FAILED', 'color' => 'cancelled'],
+                                                '7'  => ['label' => 'CANCELLED BY CUSTOMER', 'color' => 'cancelled'],
+                                                '10' => ['label' => 'RETURNED', 'color' => 'brown'],
+                                                'default' => ['label' => 'UNKNOWN', 'color' => 'default-color']
+                                            ]
+                                        ];
+
+                                        if ($item->order_vai == "woocommerce") {
+                                            $item['status_color'] =  ucfirst(strtolower($statusColors['woocommerce'][$item->status])) ?? "No Status";
+                                        }
+
+                                        if ($item->order_vai == "Dukkan") {
+                                            $dukkanStatus = $statusColors['Dukkan'][$item->status] ?? $statusColors['Dukkan']['default'];
+                                            $item['status'] = ucfirst(strtolower($dukkanStatus['label']));
+                                            $item['status_color'] = $dukkanStatus['color'];
+                                        }
+
+                                        return $item;
+                                });
+
+            $data = array( 'orders' => $orders, 
+                            'title'  => CustomHelper::Get_website_name(). " | Orders" ,
+                        );
+
+            return view('orders.index', $data);
+            
+        } catch (\Throwable $th) {
+
+            return abort(404);
         }
-        
-        if ($request->filled('date_to') && $request->filled('time_to')) {
-            $orders->where('order_created_at', '<=', "{$request->date_to}T{$request->time_to}:00");
-        }
-        
-        if ($request->filled('status') && $request->status !== 'all') {
-            $orders->where('status', $request->status);
-        }
-
-        $orders = $orders->when($request->filled('date_from') || $request->filled('date_to') || ($request->filled('status') && $request->status !== 'all'), function ($query) {
-            return $query->orderBy('order_created_at', 'asc');
-        })->get()->map(function($item) {
-            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
-            $item['status_color'] = 'completed';
-            return $item;
-        });
-
-        $data = array( 'orders' => $orders, 'title'  => CustomHelper::Get_website_name(). " | Orders" ,);
-
-        return view('orders.index', $data);
     }
 
-    public function orders_receipt_pdf($order_id)
+    public function orders_receipt_pdf($order_uuid)
     {
+        $orders = Order::query()->where('order_uuid',$order_uuid)->get()->map(function($item){
 
-        $orders = Order::query()->where('order_id',$order_id)->first();
+            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
 
-        dd( $orders );
+            if ($item->order_vai == "Dukkan" ) {
 
-        $data = ['orders' => 'orders'];
+                $dukaanProducts = DukaanProduct::where('order_uuid', $item->order_uuid)->get();
+
+                $totalCostSum = $dukaanProducts->sum('line_item_total_cost');
+                
+                $item['product_details'] = $dukaanProducts->map(function($item) use ($totalCostSum){
+                    $item['product_name'] = $item->product_slug;
+                    $item['total_cost']  = $item->line_item_total_cost;
+                    $item['price']      = $item->selling_price;
+                    $item['sum_total_cost'] = $totalCostSum; 
+                    return $item;
+                });
+            }
+
+            if ($item->order_vai == "woocommerce") {
+
+                $WoocommerceProduct = WoocommerceProduct::where('order_uuid', $item->order_uuid)->get();
+
+                $totalCostSum = $WoocommerceProduct->sum('total');
+
+                $item['product_details'] = $WoocommerceProduct->map(function($item) use($totalCostSum) {
+                    $item['product_name'] = $item->name;
+                    $item['total_cost'] = $item->total;
+                    $item['price']     = $item->price;
+                    $item['sum_total_cost'] = $totalCostSum; 
+
+                    return $item;
+                });
+            }
+
+            return $item;
+        })->first();
+
+        $data = array(
+            'orders' => $orders
+        );
 
         $pdf = Pdf::loadView('orders.PDF.receipt', $data);
 
         return $pdf->stream('receipt.pdf');
-
          
     }
 }

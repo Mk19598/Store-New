@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('woocommerce_products', function (Blueprint $table) {
             $table->id();
             $table->string('order_id', 100)->nullable();
+            $table->longText('order_uuid', 100)->nullable();
             $table->longText('name')->nullable();
             $table->string('product_id', 100)->nullable();
             $table->string('variation_id', 100)->nullable();

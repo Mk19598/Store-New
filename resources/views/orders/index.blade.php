@@ -11,6 +11,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title mb-4" style="font-size: large;font-weight: bold;">Filters</h5>
+                <hr>
                 <form action="{{ route('orders.index') }}" method="GET" id="filter-form">
                     <div class="row g-3">
                         <div class="col-md-3">
@@ -52,6 +53,29 @@
             </div>
         </div>
 
+                 {{-- Order Count --}}
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="stats">
+                   
+                    <div class="stat-item">
+                        <div class="order-badge" style="background: #20c997">{{ @$order_count }}</div>
+                        <span>{{  ucwords(__('total Order count')) }}</span>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="order-badge blue" style="background: hsl(39deg 74% 73%) !important;">{{ @$woocommerce_order_count }}</div>
+                        <span>{{  ucwords(__('total woocommerce Order count')) }}</span>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="order-badge" style="background: #17a2b8 !important;">{{ @$Dukkan_order_count }}</div>
+                        <span>{{  ucwords(__('total Dukkan Order count')) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
                 {{-- Table Card --}}
         <div class="card">
             <div class="card-body">
@@ -65,14 +89,6 @@
                     </div>
 
                     <div>
-                        <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('print')">
-                            <i class="bi bi-printer"></i> Print Selected
-                        </button>
-
-                        <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('invoice')">
-                            <i class="bi bi-file-text"></i> Invoice Selected
-                        </button>
-
                         <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('shipping')">
                             <i class="bi bi-tag"></i> Shipping Labels
                         </button>
@@ -93,6 +109,7 @@
                                 <th>{{ ucwords(__('Order ID')) }} </th>
                                 <th>{{ ucwords(__('Order IN')) }} </th>
                                 <th>{{ ucwords(__('Customer')) }} </th>
+                                <th>{{ ucwords(__('mobile number')) }} </th>
                                 <th>{{ ucwords(__('Date & Time')) }} </th>
                                 <th>{{ ucwords(__('Status')) }}  </th>
                                 <th>{{ ucwords(__('Total')) }}   </th>
@@ -111,21 +128,13 @@
                                         <div>{{ ucwords(@$order->buyer_first_name) }}</div>
                                         <div class="text-muted">{{ @$order->buyer_email }}</div>
                                     </td>
+                                    <td>{{ @$order->buyer_mobile_number }}</td>
                                     <td> {{ @$order->order_created_at_format }}</td>
                                     <td> <span class="badge bg-{{ $order->status_color }}">{{ ucwords(@$order->status) }}</span></td>
                                     <td> {{ @$order->currency_symbol.number_format(@$order->total_cost, 2) }}</td>
                                     <td>
                                         <a href="{{ route('orders.receipt_pdf',$order->order_uuid)}}"> <i class="bi bi-receipt"></i> </a>
-
-                                        <button class="btn btn-sm" onclick="printOrder('{{ $order->id }}', 'invoice')">
-                                            <i class="bi bi-file-text"></i>
-                                        </button>
-                                        <button class="btn btn-sm" onclick="printOrder('{{ $order->id }}', 'shipping')">
-                                            <i class="bi bi-tag"></i>
-                                        </button>
-                                        <button class="btn btn-sm" onclick="printOrder('{{ $order->id }}', 'receipt')">
-                                            <i class="bi bi-receipt"></i>
-                                        </button>
+                                        <a href="{{ route('orders.receipt_pdf',$order->order_uuid)}}"> <i class="bi bi-truck"></i>  </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -144,11 +153,11 @@
         }
 
         .badge.bg-processing {
-            background-color: #007bff;
+            background-color: #0275d8;
         }
 
         .badge.bg-shipped {
-            background-color: #6f42c1;
+            background-color: #8051d7;
         }
 
         .badge.bg-cancelled {
@@ -156,8 +165,32 @@
         }
 
         .badge.bg-pending {
-            background-color: #5d7012;
+            background-color: #abab32;
         }
+
+        .badge.bg-refunded {
+            background-color: #A52A2A;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .order-badge {
+            display: inline-block;
+            border-radius: 5px;
+            padding: 5px 10px;
+            color: white;
+            margin-right: 5px;
+        }
+
     </style>
 @endpush
 

@@ -6,7 +6,7 @@
     <title>Test Indian Store Invoice</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'DejaVu Sans', Arial, sans-serif; /* Use a font that supports ₹ */
             line-height: 1.6;
             color: #333;
             max-width: 800px;
@@ -51,8 +51,9 @@
         }
     </style>
 </head>
+
 <body>
-    <h1>{{ $orders->store_name }}</h1>
+    <h1>{{ @$orders->store_name }}</h1>
     {{-- <p class="contact">Contact: ravirockzu@gmail.com</p> --}}
     
     <div class="divider"></div>

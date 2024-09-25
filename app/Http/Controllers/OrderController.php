@@ -503,7 +503,7 @@ class OrderController extends Controller
                                                 'on-hold'    => 'processing',
                                                 'completed'  => 'completed',
                                                 'cancelled'  => 'cancelled',
-                                                'refunded'   => 'cancelled',
+                                                'refunded'   => 'refunded',
                                                 'failed'     => 'cancelled',
                                                 'default'    => 'cancelled'
                                             ],
@@ -518,13 +518,14 @@ class OrderController extends Controller
                                                 '5'  => ['label' => 'DELIVERED', 'color' => 'completed'],
                                                 '6'  => ['label' => 'FAILED', 'color' => 'cancelled'],
                                                 '7'  => ['label' => 'CANCELLED BY CUSTOMER', 'color' => 'cancelled'],
-                                                '10' => ['label' => 'RETURNED', 'color' => 'brown'],
+                                                '10' => ['label' => 'RETURNED', 'color' => 'refunded'],
                                                 'default' => ['label' => 'UNKNOWN', 'color' => 'default-color']
                                             ]
                                         ];
 
                                         if ($item->order_vai == "woocommerce") {
-                                            $item['status_color'] =  ucfirst(strtolower($statusColors['woocommerce'][$item->status])) ?? "No Status";
+                                            $item['status_color'] =  $statusColors['woocommerce'][$item->status] ?? "default-color";
+                                            $item['status']       = ucfirst(strtolower($item->status)) ;
                                         }
 
                                         if ($item->order_vai == "Dukkan") {
@@ -538,11 +539,16 @@ class OrderController extends Controller
 
             $data = array( 'orders' => $orders, 
                             'title'  => CustomHelper::Get_website_name(). " | Orders" ,
+                            'order_count' => $orders->count(),
+                            'woocommerce_order_count' => $orders->where('order_vai','woocommerce')->count(),
+                            'Dukkan_order_count' => $orders->where('order_vai','Dukkan')->count(),
                         );
 
             return view('orders.index', $data);
             
         } catch (\Throwable $th) {
+
+            // return $th->getMessage();
 
             return abort(404);
         }
@@ -595,6 +601,5 @@ class OrderController extends Controller
         $pdf = Pdf::loadView('orders.PDF.receipt', $data);
 
         return $pdf->stream('receipt.pdf');
-         
     }
 }

@@ -89,12 +89,12 @@
                     </div>
 
                     <div>
-                        <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('shipping')">
-                            <i class="bi bi-tag"></i> Shipping Labels
-                        </button>
-
                         <button class="btn btn-outline-primary btn-sm" onclick="bulkPrint('receipt')">
                             <i class="bi bi-receipt"></i> Receipts
+                        </button>
+
+                        <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('shipping')">
+                            <i class="bi bi-tag"></i> Shipping Labels
                         </button>
                     </div>
                 </div>

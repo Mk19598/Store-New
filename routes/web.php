@@ -34,4 +34,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/sendMessageText', [App\Http\Controllers\WhatsAppController::class, 'sendMessageText'])->name('message.sendMessageText');
     });
 
+    Route::group(['prefix' => 'products' ], function () {
+        Route::get('warehouse-pickings', [App\Http\Controllers\ProductController::class, 'warehouse_pickings'])->name('products.warehouse_pickings');
+        Route::get('warehouse-picking-products', [App\Http\Controllers\ProductController::class, 'warehouse_picking_products'])->name('products.warehouse_picking_products');
+    });
 });

@@ -10,7 +10,7 @@
                 {{-- Filter Card --}}
         <div class="card mb-4">
             <div class="card-body">
-                <h5 class="card-title mb-4" style="font-size: large;font-weight: bold;">Filters</h5>
+                <h5 class="card-title mb-4">Filters</h5>
                 <hr>
                 <form action="{{ route('orders.index') }}" method="GET" id="filter-form">
                     <div class="row g-3">
@@ -190,7 +190,6 @@
             color: white;
             margin-right: 5px;
         }
-
     </style>
 @endpush
 

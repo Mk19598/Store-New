@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('order_id', 100)->nullable();
             $table->longText('order_uuid', 100)->nullable();
+            $table->longText('order_vai', 100)->nullable();
             $table->longText('name')->nullable();
             $table->string('product_id', 100)->nullable();
             $table->string('variation_id', 100)->nullable();
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->string('price', 100)->nullable();
             $table->longText('image')->nullable();
             $table->string('parent_name', 100)->nullable();
+            $table->string('order_created_at')->nullable();
             $table->string('unique_id', 50)->nullable();
             $table->timestamps();
         });

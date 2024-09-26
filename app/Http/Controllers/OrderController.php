@@ -95,13 +95,6 @@ class OrderController extends Controller
                     'currency_symbol'   => $order->currency_symbol, 
                     'currency_name'     => null , 
 
-                    // $table->string('store_data')->nullable();
-                    // $table->string('store_name')->nullable();
-                    // $table->string('store_id')->nullable();
-                    // $table->string('store_link')->nullable();
-                    // $table->string('store_image')->nullable();
-        
-
                     'buyer_first_name' => $order->billing->first_name, 
                     'buyer_last_name'  => $order->billing->last_name, 
                     'buyer_email'      => $order->billing->email, 
@@ -200,6 +193,7 @@ class OrderController extends Controller
 
                     WoocommerceProduct::create([
                         'order_id' => $order_product->id ,
+                        'order_vai' => 'woocommerce',
                         'order_uuid' => $order->order_key, 
                         'name'       => $order_product->name,
                         'product_id' => $order_product->product_id,
@@ -215,6 +209,7 @@ class OrderController extends Controller
                         'price'         => $order_product->price,
                         'image'         => !empty($order_product->image) ? $order_product->image->src : null,
                         'parent_name'   => $order_product->parent_name,
+                        'order_created_at'  => $order->date_created, 
                         'unique_id' => $unique_id,
                     ]);
                 }
@@ -382,6 +377,7 @@ class OrderController extends Controller
                         DukaanProduct::create([ 
                             'order_id'    => $order_response['data']['display_order_id'],
                             'order_uuid'  => $order_response['data']['uuid'],
+                            'order_vai'   => 'Dukkan',
                             "product_id"     =>  $orders_products['product_id'],
                             "quantity"       => $orders_products['quantity'],
                             "is_sku_edited"  => $orders_products['is_sku_edited'],
@@ -425,6 +421,7 @@ class OrderController extends Controller
                             "return_enabled"    => $orders_products['return_enabled'],
                             "replacement_enabled"   => $orders_products['replacement_enabled'],
                             "return_duration_days"  => $orders_products['return_duration_days'],
+                            'order_created_at'      => $order_response['data']['created_at'], 
                             'unique_id'     => $unique_id,
                         ]);
                     }

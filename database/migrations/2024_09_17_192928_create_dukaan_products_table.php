@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('order_id', 100)->nullable();
             $table->longText('order_uuid', 100)->nullable();
+            $table->longText('order_vai', 100)->nullable();
             $table->string('product_id')->nullable();
             $table->integer('quantity')->nullable();
             $table->string('is_sku_edited')->nullable();
@@ -56,6 +57,7 @@ return new class extends Migration
             $table->string('return_enabled')->nullable();
             $table->string('replacement_enabled')->nullable();
             $table->integer('return_duration_days')->nullable();
+            $table->string('order_created_at')->nullable();
             $table->string('unique_id')->nullable();
             $table->timestamps();
         });

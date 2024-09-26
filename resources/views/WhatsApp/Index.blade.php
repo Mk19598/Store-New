@@ -56,14 +56,16 @@
 @endsection
 
 @section('scripts')
-<script>
-    // Automatically hide the success message after 5 seconds
-    setTimeout(function() {
-        let alert = document.querySelector('.alert');
-        if (alert) {
-            alert.classList.remove('show');
-            alert.classList.add('fade');
-        }
-    }, 5000); // 5 seconds
-</script>
+
+    <script>
+        // Automatically hide the success message after 5 seconds
+        setTimeout(function() {
+            let alert = document.querySelector('.alert');
+            if (alert) {
+                alert.classList.remove('show');
+                alert.classList.add('fade');
+            }
+        }, 5000); // 5 seconds
+    </script>
+
 @endsection

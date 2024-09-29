@@ -21,7 +21,7 @@ class InventoryManagementController extends Controller
     {
         try {
 
-            // if(InventoryManagement::count() > 0){
+            // if(InventoryManagement::where('status',1)->count() > 0){
 
             //     $Dukaan_API_TOKEN = env('DUKAAN_API_TOKEN'); 
 
@@ -82,6 +82,8 @@ class InventoryManagementController extends Controller
         Storage::put('public/barcodes/' . $barcodeFileName, $barcodeData);
         
         $validated['barcode_image'] =  $barcodeFileName; 
+
+        $validated['status'] = 1;
 
         InventoryManagement::create($validated);
 

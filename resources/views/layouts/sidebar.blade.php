@@ -24,7 +24,7 @@
 
     <a href="{{ route('products.warehouse_pickings') }}"><i class="fa-solid fa-boxes-packing"></i> <span> {{ ucwords(__('warehouse pickings')) }}</span></a>
 
-    <a href="#"><i class="fas fa-store"></i></i> <span> {{ ucwords(__('Inventary management')) }}</span></a>
+    <a href="{{ route('inventory.index') }}"><i class="fas fa-store"></i></i> <span> {{ ucwords(__('Inventary management')) }}</span></a>
 
     <a href="#"><i class="fas fa-truck-fast"></i> <span> {{ ucwords(__('Shipping')) }}</span></a>
 

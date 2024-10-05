@@ -21,4 +21,10 @@ class CustomHelper
 
         return $website_logo;
     }
+
+    
+    public static function Get_user_img_url()
+    {
+        return URL::to('public/uploads/users-logo.png');
+    }
 }

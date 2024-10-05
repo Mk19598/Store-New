@@ -1,7 +1,6 @@
 :root {
     --primary-color: #4a90e2;
-    --bg-color: #e4e4e9
-    ;
+    --bg-color: #e4e4e9;
     --text-color: #333;
     --sidebar-bg: #ffffff;
     --sidebar-hover: #e6f0ff;
@@ -23,23 +22,8 @@ p, a, span, div {
     font-family: 'Nunito', sans-serif;
 }
 
-.title-header{
-    font-size: 30px;
-    line-height: 40px;
-    font-weight: bolder;
-}
-
-.py-5 {
-    padding-top: 6rem !important;
-}
-
-a {
-    text-decoration: none;  
-    color: black;          
-}
-
 .card-title {
-    font-size: 25px ;
+    font-size: 22px ;
     font-weight: bold;
 }
 

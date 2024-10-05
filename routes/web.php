@@ -42,5 +42,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'inventory' ], function () {
         Route::resource('inventory', App\Http\Controllers\InventoryManagementController::class);
     });
-
+    
+    Route::group(['prefix' => 'settings' ], function () {
+        Route::get('index', [App\Http\Controllers\SiteSettingController::class, 'index'])->name('settings.index');
+    });
 });

@@ -4,8 +4,7 @@
 
 @section('content')
 
-    <div class="container py-5">
-        {{-- <h4 class="mb-4 title-header">Order Print Screen</h4> --}}
+    <div class="">
 
                 {{-- Filter Card --}}
         <div class="card mb-4">

@@ -41,6 +41,7 @@
     {{-- Site CSS --}}
     <link rel="stylesheet" href="{{ url('resources\css\sidebar.css') }}">
     <link rel="stylesheet" href="{{ url('resources\css\custom.css') }}">
+    <link rel="stylesheet" href="{{ url('resources\css\admin-template.css') }}">
 
     {{-- Site Script --}}
     <script src="{{ url('resources\js\sidebar.js') }}"></script>
@@ -50,7 +51,7 @@
     @stack('scripts')
 </head>
 
-<body>
+<body class="app">
     <div id="app">
         {{-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
@@ -110,13 +111,10 @@
         </nav> --}}
 
         @guest
-        @else
-            @include('layouts.sidebar')
-        @endif
-
-        <div id="main">
             @yield('content')
-        </div>
+        @else
+            @include('layouts.template')
+        @endif
     </div>
 </body>
 </html>

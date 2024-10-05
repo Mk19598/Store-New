@@ -27,7 +27,7 @@ class ProductController extends Controller
 
         } catch (\Throwable $th) {
 
-           return $th->getMessage();
+            return view('layouts.404-Page');
         }
     }
 

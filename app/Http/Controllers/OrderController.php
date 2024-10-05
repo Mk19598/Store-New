@@ -38,19 +38,18 @@ class OrderController extends Controller
                 return response()->json( $Dukaan, $Dukaan['status_code']);
             }
 
-            return response()->json(array(
-                'status' => true,
-                'message' => ucwords("{$WooCommerce['message']} & {$Dukaan['message']}"),
-                'woocommerce_data' => $WooCommerce,
-                'DUKAAN_data' => $Dukaan,
-            ), 200);
+            $data = array(
+                'title'    => CustomHelper::Get_website_name(). " | Orders Store-Update" ,
+                'message'  => ("Orders have been updated till this current date & time"),
+                'respond_message' => ucwords("{$WooCommerce['message']} & {$Dukaan['message']}"),
+                'current_time'    => carbon::now()->format('l jS \of F Y h:i:s A'),
+            );
             
+            return view('orders.store-update',$data);
+
         } catch (\Throwable $th) {
 
-            return response()->json(array(
-                "status" => false,
-                "message" => $th->getMessage() ,
-            ), 400);
+            return view('layouts.404-page');
         }
     }
 
@@ -545,9 +544,7 @@ class OrderController extends Controller
             
         } catch (\Throwable $th) {
 
-            // return $th->getMessage();
-
-            return abort(404);
+            return view('layouts.404-Page');
         }
     }
 

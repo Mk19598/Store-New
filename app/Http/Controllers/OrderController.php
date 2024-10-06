@@ -39,7 +39,7 @@ class OrderController extends Controller
             }
 
             $data = array(
-                'title'    => CustomHelper::Get_website_name(). " | Orders Store-Update" ,
+                'title'    => "Orders Store-Update | ".CustomHelper::Get_website_name() ,
                 'message'  => ("Orders have been updated till this current date & time"),
                 'respond_message' => ucwords("{$WooCommerce['message']} & {$Dukaan['message']}"),
                 'current_time'    => carbon::now()->format('l jS \of F Y h:i:s A'),
@@ -469,31 +469,33 @@ class OrderController extends Controller
 
                     // Apply filters
 
-            if ($request->filled('date_from') && $request->filled('time_from')) {
-                $orders->where('order_created_at', '>=', "{$request->date_from}T{$request->time_from}:00");
-            }
-            
-            if ($request->filled('date_to') && $request->filled('time_to')) {
-                $orders->where('order_created_at', '<=', "{$request->date_to}T{$request->time_to}:00");
-            }
-            
-            if ($request->filled('status') && $request->status !== 'all') {
+            if($request->ajax()){
 
-                $statusMap = [
-                    'pending'    => ['pending', '0'],
-                    'completed'  => ['completed', 5],
-                    'cancelled'  => ['cancelled', 4, 7],
-                    'failed'     => ['failed', 6],
-                    'refunded'   => ['refunded', 10],
-                    'processing' => ['processing', 3],
-                ];
-            
-                if (isset($statusMap[$request->status])) {
-                    $orders->whereIn('status', $statusMap[$request->status]);
-                }else{
-                    $orders->where('status', $request->status);
+                if ($request->filled('date_from') && $request->filled('time_from')) {
+                    $orders->where('order_created_at', '>=', "{$request->date_from}T{$request->time_from}:00");
                 }
-            
+                
+                if ($request->filled('date_to') && $request->filled('time_to')) {
+                    $orders->where('order_created_at', '<=', "{$request->date_to}T{$request->time_to}:00");
+                }
+                
+                if ($request->filled('status') && $request->status !== 'all') {
+
+                    $statusMap = [
+                        'pending'    => ['pending', '0'],
+                        'completed'  => ['completed', 5],
+                        'cancelled'  => ['cancelled', 4, 7],
+                        'failed'     => ['failed', 6],
+                        'refunded'   => ['refunded', 10],
+                        'processing' => ['processing', 3],
+                    ];
+                
+                    if (isset($statusMap[$request->status])) {
+                        $orders->whereIn('status', $statusMap[$request->status]);
+                    }else{
+                        $orders->where('status', $request->status);
+                    }
+                }
             }
 
             $orders = $orders->when($request->filled('date_from') || $request->filled('date_to') || ($request->filled('status') && $request->status !== 'all'), 
@@ -549,12 +551,18 @@ class OrderController extends Controller
                                 });
 
             $data = array( 'orders' => $orders, 
-                            'title'  => CustomHelper::Get_website_name(). " | Orders" ,
+                            'title'  => "Orders | ".CustomHelper::Get_website_name()  ,
                             'order_count' => $orders->count(),
                             'woocommerce_order_count' => $orders->where('order_vai','woocommerce')->count(),
                             'Dukkan_order_count' => $orders->where('order_vai','Dukkan')->count(),
                             'today' => Carbon::today()->format('Y-m-d') ,
                         );
+
+                // filter
+            if($request->ajax()){
+
+                return view('orders.index-table', $data)->render();
+            }
 
             return view('orders.index', $data);
             

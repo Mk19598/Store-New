@@ -19,7 +19,7 @@ class SiteSettingController extends Controller
         $Auth_user = Auth::user();
 
         $data = array(
-            'title'       => CustomHelper::Get_website_name(). " | Settings" ,
+            'title'       => "Settings | ".CustomHelper::Get_website_name() ,
             'SiteSetting' => $SiteSetting ,
             'Auth_user'  => $Auth_user ,
         );

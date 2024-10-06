@@ -20,7 +20,7 @@ class ProductController extends Controller
     {
         try {
             $data = array(
-                'title' => CustomHelper::Get_website_name(). " | Product Pickup" ,
+                'title' => "Product Pickup | ". CustomHelper::Get_website_name() ,
                 'today' => Carbon::today()->format('Y-m-d') ,
                 'query' => [],
             );
@@ -53,7 +53,7 @@ class ProductController extends Controller
         $query = $dukaanProducts->concat($woocommerceProducts);
 
         $data = [
-            'title' => CustomHelper::Get_website_name() . " | Product Pickup",
+            'title' =>  "Product Pickup | " .CustomHelper::Get_website_name() ,
             'today' => Carbon::today()->format('Y-m-d') ,
             'query' => $query,
         ];

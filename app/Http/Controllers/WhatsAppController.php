@@ -23,10 +23,9 @@ class WhatsAppController extends Controller
     public function index()
     {
         $data = array( 
-                        'title'  => CustomHelper::Get_website_name() . " WhatsApp" ,
+                        'title'  => " WhatsApp | ". CustomHelper::Get_website_name()  ,
                     );
         return view('WhatsApp.Index', $data);
-
     }
 
     public function sendMessageText(Request $request)

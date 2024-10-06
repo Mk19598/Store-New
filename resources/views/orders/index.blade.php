@@ -15,7 +15,7 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label for="date_from" class="form-label">From Date</label>
-                            <input type="date" class="form-control" id="date_from" name="date_from" value="{{ request('date_from') }}">
+                            <input type="date" class="form-control" id="date_from" name="date_from" value="{{ request('date_from') }}" max="{{ $today }}">
                         </div>
 
                         <div class="col-md-3">
@@ -25,7 +25,7 @@
 
                         <div class="col-md-3">
                             <label for="date_to" class="form-label">To Date</label>
-                            <input type="date" class="form-control" id="date_to" name="date_to" value="{{ request('date_to') }}">
+                            <input type="date" class="form-control" id="date_to" name="date_to" value="{{ request('date_to') }}" max="{{ $today }}" >
                         </div>
 
                         <div class="col-md-3">
@@ -36,16 +36,22 @@
                         <div class="col-md-3">
                             <label for="status" class="form-label">Order Status</label>
                             <select class="form-select" id="status" name="status">
-                                <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>All Statuses</option>
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Processing</option>
-                                <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}> {{ ucwords(__('All Status')) }}</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}> {{ ucwords(__('pending')) }} </option>
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}> {{ ucwords(__('completed')) }}  </option>
+                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}> {{ ucwords(__('cancelled')) }} </option>
+                                <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>{{ ucwords(__('failed')) }}  </option>
+                                <option value="refunded" {{ request('status') == 'refunded' ? 'selected' : '' }}>{{ ucwords(__('refunded')) }}  </option>
+                                <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>{{ ucwords(__('processing')) }}  </option>
+                                <option value="on-hold" {{ request('status') == 'on-hold' ? 'selected' : '' }}>{{ ucwords(__('on-hold (woocommerce)')) }} </option>
+                                <option value="-1" {{ request('status') == 'ABANDONED / DRAFT' ? 'selected' : '' }}>{{ ucfirst(__('Abandoned / Draft (Dukkan) ')) }}  </option>
+                                <option value="1" {{ request('status') == 'ACCEPTED' ? 'selected' : '' }}>{{ ucwords(__('accepted (Dukkan)')) }}  </option>
+                                <option value="2" {{ request('status') == 'REJECTED' ? 'selected' : '' }}>{{ ucwords(__('rejected (Dukkan)')) }}  </option>
                             </select>
                         </div>
 
                         <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                            <button type="submit" class="btn app-btn-primary">Apply Filters</button>
                         </div>
                     </div>
                 </form>

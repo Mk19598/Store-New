@@ -4,31 +4,38 @@
 
 @section('content')
 
-    <div class="container py-5">
+    <div class="">
 
                 {{-- Filter Card --}}
         <div class="card mb-4">
             <div class="card-body">
-                <form method="{{ route('products.warehouse_picking_products') }}" action="get" id="filter-form">
+                <form method="post" action="{{ route('products.warehouse_picking_products') }}" id="filter-form">
+                    @csrf
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="date_from" class="form-label">From Date</label>
-                            <input type="date" class="form-control" id="date_from" name="date_from" required>
+                            <input type="date" class="form-control" id="date_from" name="date_from" max="{{ $today }}" required >
                         </div>
 
                         <div class="col-md-6">
                             <label for="date_to" class="form-label">To Date</label>
-                            <input type="date" class="form-control" id="date_to" name="date_to" required>
+                            <input type="date" class="form-control" id="date_to" name="date_to" max="{{ $today }}" required>
                         </div>
 
                         <div class="col-md-4">
                             <label for="status" class="form-label">Order Status</label>
                             <select class="form-select" id="status" name="status" required>
-                                <option value="all" >All Statuses</option>
-                                <option value="completed" >Completed</option>
-                                <option value="processing" >Processing</option>
-                                <option value="shipped" >Shipped</option>
-                                <option value="cancelled" >Cancelled</option>
+                                <option value="all" > {{ ucwords(__('All Status')) }}</option>
+                                <option value="pending" > {{ ucwords(__('pending')) }} </option>
+                                <option value="completed" > {{ ucwords(__('completed')) }}  </option>
+                                <option value="cancelled"> {{ ucwords(__('cancelled')) }} </option>
+                                <option value="failed" >{{ ucwords(__('failed')) }}  </option>
+                                <option value="refunded" >{{ ucwords(__('refunded')) }}  </option>
+                                <option value="processing" >{{ ucwords(__('processing')) }}  </option>
+                                <option value="on-hold">{{ ucwords(__('on-hold (woocommerce)')) }} </option>
+                                <option value="-1">{{ ucfirst(__('Abandoned / Draft (Dukkan) ')) }}  </option>
+                                <option value="1" >{{ ucwords(__('accepted (Dukkan)')) }}  </option>
+                                <option value="2" >{{ ucwords(__('rejected (Dukkan)')) }}  </option>
                             </select>
                         </div>
 
@@ -47,7 +54,7 @@
                         </div>
 
                         <div class="col-md-12 text-center p-2">
-                            <button type="submit" class="btn btn-primary">Get Picking Summary</button>
+                            <button type="submit" class="btn app-btn-primary">Get Picking Summary</button>
                         </div>
                     </div>
                 </form>
@@ -81,11 +88,26 @@
                 e.preventDefault(); 
                 $.ajax({
                     url: "{{ route('products.warehouse_picking_products') }}", 
-                    method: 'get', 
+                    method: 'post', 
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+                    },
                     data: $(this).serialize(), 
 
                     success: function(data) {
                         $('.data').show().html(data);
+
+                        $('#products-table').DataTable({
+                            columnDefs: [
+                                { targets: [1, 2], className: 'dt-body-left' },  
+                                { targets: [0, 3, 4, 5], className: 'dt-body-center' } 
+                            ],
+                            headerCallback: function(thead, data, start, end, display) {
+                                $(thead).find('th').addClass('dt-head-center');
+                            },
+                            
+                        });
+
                     },
                     error: function(xhr, status, error) {
                         $('.data').hide();

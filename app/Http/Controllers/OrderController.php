@@ -478,7 +478,22 @@ class OrderController extends Controller
             }
             
             if ($request->filled('status') && $request->status !== 'all') {
-                $orders->where('status', $request->status);
+
+                $statusMap = [
+                    'pending'    => ['pending', '0'],
+                    'completed'  => ['completed', 5],
+                    'cancelled'  => ['cancelled', 4, 7],
+                    'failed'     => ['failed', 6],
+                    'refunded'   => ['refunded', 10],
+                    'processing' => ['processing', 3],
+                ];
+            
+                if (isset($statusMap[$request->status])) {
+                    $orders->whereIn('status', $statusMap[$request->status]);
+                }else{
+                    $orders->where('status', $request->status);
+                }
+            
             }
 
             $orders = $orders->when($request->filled('date_from') || $request->filled('date_to') || ($request->filled('status') && $request->status !== 'all'), 
@@ -538,6 +553,7 @@ class OrderController extends Controller
                             'order_count' => $orders->count(),
                             'woocommerce_order_count' => $orders->where('order_vai','woocommerce')->count(),
                             'Dukkan_order_count' => $orders->where('order_vai','Dukkan')->count(),
+                            'today' => Carbon::today()->format('Y-m-d') ,
                         );
 
             return view('orders.index', $data);

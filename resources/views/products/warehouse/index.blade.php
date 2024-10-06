@@ -74,6 +74,9 @@
         h4 {
             font-weight: bolder;
         }
+        .pagination-right {
+            text-align: right; 
+        }
     </style>
 @endpush
 
@@ -95,19 +98,23 @@
                     data: $(this).serialize(), 
 
                     success: function(data) {
+
                         $('.data').show().html(data);
 
                         $('#products-table').DataTable({
-                            columnDefs: [
+
+                            columnDefs: [                   // Columns
                                 { targets: [1, 2], className: 'dt-body-left' },  
                                 { targets: [0, 3, 4, 5], className: 'dt-body-center' } 
                             ],
-                            headerCallback: function(thead, data, start, end, display) {
+
+                            headerCallback: function(thead, data, start, end, display) { // Head
                                 $(thead).find('th').addClass('dt-head-center');
                             },
-                            
-                        });
 
+                            dom: '<"top"Bf > rt <"bottom" <"pagination-left"i> <"pagination-right"p> ><"clear">', // Custom layout
+                            buttons: ['pdf', 'print' ]
+                        });
                     },
                     error: function(xhr, status, error) {
                         $('.data').hide();

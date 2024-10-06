@@ -43,7 +43,7 @@ class InventoryManagementController extends Controller
 
             
         $data = array(
-                            'title'  => CustomHelper::Get_website_name(). " | Inventory Management" ,
+                            'title'  => "Inventory Management | " .CustomHelper::Get_website_name() ,
                             'inventory_count' =>  InventoryManagement::count(),
                             'inventory_data' => InventoryManagement::get(),
 

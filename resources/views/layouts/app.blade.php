@@ -28,20 +28,34 @@
 
     <!-- Datatables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.7/css/dataTables.dataTables.css" />
-    
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="{{ url('resources\css\sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url('resources\css\custom.css') }}">
+    <link rel="stylesheet" href="{{ url('resources\css\admin-template.css') }}">
+
                         {{-- Another Source Script Links --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    
+        
+    <!-- DataTables CSS and JS -->
     <script src="https://cdn.datatables.net/2.1.7/js/dataTables.js"></script>
 
-    {{-- Site CSS --}}
-    <link rel="stylesheet" href="{{ url('resources\css\sidebar.css') }}">
-    <link rel="stylesheet" href="{{ url('resources\css\custom.css') }}">
-    <link rel="stylesheet" href="{{ url('resources\css\admin-template.css') }}">
+    <!-- DataTables Buttons extension -->
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.flash.min.js"></script>
+
+    <!-- pdfMake for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    <!-- Buttons for Excel, CSV, and PDF export -->
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
     {{-- Site Script --}}
     <script src="{{ url('resources\js\sidebar.js') }}"></script>

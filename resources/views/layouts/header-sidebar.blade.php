@@ -92,7 +92,7 @@
 
                     {{-- Dashboard --}}
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.html">
+                        <a class="nav-link active" href="{{ route('dashboard')}}">
                             <span class="nav-icon">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door"
                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -145,7 +145,7 @@
                                 </svg>
                             </span>
 
-                            <span class="nav-link-text">{{ __('Picking Picking' ) }}</span>
+                            <span class="nav-link-text">{{ __('Picking' ) }}</span>
                             <span class="submenu-arrow">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">

@@ -22,47 +22,51 @@ class WhatsAppController extends Controller
 
     public function index()
     {
-        $data = array( 
-                        'title'  => " WhatsApp | ". CustomHelper::Get_website_name()  ,
-                    );
-        return view('WhatsApp.Index', $data);
+        try {
+
+            $data = array(  'title'  => " WhatsApp | ". CustomHelper::Get_website_name() );
+            return view('WhatsApp.Index', $data);
+
+        } catch (\Throwable $th) {
+
+            return view('layouts.404-Page');
+
+        }
+       
     }
 
     public function sendMessageText(Request $request)
     {
 
-        $request->validate([
-            'number' => 'required',
-            'message' => 'required',
-            'instance_id' => 'required',
-        ]);
+        try {
 
-        $accessToken = env('POETS_API_ACCESS_TOKEN');
+            $request->validate([
+                'number' => 'required',
+                'message' => 'required',
+                'instance_id' => 'required',
+            ]);
+    
+            $accessToken = env('POETS_API_ACCESS_TOKEN');
 
-            try {
-                $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
-                    'form_params' => [
-                        'number' => $request->number,       
-                        'type' => 'text',          
-                        'message' => $request->message,     
-                        'instance_id' => $request->instance_id, 
-                        'access_token' => $accessToken,  
-                    ],
-                ]);
+            $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
+                'form_params' => [
+                    'number' => $request->number,       
+                    'type' => 'text',          
+                    'message' => $request->message,     
+                    'instance_id' => $request->instance_id, 
+                    'access_token' => $accessToken,  
+                ],
+            ]);
 
-                return back()->with('success', 'Your message has been sent successfully!');
+            return back()->with('success', 'Your message has been sent successfully!');
 
-
-            } catch (RequestException $e) {
-                if ($e->hasResponse()) {
-                    // return json_decode($e->getResponse()->getBody()->getContents(), true);
-                    return back()->with('success', json_decode($e->getResponse()->getBody()->getContents(), true));
-
-                }
-                return back()->with('success', 'Request failed');
-
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                // return json_decode($e->getResponse()->getBody()->getContents(), true);
+                return back()->with('success', json_decode($e->getResponse()->getBody()->getContents(), true));
             }
-
-
+            
+            return back()->with('success', 'Request failed');
+        }
     }   
 }

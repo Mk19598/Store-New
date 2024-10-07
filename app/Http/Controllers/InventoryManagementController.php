@@ -16,7 +16,6 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class InventoryManagementController extends Controller
 {
-
     public function Index()
     {
         try {
@@ -39,104 +38,125 @@ class InventoryManagementController extends Controller
             //     ]);
 
             // }
-        
-
             
-        $data = array(
-                            'title'  => "Inventory Management | " .CustomHelper::Get_website_name() ,
-                            'inventory_count' =>  InventoryManagement::count(),
-                            'inventory_data' => InventoryManagement::get(),
-
-                        );
+        $data = array( 'title'  => "Inventory Management | " .CustomHelper::Get_website_name() ,
+                        'inventory_count' =>  InventoryManagement::count(),
+                        'inventory_data' => InventoryManagement::get(),
+                    );
 
             return view('inventory.index', $data);
             
         } catch (\Throwable $th) {
 
             return view('layouts.404-Page');
-
         }
     }
 
     public function create()
     {
-        return view('inventory.create');
-    }
+        try {
+            return view('inventory.create');
 
+        } catch (\Throwable $th) {
+            return view('layouts.404-Page');
+
+        }
+    }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'product_name' => 'required',
-            'weight' => 'required',
-            'sku' => 'required',
-            'barcode' => 'required',
-        ]);
+        try {
 
-        $generator = new BarcodeGeneratorPNG();
-        $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128); 
+            $validated = $request->validate([
+                'product_name' => 'required',
+                'weight' => 'required',
+                'sku' => 'required',
+                'barcode' => 'required',
+            ]);
+    
+            $generator = new BarcodeGeneratorPNG();
+            $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128); 
+            
+            $barcodeFileName = 'barcode-' . $validated['barcode'] . '.png';
+            Storage::put('public/barcodes/' . $barcodeFileName, $barcodeData);
+            
+            $validated['barcode_image'] =  $barcodeFileName; 
+    
+            $validated['status'] = 1;
+    
+            InventoryManagement::create($validated);
+    
+            return redirect()->route('inventory.index')->with('success', 'Inventory created successfully!');
+
+        } catch (\Throwable $th) {
+
+            return view('layouts.404-Page');
+        }
         
-        $barcodeFileName = 'barcode-' . $validated['barcode'] . '.png';
-        Storage::put('public/barcodes/' . $barcodeFileName, $barcodeData);
-        
-        $validated['barcode_image'] =  $barcodeFileName; 
-
-        $validated['status'] = 1;
-
-        InventoryManagement::create($validated);
-
-        return redirect()->route('inventory.index')->with('success', 'Inventory created successfully!');
     }
-
 
     public function edit($id)
     {
-        $inventory = InventoryManagement::findOrFail($id);
-        return view('inventory.edit', compact('inventory'));
+        try {
+
+            $inventory = InventoryManagement::findOrFail($id);
+            return view('inventory.edit', compact('inventory'));
+
+        } catch (\Throwable $th) {
+
+            return view('layouts.404-Page');
+        }
     }
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'product_name' => 'required',
-            'weight' => 'required',
-            'sku' => 'required',
-            'barcode' => 'required',
-        ]);
-        $inventory = InventoryManagement::findOrFail($id);
+        try {
 
-        if ($inventory->barcode !== $validated['barcode']) {
-    
-            $generator = new BarcodeGeneratorPNG();
-            $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128); 
-    
-            $barcodeFileName = 'barcode-' . $validated['barcode'] . '.png';
-    
-            Storage::put('public/barcodes/' . $barcodeFileName, $barcodeData);
-    
-            $validated['barcode_image'] = $barcodeFileName;
-    
-            // if ($inventory->barcode_image) {
-            //     Storage::delete('public/barcodes/' . $inventory->barcode_image);
-            // }
+            $validated = $request->validate([
+                'product_name' => 'required',
+                'weight' => 'required',
+                'sku' => 'required',
+                'barcode' => 'required',
+            ]);
 
-        } else {
-            $validated['barcode_image'] = $inventory->barcode_image;
+            $inventory = InventoryManagement::findOrFail($id);
+    
+            if ($inventory->barcode !== $validated['barcode']) {
+        
+                $generator = new BarcodeGeneratorPNG();
+                $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128); 
+        
+                $barcodeFileName = 'barcode-' . $validated['barcode'] . '.png';
+        
+                Storage::put('public/barcodes/' . $barcodeFileName, $barcodeData);
+        
+                $validated['barcode_image'] = $barcodeFileName;
+    
+            } else {
+                $validated['barcode_image'] = $inventory->barcode_image;
+            }
+        
+            $inventory->update($validated);
+
+            return redirect()->route('inventory.index')->with('success', 'Inventory updated successfully.');
+
+        } catch (\Throwable $th) {
+
+            return view('layouts.404-Page');
         }
-    
-        $inventory->update($validated);
-        return redirect()->route('inventory.index')->with('success', 'Inventory updated successfully.');
 
     }
 
     public function destroy($id)
     {
-        $inventory = InventoryManagement::findOrFail($id);
+        try {
+            $inventory = InventoryManagement::findOrFail($id)->delete();
 
-        $inventory->delete();
+            return redirect()->route('inventory.index')->with('success', 'Inventory item deleted successfully.');
 
-        return redirect()->route('inventory.index')->with('success', 'Inventory item deleted successfully.');
+        } catch (\Throwable $th) {
+
+          return view('layouts.404-Page');
+        }
     }
-
-
 }

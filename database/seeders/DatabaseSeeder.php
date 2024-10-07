@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL; 
+use Carbon\Carbon;
 use App\Models\User;
 
 class DatabaseSeeder extends Seeder
@@ -18,12 +20,13 @@ class DatabaseSeeder extends Seeder
             'name' => 'Manikandan',
             'email' => 'manikandan@gmail.com',
             'password' => Hash::make(1234),
-            'role' => 3,
+            'role' => 1,
             'active' => 1,
         ]);
 
         $this->call([
             SiteSettingSeeder::class,
+            CerenditalsSeeder::class,
         ]);
     }
 }

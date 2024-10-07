@@ -33,7 +33,7 @@ class InventoryManagementController extends Controller
             //         'inventory_list' => [
             //             [
             //                 'warehouse' => 42097,
-            //                 'quantity_available' => InventoryManagement::count()
+            //                 'quantity_available' => InventoryManagement::where('status',1)->count()
             //             ]
             //         ]
             //     ]);

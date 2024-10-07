@@ -16,7 +16,7 @@ class CustomHelper
     public static function Get_website_logo_url()
     {
         $website_logo = SiteSetting::query()->pluck('website_logo')->map(function($item){
-            return URL::to('public/uploads/logos/'.$item);
+            return URL::to('public/'.$item);
         })->first();
 
         return $website_logo;

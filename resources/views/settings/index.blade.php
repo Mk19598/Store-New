@@ -17,16 +17,16 @@
             <div class="app-card app-card-settings shadow-sm p-4">
 
                 <div class="app-card-body">
-                    <form class="settings-form">
-
+                    <form class="settings-form" action="{{ route('settings.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
                         <div class="mb-3">
                             <label for="setting-input-1" class="form-label">{{ __("Website Name") }}</label>
-                            <input type="text" class="form-control" id="setting-input-1" value="{{ @$SiteSetting->website_name }}" required>
+                            <input type="text" class="form-control" id="setting-input-1" name='website_name' value="{{ @$SiteSetting->website_name }}" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="setting-input-2" class="form-label">{{ __("Website Image") }}</label>
-                            <input type="file" class="form-control" id="setting-input-2" required>
+                            <input type="file" class="form-control" name='website_logo' id="setting-input-2" required>
                         </div>
                         
                         <button type="submit" class="btn app-btn-primary">Save Changes</button>

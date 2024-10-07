@@ -17,22 +17,27 @@ class TestEmailController extends Controller
 
     public function index()
     {
-        $data = array( 
-                        'title'  => "Emails  | ". CustomHelper::Get_website_name() ,
-                    );
-        return view('email.TestingContent', $data);
+        try {
 
+            $data = array( 'title'  => "Emails  | ". CustomHelper::Get_website_name() );
+
+            return view('email.TestingContent', $data);
+
+        } catch (\Throwable $th) {
+            
+            return view('layouts.404-Page');
+
+        }
     }
 
     public function sendMail(Request $request)
     {
-
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'message' => 'required|string|max:2000',
         ]);
-        // Gather details
+       
         $details = [
             'name' => $request->input('name'),
             'email' => $request->input('email'),

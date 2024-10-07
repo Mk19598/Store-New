@@ -47,15 +47,16 @@
         <div class="col-12 col-md-8">
             <div class="app-card app-card-settings shadow-sm p-4">
                 <div class="app-card-body">
-                    <form class="settings-form">
-                        
+                    <form class="settings-form" action="{{ route('cerenditals.index') }}" method="post">
+                        @csrf
+
                         <div class="row d-flex">
 
                             <label for="setting-input-1" class="form-label">{{ __("Dukkan") }}</label>
 
                             <div class="col-md-12 mb-3">
                                 <small>{{ __('Dukkan API Token')}}</small>
-                                <input type="text" class="form-control" id="setting-input-1" value="" required>
+                                <input type="text" class="form-control" id="setting-input-1" value="{{ @$Cerenditals->dukkan_api_token }}" name="dukkan_api_token" required>
                             </div>
                             
                         </div>
@@ -66,18 +67,18 @@
 
                             <div class="col-md-12 mb-3">
                                 <small>{{ __('URL')}}</small>
-                                <input type="text" class="form-control" id="setting-input-1" value="" required>
+                                <input type="text" class="form-control" id="setting-input-1" value="{{ @$Cerenditals->woocommerce_url }}" name="woocommerce_url" required>
                             </div>
                             
                             <div class="col-md-6 mb-3">
                                 <small>{{ __('Customer key')}}</small>
-                                <input type="text" class="form-control" id="setting-input-1" value="" required>
+                                <input type="text" class="form-control" id="setting-input-1" value="{{ @$Cerenditals->woocommerce_customer_key }}" name="woocommerce_customer_key" required>
                             </div>
 
                             
                             <div class="col-md-6 mb-3">
                                 <small>{{ __('Customer Secret Key')}}</small>
-                                <input type="text" class="form-control" id="setting-input-1" value="" required>
+                                <input type="text" class="form-control" id="setting-input-1" value="{{ @$Cerenditals->woocommerce_secret_key }}" name="woocommerce_secret_key" required>
                             </div>
                         </div>
 

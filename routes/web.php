@@ -46,4 +46,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'settings' ], function () {
         Route::get('index', [App\Http\Controllers\SiteSettingController::class, 'index'])->name('settings.index');
     });
+    
+    Route::group(['prefix' => 'settings' ], function () {
+        Route::post('cerenditals', [App\Http\Controllers\CerenditalsController::class, 'update'])->name('cerenditals.index');
+    });
 });

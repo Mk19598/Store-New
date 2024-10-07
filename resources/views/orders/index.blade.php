@@ -4,19 +4,18 @@
 
 @section('content')
 
-    <div class="container py-5">
-        {{-- <h4 class="mb-4 title-header">Order Print Screen</h4> --}}
+    <div class="">
 
                 {{-- Filter Card --}}
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title mb-4">Filters</h5>
                 <hr>
-                <form action="{{ route('orders.index') }}" method="GET" id="filter-form">
+                <form method="get" action="{{ route('orders.index') }}" id="filter-form">
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label for="date_from" class="form-label">From Date</label>
-                            <input type="date" class="form-control" id="date_from" name="date_from" value="{{ request('date_from') }}">
+                            <input type="date" class="form-control" id="date_from" name="date_from" value="{{ request('date_from') }}" max="{{ $today }}">
                         </div>
 
                         <div class="col-md-3">
@@ -26,7 +25,7 @@
 
                         <div class="col-md-3">
                             <label for="date_to" class="form-label">To Date</label>
-                            <input type="date" class="form-control" id="date_to" name="date_to" value="{{ request('date_to') }}">
+                            <input type="date" class="form-control" id="date_to" name="date_to" value="{{ request('date_to') }}" max="{{ $today }}" >
                         </div>
 
                         <div class="col-md-3">
@@ -37,16 +36,22 @@
                         <div class="col-md-3">
                             <label for="status" class="form-label">Order Status</label>
                             <select class="form-select" id="status" name="status">
-                                <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>All Statuses</option>
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Processing</option>
-                                <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}> {{ ucwords(__('All Status')) }}</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}> {{ ucwords(__('pending')) }} </option>
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}> {{ ucwords(__('completed')) }}  </option>
+                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}> {{ ucwords(__('cancelled')) }} </option>
+                                <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>{{ ucwords(__('failed')) }}  </option>
+                                <option value="refunded" {{ request('status') == 'refunded' ? 'selected' : '' }}>{{ ucwords(__('refunded')) }}  </option>
+                                <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>{{ ucwords(__('processing')) }}  </option>
+                                <option value="on-hold" {{ request('status') == 'on-hold' ? 'selected' : '' }}>{{ ucwords(__('on-hold (woocommerce)')) }} </option>
+                                <option value="-1" {{ request('status') == 'ABANDONED / DRAFT' ? 'selected' : '' }}>{{ ucfirst(__('Abandoned / Draft (Dukkan) ')) }}  </option>
+                                <option value="1" {{ request('status') == 'ACCEPTED' ? 'selected' : '' }}>{{ ucwords(__('accepted (Dukkan)')) }}  </option>
+                                <option value="2" {{ request('status') == 'REJECTED' ? 'selected' : '' }}>{{ ucwords(__('rejected (Dukkan)')) }}  </option>
                             </select>
                         </div>
-
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                        
+                        <div class="col-md-12 text-center p-2">
+                            <button type="submit" class="btn app-btn-primary">Apply Filters</button>
                         </div>
                     </div>
                 </form>
@@ -99,48 +104,13 @@
                     </div>
                 </div>
 
-                <div class="table-responsive" >
-                    <table class="table table-striped" id="orders-list-table">
-
-                        <thead>
-                            <tr>
-                                <th> {{ ucwords(__('Select')) }}  </th>
-                                <th>#</th>
-                                <th>{{ ucwords(__('Order ID')) }} </th>
-                                <th>{{ ucwords(__('Order IN')) }} </th>
-                                <th>{{ ucwords(__('Customer')) }} </th>
-                                <th>{{ ucwords(__('mobile number')) }} </th>
-                                <th>{{ ucwords(__('Date & Time')) }} </th>
-                                <th>{{ ucwords(__('Status')) }}  </th>
-                                <th>{{ ucwords(__('Total')) }}   </th>
-                                <th>{{ ucwords(__('Actions')) }} </th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach ($orders as $key => $order)
-                                <tr>
-                                    <td> <input class="form-check-input order-checkbox" type="checkbox"value="{{ $order->id }}"></td>
-                                    <td> {{ $key+1 }} </td>
-                                    <td> {{ @$order->order_id }} </td>
-                                    <td> {{ @$order->order_vai }} </td>
-                                    <td>
-                                        <div>{{ ucwords(@$order->buyer_first_name) }}</div>
-                                        <div class="text-muted">{{ @$order->buyer_email }}</div>
-                                    </td>
-                                    <td>{{ @$order->buyer_mobile_number }}</td>
-                                    <td> {{ @$order->order_created_at_format }}</td>
-                                    <td> <span class="badge bg-{{ $order->status_color }}">{{ ucwords(@$order->status) }}</span></td>
-                                    <td> {{ @$order->currency_symbol.number_format(@$order->total_cost, 2) }}</td>
-                                    <td>
-                                        <a href="{{ route('orders.receipt_pdf',$order->order_uuid)}}"> <i class="bi bi-receipt"></i> </a>
-                                        <a href="{{ route('orders.receipt_pdf',$order->order_uuid)}}"> <i class="bi bi-truck"></i>  </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>               
+                
+                   {{-- Table Card --}}
+                   
+                <div class="data">
+                    @include('orders.index-table')
                 </div>
+
             </div>
         </div>
     </div>
@@ -198,8 +168,39 @@
     <script>
             // Datatables
         $(document).ready( function () {
-            $('#orders-list-table').DataTable();
-        } );
+
+            $('#orders-list-table').DataTable({
+                columnDefs: [                   // Columns
+                    { targets: [1, 2], className: 'dt-body-left' },  
+                    { targets: [0, 3, 4, 5], className: 'dt-body-center' } 
+                ],
+
+                headerCallback: function(thead, data, start, end, display) { // Head
+                    $(thead).find('th').addClass('dt-head-center');
+                },
+            });
+            
+            $('#filter-form').on('submit', function(e) {
+                e.preventDefault(); 
+
+                $.ajax({
+
+                    url: "{{ route('orders.index') }}", 
+                    method: 'get', 
+                    data: $(this).serialize(), 
+
+                    success: function(data) {
+                        $('.data').html(data);
+                    },
+
+                    error: function(xhr, status, error) {
+                        console.error(xhr);
+                    }
+                });
+            });
+        });
+
+
 
         document.addEventListener('DOMContentLoaded', function() {
             const selectAllCheckbox = document.getElementById('select-all');

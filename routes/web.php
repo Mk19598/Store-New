@@ -18,8 +18,8 @@ Route::group(['middleware' => 'auth'], function () {
     // Orders
 
     Route::group(['prefix' => 'orders' ], function () {
-        Route::get('index', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
-        Route::get('store', [App\Http\Controllers\OrderController::class, 'orders_store'])->name('orders.store');
+        Route::get('list', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+        Route::get('store-update', [App\Http\Controllers\OrderController::class, 'orders_store'])->name('orders.store');
         Route::get('receipt-pdf/{order_uuid}', [App\Http\Controllers\OrderController::class, 'orders_receipt_pdf'])->name('orders.receipt_pdf');
     });
 
@@ -36,11 +36,14 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'products' ], function () {
         Route::get('warehouse-pickings', [App\Http\Controllers\ProductController::class, 'warehouse_pickings'])->name('products.warehouse_pickings');
-        Route::get('warehouse-picking-products', [App\Http\Controllers\ProductController::class, 'warehouse_picking_products'])->name('products.warehouse_picking_products');
+        Route::post('warehouse-picking-products', [App\Http\Controllers\ProductController::class, 'warehouse_picking_products'])->name('products.warehouse_picking_products');
     });
 
     Route::group(['prefix' => 'inventory' ], function () {
         Route::resource('inventory', App\Http\Controllers\InventoryManagementController::class);
     });
-
+    
+    Route::group(['prefix' => 'settings' ], function () {
+        Route::get('index', [App\Http\Controllers\SiteSettingController::class, 'index'])->name('settings.index');
+    });
 });

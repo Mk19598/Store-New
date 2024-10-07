@@ -43,7 +43,7 @@ class InventoryManagementController extends Controller
 
             
         $data = array(
-                            'title'  => CustomHelper::Get_website_name(). " | Inventory Management" ,
+                            'title'  => "Inventory Management | " .CustomHelper::Get_website_name() ,
                             'inventory_count' =>  InventoryManagement::count(),
                             'inventory_data' => InventoryManagement::get(),
 
@@ -53,10 +53,8 @@ class InventoryManagementController extends Controller
             
         } catch (\Throwable $th) {
 
-            return response()->json(array(
-                "status" => false,
-                "message" => $th->getMessage() ,
-            ), 400);
+            return view('layouts.404-Page');
+
         }
     }
 

@@ -17,6 +17,7 @@ use App\Models\WoocommerceProduct;
 use App\Models\DukaanOrder;
 use App\Models\DukaanBuyer;
 use App\Models\DukaanProduct;
+use App\Models\Cerenditals;
 
 class OrderController extends Controller
 {
@@ -55,10 +56,12 @@ class OrderController extends Controller
 
     private function WooCommerce(){
 
+        $woocommerce_Cerenditals = Cerenditals::first();
+
         $woocommerce = new Client(
-            env('woocommerce_url'), 
-            env('woocommerce_customer_key') ,       
-            env('woocommerce_consumer_secret'),    
+            $woocommerce_Cerenditals->woocommerce_url, 
+            $woocommerce_Cerenditals->woocommerce_customer_key,       
+            $woocommerce_Cerenditals->woocommerce_secret_key,    
             [
                 'wp_api' => true,   
                 'version' => 'wc/v3' 
@@ -66,8 +69,6 @@ class OrderController extends Controller
         );
 
         $orders = $woocommerce->get('orders');
-
-        // dd($woocommerce->get('settings/general'));
 
         $unique_id =  substr(uniqid(mt_rand(), true), 0, 11);
         
@@ -238,7 +239,7 @@ class OrderController extends Controller
 
     private function Dukaan(){
 
-        $Dukaan_API_TOKEN = env('DUKAAN_API_TOKEN'); 
+        $Dukaan_API_TOKEN = Cerenditals::pluck('dukkan_api_token')->first();
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $Dukaan_API_TOKEN, 'Accept' => 'application/json',])
                         ->get('https://api.mydukaan.io/api/seller-front/order-list/', [

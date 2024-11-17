@@ -6,7 +6,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::group(['middleware' => 'auth'], function () {
 

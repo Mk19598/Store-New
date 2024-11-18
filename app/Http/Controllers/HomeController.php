@@ -78,8 +78,8 @@ class HomeController extends Controller
 
             $data = array( 'title'  => "Dashboard | ".CustomHelper::Get_website_name()  ,
                             'order_count' => $orders->count(),
-                            'woocommerce_order_count' => $orders->where('order_vai','woocommerce')->count(),
                             'Dukkan_order_count' => $orders->where('order_vai','Dukkan')->count(),
+                            'woocommerce_order_count' =>  Order::query()->where('order_vai','woocommerce')->count(),
                             'today' => Carbon::today()->format('Y-m-d') ,
                             'statusCounts' => $statusCounts ,
                             'daysOfWeekCounts' => $daysOfWeekCounts,
@@ -88,6 +88,7 @@ class HomeController extends Controller
             return view('dashboard.home', $data);
         
         } catch (\Throwable $th) {
+            // return $th->getMessage();
             return view('layouts.404-Page');
         }
     }

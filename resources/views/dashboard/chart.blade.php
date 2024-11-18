@@ -197,7 +197,7 @@
     var barChartConfig = {
         type: 'doughnut',
         data: {
-            labels: ['Pending', 'Processing', 'Completed', 'Refunded', 'Cancelled', 'Failed'],
+            labels: ['Pending', 'Processing', 'Completed', 'Refunded', 'Cancelled', 'Failed','shipped','default'],
             datasets: [{
                 label: 'Orders',
                 backgroundColor: [
@@ -206,7 +206,9 @@
                     '#a3e4d7',  
                     '#f9e79f', 
                     '#ec7063',  
-                    'rgba(255, 99, 71, 0.6)'    
+                    'rgba(255, 99, 71, 0.6)',
+                    '#d7bde2',    
+                    '#85929e',    
                 ],
                 data: [
                     "{{ $statusCounts['pending'] }}",
@@ -214,7 +216,9 @@
                     "{{ $statusCounts['completed'] }}",
                     "{{ $statusCounts['refunded'] }}",
                     "{{ $statusCounts['cancelled'] }}",
-                    "{{ $statusCounts['failed'] }}"
+                    "{{ $statusCounts['failed'] }}",
+                    "{{ $statusCounts['shipped'] }}",
+                    "{{ $statusCounts['default'] }}",
                 ]
             }]
         },

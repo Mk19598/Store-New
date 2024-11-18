@@ -33,17 +33,19 @@ class HomeController extends Controller
     public function dashboard()
     {
         try {
-        
                 // Status
+                
             $statusMap = [
-                'pending'    => ['pending', '1'],
-                'completed'  => ['completed', '5'],
-                'cancelled'  => ['cancelled', '4', '7'],
-                'failed'     => ['failed', '6'],
-                'refunded'   => ['refunded', '10'],
-                'processing' => ['processing', '3'],
+                'pending'    => ['pending','on-hold', '0'],  
+                'completed'  => ['completed', '1', '5'],  
+                'cancelled'  => ['cancelled', '2', '4', '7','-1'],  
+                'failed'     => ['failed', '6'],  
+                'refunded'   => ['refunded', '10'], 
+                'processing' => ['processing', '3'],  
+                'shipped'    => [ '3'],  
+                'default'    => ['default']
             ];
-            
+
             $statusCounts = collect($statusMap)->mapWithKeys(function ($statusValues, $statusName) {
                 return [$statusName => Order::whereIn('status', $statusValues)->count()];
             })->toArray();

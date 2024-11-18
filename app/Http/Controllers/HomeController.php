@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http; 
+use App\Helpers\CustomHelper;
+use Carbon\Carbon;
+use App\Models\Order;
 
 class HomeController extends Controller
 {
@@ -28,6 +32,63 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        return view('home');
+        try {
+        
+            $orders = Order::query();
+                
+                // Status
+            $statusMap = [
+                'pending'    => ['pending', '1'],
+                'completed'  => ['completed', '5'],
+                'cancelled'  => ['cancelled', '4', '7'],
+                'failed'     => ['failed', '6'],
+                'refunded'   => ['refunded', '10'],
+                'processing' => ['processing', '3'],
+            ];
+            
+            $statusCounts = collect($statusMap)->mapWithKeys(function ($statusValues, $statusName) {
+                return [$statusName => Order::whereIn('status', $statusValues)->count()];
+            })->toArray();
+
+                // Orders Chart
+
+            $startOfWeek = Carbon::now()->startOfWeek();
+            $endOfWeek = Carbon::now()->endOfWeek();
+            
+            $ordersWeek = $orders
+                ->whereBetween('order_created_at', [$startOfWeek, $endOfWeek])
+                ->get()
+                ->groupBy(function ($order) {
+                    return Carbon::parse($order->order_created_at)->format('l'); 
+                });
+            
+            $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            $daysOfWeekCounts = [];
+            
+            foreach ($days as $day) {
+                $dailyOrders = $ordersWeek->get($day, collect());
+            
+                $daysOfWeekCounts[$day] = [
+                    'order_count' => $dailyOrders->count(),
+                    'woocommerce_order_count' => $dailyOrders->where('order_vai', 'woocommerce')->count(),
+                    'Dukkan_order_count' => $dailyOrders->where('order_vai', 'Dukkan')->count(),
+                ];
+            }
+                
+            $data = array( 'title'  => "Dashboard | ".CustomHelper::Get_website_name()  ,
+                            'order_count' => $orders->count(),
+                            'woocommerce_order_count' => $orders->where('order_vai','woocommerce')->count(),
+                            'Dukkan_order_count' => $orders->where('order_vai','Dukkan')->count(),
+                            'today' => Carbon::today()->format('Y-m-d') ,
+                            'statusCounts' => $statusCounts ,
+                            'daysOfWeekCounts' => $daysOfWeekCounts,
+                        );
+
+            return view('dashboard.home', $data);
+        
+        } catch (\Throwable $th) {
+            return view('layouts.404-Page');
+        }
     }
 }

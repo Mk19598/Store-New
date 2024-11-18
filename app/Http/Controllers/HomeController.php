@@ -34,8 +34,6 @@ class HomeController extends Controller
     {
         try {
         
-            $orders = Order::query();
-                
                 // Status
             $statusMap = [
                 'pending'    => ['pending', '1'],
@@ -55,7 +53,7 @@ class HomeController extends Controller
             $startOfWeek = Carbon::now()->startOfWeek();
             $endOfWeek = Carbon::now()->endOfWeek();
             
-            $ordersWeek = $orders
+            $ordersWeek = Order::query()
                 ->whereBetween('order_created_at', [$startOfWeek, $endOfWeek])
                 ->get()
                 ->groupBy(function ($order) {
@@ -76,6 +74,8 @@ class HomeController extends Controller
                 ];
             }
                 
+            $orders = Order::query();
+
             $data = array( 'title'  => "Dashboard | ".CustomHelper::Get_website_name()  ,
                             'order_count' => $orders->count(),
                             'woocommerce_order_count' => $orders->where('order_vai','woocommerce')->count(),

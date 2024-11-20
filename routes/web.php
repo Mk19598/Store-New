@@ -21,6 +21,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('list', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
         Route::get('store-update', [App\Http\Controllers\OrderController::class, 'orders_store'])->name('orders.store');
         Route::get('receipt-pdf/{order_uuid}', [App\Http\Controllers\OrderController::class, 'orders_receipt_pdf'])->name('orders.receipt_pdf');
+        Route::post('tracking-links', [App\Http\Controllers\OrderController::class, 'tracking_links'])->name('orders.tracking_links');
+        Route::get('tracking-links/{orderId}', [App\Http\Controllers\OrderController::class, 'getTrackingLinks']);
     });
 
     Route::group(['prefix' => 'email' ], function () {
@@ -51,4 +53,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'settings' ], function () {
         Route::post('cerenditals', [App\Http\Controllers\CerenditalsController::class, 'update'])->name('cerenditals.index');
     });
+
+
+    Route::group(['prefix' => 'shipping' ], function () {
+        Route::get('label', [App\Http\Controllers\ShippingManagementController::class, 'label'])->name('shipping.label');
+    });
+
 });

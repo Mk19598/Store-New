@@ -5,19 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class ShippingLink extends Model
 {
     use HasFactory;
 
-    protected $table = 'orders';
+    protected $table = 'shipping_links';
 
     protected $guarded = array();
     
     public static $rules = array();
-
-    public function trackingLinks()
-    {
-        return $this->hasMany(ShippingLink::class, 'order_id', 'order_uuid');
-    }
-
 }

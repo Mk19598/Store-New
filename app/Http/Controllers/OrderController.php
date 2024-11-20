@@ -18,6 +18,7 @@ use App\Models\DukaanOrder;
 use App\Models\DukaanBuyer;
 use App\Models\DukaanProduct;
 use App\Models\Cerenditals;
+use App\Models\ShippingLink;
 
 class OrderController extends Controller
 {
@@ -505,7 +506,7 @@ class OrderController extends Controller
 
                                     return $query->orderBy('order_created_at', 'asc');
 
-                                    })->get()->map(function($item) {
+                                    })->with('trackingLinks')->get()->map(function($item) {
 
                                         $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
 
@@ -547,6 +548,8 @@ class OrderController extends Controller
                                             $item['status'] = ucfirst(strtolower($dukkanStatus['label']));
                                             $item['status_color'] = $dukkanStatus['color'];
                                         }
+
+                                        $item['tracking_links'] = $item->trackingLinks->pluck('tracking_link');
 
                                         return $item;
                                 });
@@ -621,4 +624,58 @@ class OrderController extends Controller
 
         return $pdf->stream('receipt.pdf');
     }
+
+
+    public function tracking_links(Request $request)
+    {
+        $data = $request->all();
+        
+        $trackingLinks = $data['tracking_links'] ?? [];
+
+        ShippingLink::where('order_id', $data['order_id'])->delete();
+    
+        foreach ($trackingLinks as $trackingLink) {
+            ShippingLink::create([
+                'order_id' => $data['order_id'],
+                'tracking_link' => $trackingLink,
+            ]);
+        }
+    
+    
+        return redirect()->route('orders.index');
+
+    }
+
+    public function getTrackingLinks($orderId)
+    {
+        $order = Order::where('order_uuid', $orderId)->first();
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        $trackingLinks = $order->trackingLinks;
+
+        return response()->json([
+            'tracking_links' => $trackingLinks->pluck('tracking_link')->toArray(),
+        ]);
+    }
+
+    public function saveTrackingLinks(Request $request)
+    {
+        $orderId = $request->input('order_id');
+        $trackingLinks = $request->input('tracking_links', []);
+
+        $order = Order::find($orderId);
+
+        if ($order) {
+            foreach ($trackingLinks as $link) {
+                $order->trackingLinks()->create(['tracking_link' => $link]);
+            }
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Order not found']);
+    }
+
 }

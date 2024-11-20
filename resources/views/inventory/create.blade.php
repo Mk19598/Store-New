@@ -25,6 +25,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="inventory" class="form-label">{{ __('Inventory') }}</label>
+                        <input type="text" class="form-control" id="inventory" name="inventory" value="{{ old('inventory') }}" required>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="barcode" class="form-label">{{ __('BarCode') }}</label>
                         <input type="text" class="form-control" id="barcode" name="barcode" value="{{ old('barcode') }}" required>
                     </div>

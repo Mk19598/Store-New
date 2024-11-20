@@ -23,6 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('receipt-pdf/{order_uuid}', [App\Http\Controllers\OrderController::class, 'orders_receipt_pdf'])->name('orders.receipt_pdf');
         Route::post('tracking-links', [App\Http\Controllers\OrderController::class, 'tracking_links'])->name('orders.tracking_links');
         Route::get('tracking-links/{orderId}', [App\Http\Controllers\OrderController::class, 'getTrackingLinks']);
+        Route::post('shipping-lable', [App\Http\Controllers\OrderController::class, 'shipping_lable'])->name('orders.shipping_lable');
     });
 
     Route::group(['prefix' => 'email' ], function () {
@@ -42,7 +43,12 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'inventory' ], function () {
-        Route::resource('inventory', App\Http\Controllers\InventoryManagementController::class);
+        Route::get('index', [App\Http\Controllers\InventoryManagementController::class, 'Index'])->name('inventory.index');
+        Route::get('create', [App\Http\Controllers\InventoryManagementController::class, 'create'])->name('inventory.create');
+        Route::post('store', [App\Http\Controllers\InventoryManagementController::class, 'store'])->name('inventory.store');
+        Route::get('edit/{id}', [App\Http\Controllers\InventoryManagementController::class, 'edit'])->name('inventory.edit');
+        Route::put('update/{id}', [App\Http\Controllers\InventoryManagementController::class, 'update'])->name('inventory.update');
+        Route::delete('destroy/{id}', [App\Http\Controllers\InventoryManagementController::class, 'destroy'])->name('inventory.destroy');
     });
     
     Route::group(['prefix' => 'settings' ], function () {

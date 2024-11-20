@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('barcode')->nullable();
             $table->string('barcode_image')->nullable();
             $table->string('product_type')->nullable();
+            $table->string('inventory')->nullable();
             $table->integer('status')->nullable();
             $table->timestamps();
         });

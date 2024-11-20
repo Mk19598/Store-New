@@ -229,7 +229,26 @@
             }
             // In a real application, you would call an API endpoint here
             console.log(`Bulk ${type} for orders:`, selectedOrders);
-            alert(`Generating ${type} for ${selectedOrders.length} orders.`);
+            // alert(`Generating ${type} for ${selectedOrders.length} orders.`);
+
+                $.ajax({
+                url: '{{ route('orders.shipping_lable') }}',  
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    selectedOrders: selectedOrders
+                },
+                success: function (response) {
+                    console.log("Server response:", response);
+                    // setTimeout(function () {
+                    //     location.reload(); 
+                    // }, 2000);
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert('An error occurred while saving tracking links.');
+                }
+            });
         }
 
         function printOrder(orderId, type) {

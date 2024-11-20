@@ -52,6 +52,15 @@
                                 @enderror
                             </div>
 
+                            {{-- Inventory --}}
+                            <div class="mb-3">
+                                <label for="inventory" class="form-label">Inventory</label>
+                                <input type="text" class="form-control" id="inventory" name="inventory" value="{{ old('inventory', $inventory->inventory) }}" required>
+                                @error('inventory')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
                             {{-- BarCode --}}
                             <div class="mb-3">
                                 <label for="barcode" class="form-label">Barcode</label>

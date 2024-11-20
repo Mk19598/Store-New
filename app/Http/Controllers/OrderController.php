@@ -660,22 +660,56 @@ class OrderController extends Controller
         ]);
     }
 
-    public function saveTrackingLinks(Request $request)
+    public function shipping_lable(Request $request)
     {
-        $orderId = $request->input('order_id');
-        $trackingLinks = $request->input('tracking_links', []);
+        $orderId = $request->input('selectedOrders');
 
-        $order = Order::find($orderId);
+        $orders = Order::whereIn('id', $orderId)->get();
 
-        if ($order) {
-            foreach ($trackingLinks as $link) {
-                $order->trackingLinks()->create(['tracking_link' => $link]);
+        $orders = Order::query()->where('order_uuid',$order_uuid)->get()->map(function($item){
+
+            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
+
+            if ($item->order_vai == "Dukkan" ) {
+
+                $dukaanProducts = DukaanProduct::where('order_uuid', $item->order_uuid)->get();
+
+                $totalCostSum = $dukaanProducts->sum('line_item_total_cost');
+                
+                $item['product_details'] = $dukaanProducts->map(function($item) use ($totalCostSum){
+                    $item['product_name'] = $item->product_slug;
+                    $item['total_cost']  = $item->line_item_total_cost;
+                    $item['price']      = $item->selling_price;
+                    $item['sum_total_cost'] = $totalCostSum; 
+                    return $item;
+                });
             }
 
-            return response()->json(['success' => true]);
-        }
+            if ($item->order_vai == "woocommerce") {
 
-        return response()->json(['success' => false, 'message' => 'Order not found']);
+                $WoocommerceProduct = WoocommerceProduct::where('order_uuid', $item->order_uuid)->get();
+
+                $totalCostSum = $WoocommerceProduct->sum('total');
+
+                $item['product_details'] = $WoocommerceProduct->map(function($item) use($totalCostSum) {
+                    $item['product_name'] = $item->name;
+                    $item['total_cost'] = $item->total;
+                    $item['price']     = $item->price;
+                    $item['sum_total_cost'] = $totalCostSum; 
+
+                    return $item;
+                });
+            }
+
+            return $item;
+        })->first();
+
+        $data = array(
+            'orders' => $orders
+        );
+
+        
+        return $orders ;
     }
 
 }

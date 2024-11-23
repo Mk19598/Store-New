@@ -485,10 +485,10 @@ class OrderController extends Controller
                     $statusMap = [
                         'pending'    => ['pending', '0'],
                         'completed'  => ['completed', 5],
-                        'cancelled'  => ['cancelled', 4, 7],
-                        'failed'     => ['failed', 6],
+                        'cancelled'  => ['cancelled','failed', 4, 7 , 6],
                         'refunded'   => ['refunded', 10],
-                        'processing' => ['processing', 3],
+                        'processing' => ['processing' ],
+                        'shipped'    => [ 'order-shipped', 3],
                     ];
                 
                     if (isset($statusMap[$request->status])) {
@@ -519,6 +519,7 @@ class OrderController extends Controller
                                                 'cancelled'  => 'cancelled',
                                                 'refunded'   => 'refunded',
                                                 'failed'     => 'cancelled',
+                                                'order-shipped' => 'shipped',
                                                 'default'    => 'cancelled'
                                             ],
 

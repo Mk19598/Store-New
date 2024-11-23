@@ -13,10 +13,10 @@ use App\Helpers\CustomHelper;
 use App\Models\WoocommerceOrder;
 use App\Models\WoocommerceBuyer;
 use App\Models\WoocommerceShipping;
-use App\Models\WoocommerceProduct;
+use App\Models\WoocommerceOrderProduct;
 use App\Models\DukaanOrder;
 use App\Models\DukaanBuyer;
-use App\Models\DukaanProduct;
+use App\Models\DukaanOrderProduct;
 use App\Models\Cerenditals;
 use App\Models\ShippingLink;
 
@@ -192,7 +192,7 @@ class OrderController extends Controller
 
                 foreach($order->line_items as $key => $order_product){
 
-                    WoocommerceProduct::create([
+                    WoocommerceOrderProduct::create([
                         'order_id' => $order_product->id ,
                         'order_vai' => 'woocommerce',
                         'order_uuid' => $order->order_key, 
@@ -375,7 +375,7 @@ class OrderController extends Controller
 
                     foreach ($order_response['data']['products'] as $key => $orders_products) {
 
-                        DukaanProduct::create([ 
+                        DukaanOrderProduct::create([ 
                             'order_id'    => $order_response['data']['display_order_id'],
                             'order_uuid'  => $order_response['data']['uuid'],
                             'order_vai'   => 'Dukkan',
@@ -585,11 +585,11 @@ class OrderController extends Controller
 
             if ($item->order_vai == "Dukkan" ) {
 
-                $dukaanProducts = DukaanProduct::where('order_uuid', $item->order_uuid)->get();
+                $DukaanOrderProducts = DukaanOrderProduct::where('order_uuid', $item->order_uuid)->get();
 
-                $totalCostSum = $dukaanProducts->sum('line_item_total_cost');
+                $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
                 
-                $item['product_details'] = $dukaanProducts->map(function($item) use ($totalCostSum){
+                $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
                     $item['product_name'] = $item->product_slug;
                     $item['total_cost']  = $item->line_item_total_cost;
                     $item['price']      = $item->selling_price;
@@ -600,11 +600,11 @@ class OrderController extends Controller
 
             if ($item->order_vai == "woocommerce") {
 
-                $WoocommerceProduct = WoocommerceProduct::where('order_uuid', $item->order_uuid)->get();
+                $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_uuid', $item->order_uuid)->get();
 
-                $totalCostSum = $WoocommerceProduct->sum('total');
+                $totalCostSum = $WoocommerceOrderProduct->sum('total');
 
-                $item['product_details'] = $WoocommerceProduct->map(function($item) use($totalCostSum) {
+                $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
                     $item['product_name'] = $item->name;
                     $item['total_cost'] = $item->total;
                     $item['price']     = $item->price;
@@ -673,11 +673,11 @@ class OrderController extends Controller
 
             if ($item->order_vai == "Dukkan" ) {
 
-                $dukaanProducts = DukaanProduct::where('order_uuid', $item->order_uuid)->get();
+                $DukaanOrderProducts = DukaanOrderProduct::where('order_uuid', $item->order_uuid)->get();
 
-                $totalCostSum = $dukaanProducts->sum('line_item_total_cost');
+                $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
                 
-                $item['product_details'] = $dukaanProducts->map(function($item) use ($totalCostSum){
+                $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
                     $item['product_name'] = $item->product_slug;
                     $item['total_cost']  = $item->line_item_total_cost;
                     $item['price']      = $item->selling_price;
@@ -688,11 +688,11 @@ class OrderController extends Controller
 
             if ($item->order_vai == "woocommerce") {
 
-                $WoocommerceProduct = WoocommerceProduct::where('order_uuid', $item->order_uuid)->get();
+                $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_uuid', $item->order_uuid)->get();
 
-                $totalCostSum = $WoocommerceProduct->sum('total');
+                $totalCostSum = $WoocommerceOrderProduct->sum('total');
 
-                $item['product_details'] = $WoocommerceProduct->map(function($item) use($totalCostSum) {
+                $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
                     $item['product_name'] = $item->name;
                     $item['total_cost'] = $item->total;
                     $item['price']     = $item->price;

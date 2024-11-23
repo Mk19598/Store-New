@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Automattic\WooCommerce\Client;
 use App\Helpers\CustomHelper;
-use App\Models\WoocommerceProduct;
-use App\Models\DukaanProduct;
+use App\Models\WoocommerceOrderProduct;
+use App\Models\DukaanOrderProduct;
 use App\Models\Order;
 
 class ProductPickingController extends Controller
@@ -36,21 +36,21 @@ class ProductPickingController extends Controller
     public function filter(Request $request) {
 
 
-        $dukaanProductQuery = DukaanProduct::query()->select('orders.status','dukaan_products.*', DB::raw('SUM(quantity) as total_quantity'))
-                                                ->join('orders','orders.order_uuid','=','dukaan_products.order_uuid');
+        $DukaanOrderProductQuery = DukaanOrderProduct::query()->select('orders.status','dukaan_order_products.*', DB::raw('SUM(quantity) as total_quantity'))
+                                                ->join('orders','orders.order_uuid','=','dukaan_order_products.order_uuid');
 
-        $woocommerceProductQuery = WoocommerceProduct::query()->select('orders.status','woocommerce_products.*', DB::raw('SUM(quantity) as total_quantity'))
-                                                ->join('orders','orders.order_uuid','=','woocommerce_products.order_uuid');
+        $WoocommerceOrderProductQuery = WoocommerceOrderProduct::query()->select('orders.status','woocommerce_order_products.*', DB::raw('SUM(quantity) as total_quantity'))
+                                                ->join('orders','orders.order_uuid','=','woocommerce_order_products.order_uuid');
 
         
-        $this->applyFilters($dukaanProductQuery, $request);
-        $this->applyFilters($woocommerceProductQuery, $request);
+        $this->applyFilters($DukaanOrderProductQuery, $request);
+        $this->applyFilters($WoocommerceOrderProductQuery, $request);
         
-        $dukaanProducts = $dukaanProductQuery->groupBy('product_id')->get();
+        $DukaanOrderProducts = $DukaanOrderProductQuery->groupBy('product_id')->get();
     
-        $woocommerceProducts = $woocommerceProductQuery->groupBy('product_id')->get();
+        $WoocommerceOrderProducts = $WoocommerceOrderProductQuery->groupBy('product_id')->get();
         
-        $query = $dukaanProducts->concat($woocommerceProducts);
+        $query = $DukaanOrderProducts->concat($WoocommerceOrderProducts);
 
         $data = [
             'title' =>  "Product Pickup | " .CustomHelper::Get_website_name() ,

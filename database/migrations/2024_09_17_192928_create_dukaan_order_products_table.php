@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dukaan_products', function (Blueprint $table) {
+        Schema::create('dukaan_order_products', function (Blueprint $table) {
             $table->id();
             $table->string('order_id', 100)->nullable();
             $table->longText('order_uuid', 100)->nullable();
@@ -68,6 +68,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dukaan_products');
+        Schema::dropIfExists('dukaan_order_products');
     }
 };

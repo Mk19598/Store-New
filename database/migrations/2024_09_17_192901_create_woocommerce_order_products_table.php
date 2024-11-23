@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('woocommerce_products', function (Blueprint $table) {
+        Schema::create('woocommerce_order_products', function (Blueprint $table) {
             $table->id();
             $table->string('order_id', 100)->nullable();
             $table->longText('order_uuid', 100)->nullable();
@@ -41,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('woocommerce_products');
+        Schema::dropIfExists('woocommerce_order_products');
     }
 };

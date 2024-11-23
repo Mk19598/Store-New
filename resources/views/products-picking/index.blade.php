@@ -9,7 +9,7 @@
                 {{-- Filter Card --}}
         <div class="card mb-4">
             <div class="card-body">
-                <form method="post" action="{{ route('picking.products.index') }}" id="filter-form">
+                <form method="post" action="{{ route('products-picking.index') }}" id="filter-form">
                     @csrf
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -64,7 +64,7 @@
                    {{-- Table Card --}}
                    
         <div class="data">
-            @include('products.warehouse.index-table')
+            @include('products-picking.index-table')
         </div>
     </div>
 @endsection
@@ -90,7 +90,7 @@
             $('#filter-form').on('submit', function(e) {
                 e.preventDefault(); 
                 $.ajax({
-                    url: "{{ route('picking.products.filter') }}", 
+                    url: "{{ route('products-picking.filter') }}", 
                     method: 'post', 
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}' 

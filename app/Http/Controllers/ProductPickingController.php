@@ -25,7 +25,7 @@ class ProductPickingController extends Controller
                 'query' => [],
             );
     
-            return view('products.warehouse.index',$data);
+            return view('products-picking.index',$data);
 
         } catch (\Throwable $th) {
 
@@ -58,7 +58,7 @@ class ProductPickingController extends Controller
             'query' => $query,
         ];
     
-        return view('products.warehouse.index-table', $data)->render();
+        return view('products-picking.index-table', $data)->render();
     }
     
     private function applyFilters($query, $request) {

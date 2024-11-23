@@ -40,7 +40,7 @@
                                 <option value="pending" > {{ ucwords(__('pending')) }} </option>
                                 <option value="processing">{{ ucwords(__('processing')) }}  </option>
                                 <option value="shipped" >{{ ucwords(__('shipped')) }}  </option>
-                                    <option value="completed" > {{ ucwords(__('completed')) }}  </option>
+                                <option value="completed" > {{ ucwords(__('completed')) }}  </option>
                                 <option value="cancelled" > {{ ucwords(__('cancelled / failed')) }} </option>
                                 <option value="refunded" >{{ ucwords(__('refunded')) }}  </option>
                                 <option value="on-hold" >{{ ucwords(__('on-hold (woocommerce)')) }} </option>

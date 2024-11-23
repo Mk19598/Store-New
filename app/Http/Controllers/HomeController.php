@@ -46,7 +46,6 @@ class HomeController extends Controller
                 'default'    => ['default']
             ];
 
-
             $statusCounts = collect($statusMap)->mapWithKeys(function ($statusValues, $statusName) {
                 return [$statusName => Order::whereIn('status', $statusValues)->count()];
             })->toArray();

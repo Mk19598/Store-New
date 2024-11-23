@@ -14,9 +14,9 @@ use App\Models\WoocommerceProduct;
 use App\Models\DukaanProduct;
 use App\Models\Order;
 
-class ProductController extends Controller
+class ProductPickingController extends Controller
 {
-    public function warehouse_pickings(Request $request)
+    public function index(Request $request)
     {
         try {
             $data = array(
@@ -33,7 +33,7 @@ class ProductController extends Controller
         }
     }
 
-    public function warehouse_picking_products(Request $request) {
+    public function filter(Request $request) {
 
 
         $dukaanProductQuery = DukaanProduct::query()->select('orders.status','dukaan_products.*', DB::raw('SUM(quantity) as total_quantity'))
@@ -85,11 +85,12 @@ class ProductController extends Controller
 
             $statusMap = [
                 'pending'    => ['pending', '0'],
+                'processing' => ['processing'],
                 'completed'  => ['completed', 5],
-                'cancelled'  => ['cancelled', 4, 7],
+                'cancelled'  => ['cancelled', 4, 7 ,7,-1],
                 'failed'     => ['failed', 6],
                 'refunded'   => ['refunded', 10],
-                'processing' => ['processing', 3],
+                'shipped'    => [ 'order-shipped'],  
             ];
         
             if (isset($statusMap[$request->status])) {
@@ -97,7 +98,6 @@ class ProductController extends Controller
             }else{
                 $query->where('orders.status', $request->status);
             }
-        
         }
     }
 }

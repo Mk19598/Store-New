@@ -18,6 +18,7 @@ use App\Models\DukaanOrder;
 use App\Models\DukaanBuyer;
 use App\Models\DukaanProduct;
 use App\Models\Cerenditals;
+use App\Models\ShippingLink;
 
 class OrderController extends Controller
 {
@@ -505,7 +506,7 @@ class OrderController extends Controller
 
                                     return $query->orderBy('order_created_at', 'asc');
 
-                                    })->get()->map(function($item) {
+                                    })->with('trackingLinks')->get()->map(function($item) {
 
                                         $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
 
@@ -548,6 +549,8 @@ class OrderController extends Controller
                                             $item['status'] = ucfirst(strtolower($dukkanStatus['label']));
                                             $item['status_color'] = $dukkanStatus['color'];
                                         }
+
+                                        $item['tracking_links'] = $item->trackingLinks->pluck('tracking_link');
 
                                         return $item;
                                 });
@@ -622,4 +625,92 @@ class OrderController extends Controller
 
         return $pdf->stream('receipt.pdf');
     }
+
+
+    public function tracking_links(Request $request)
+    {
+        $data = $request->all();
+        
+        $trackingLinks = $data['tracking_links'] ?? [];
+
+        ShippingLink::where('order_id', $data['order_id'])->delete();
+    
+        foreach ($trackingLinks as $trackingLink) {
+            ShippingLink::create([
+                'order_id' => $data['order_id'],
+                'tracking_link' => $trackingLink,
+            ]);
+        }
+    
+    
+        return redirect()->route('orders.index');
+
+    }
+
+    public function getTrackingLinks($orderId)
+    {
+        $order = Order::where('order_uuid', $orderId)->first();
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        $trackingLinks = $order->trackingLinks;
+
+        return response()->json([
+            'tracking_links' => $trackingLinks->pluck('tracking_link')->toArray(),
+        ]);
+    }
+
+    public function shipping_lable(Request $request)
+    {
+        $orderId = $request->input('selectedOrders');
+
+        $orders = Order::whereIn('id', $orderId)->get();
+
+        $orders = Order::query()->where('order_uuid',$order_uuid)->get()->map(function($item){
+
+            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
+
+            if ($item->order_vai == "Dukkan" ) {
+
+                $dukaanProducts = DukaanProduct::where('order_uuid', $item->order_uuid)->get();
+
+                $totalCostSum = $dukaanProducts->sum('line_item_total_cost');
+                
+                $item['product_details'] = $dukaanProducts->map(function($item) use ($totalCostSum){
+                    $item['product_name'] = $item->product_slug;
+                    $item['total_cost']  = $item->line_item_total_cost;
+                    $item['price']      = $item->selling_price;
+                    $item['sum_total_cost'] = $totalCostSum; 
+                    return $item;
+                });
+            }
+
+            if ($item->order_vai == "woocommerce") {
+
+                $WoocommerceProduct = WoocommerceProduct::where('order_uuid', $item->order_uuid)->get();
+
+                $totalCostSum = $WoocommerceProduct->sum('total');
+
+                $item['product_details'] = $WoocommerceProduct->map(function($item) use($totalCostSum) {
+                    $item['product_name'] = $item->name;
+                    $item['total_cost'] = $item->total;
+                    $item['price']     = $item->price;
+                    $item['sum_total_cost'] = $totalCostSum; 
+
+                    return $item;
+                });
+            }
+
+            return $item;
+        })->first();
+
+        $data = array(
+            'orders' => $orders
+        );
+
+        
+        return $orders ;
+    }
+
 }

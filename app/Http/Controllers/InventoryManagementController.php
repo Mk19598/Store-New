@@ -71,7 +71,7 @@ class InventoryManagementController extends Controller
         try
         {
 
-            $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'barcode' => 'required', ]);
+            $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'inventory' => 'required',  'barcode' => 'required', ]);
 
             $generator = new BarcodeGeneratorPNG();
             $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128);
@@ -118,7 +118,7 @@ class InventoryManagementController extends Controller
         try
         {
 
-            $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'barcode' => 'required', ]);
+            $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'inventory' => 'required', 'barcode' => 'required', ]);
 
             $inventory = InventoryManagement::findOrFail($id);
 

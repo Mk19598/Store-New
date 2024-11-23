@@ -41,6 +41,7 @@
                                 <th>{{ ucwords(__('Product')) }}</th>
                                 <th>{{ ucwords(__('Weight')) }}</th>
                                 <th>{{ ucwords(__('SKU')) }}</th>
+                                <th>{{ ucwords(__('Inventory')) }}</th>
                                 <th>{{ ucwords(__('BarCode')) }}</th>
                                 <th>{{ ucwords(__('Barcode Image')) }}</th>
                                 <th>{{ ucwords(__('Actions')) }}</th>
@@ -54,6 +55,7 @@
                                     <td>{{ @$inventory->product_name }}</td>
                                     <td>{{ @$inventory->weight }}</td>
                                     <td>{{ @$inventory->sku }}</td>
+                                    <td>{{ @$inventory->inventory }}</td>
                                     <td>{{ @$inventory->barcode }}</td>
                                     <td>
                                         <img src="{{ URL::to('storage/app/private/public/barcodes'.'/'.$inventory->barcode_image) }}" alt="Barcode Image" width="150" />

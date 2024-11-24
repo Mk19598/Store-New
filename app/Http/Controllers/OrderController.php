@@ -308,6 +308,8 @@ class OrderController extends Controller
                         'buyer_pin'    => $order_response['data']['order_meta']['buyer_address']['pin'], 
                         'buyer_landmark' => $order_response['data']['order_meta']['buyer_address']['landmark'], 
                         
+                        'buyer_shipping_first_name' => $order_response['data']['order_meta']['buyer_address']['buyer']['name'],
+                        'buyer_shipping_last_name'  => null,
                         'buyer_shipping_address_1' => $order_response['data']['order_meta']['buyer_address']['line'], 
                         'buyer_shipping_address_2' => $order_response['data']['order_meta']['buyer_address']['line_1'], 
                         'buyer_shipping_city'   => $order_response['data']['order_meta']['buyer_address']['city'], 

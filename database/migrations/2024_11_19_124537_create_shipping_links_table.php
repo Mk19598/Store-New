@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('shipping_links', function (Blueprint $table) {
             $table->id();
             $table->string('order_id')->nullable();
+            $table->integer('courier_id')->nullable();
             $table->longText('tracking_link')->nullable();
             $table->timestamps();
         });

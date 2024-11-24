@@ -19,6 +19,7 @@ use App\Models\DukaanBuyer;
 use App\Models\DukaanProduct;
 use App\Models\Cerenditals;
 use App\Models\ShippingLink;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class OrderController extends Controller
 {
@@ -628,18 +629,37 @@ class OrderController extends Controller
 
     public function tracking_links(Request $request)
     {
+
         $data = $request->all();
         
         $trackingLinks = $data['tracking_links'] ?? [];
 
-        ShippingLink::where('order_id', $data['order_id'])->delete();
-    
-        foreach ($trackingLinks as $trackingLink) {
+        $courierId = $data['courier_id'];
+        
+        $existingLinks = ShippingLink::where('order_id', $data['order_id'])->pluck('tracking_link')->toArray();
+
+        $newLinks = array_diff($trackingLinks, $existingLinks);
+
+        foreach ($newLinks as $newLink) {
             ShippingLink::create([
                 'order_id' => $data['order_id'],
-                'tracking_link' => $trackingLink,
+                'tracking_link' => $newLink,
+                'courier_id' => $courierId
             ]);
         }
+
+        return redirect()->route('orders.index');
+
+        // $trackingLinks = $data['tracking_links'] ?? [];
+
+        // ShippingLink::where('order_id', $data['order_id'])->delete();
+    
+        // foreach ($trackingLinks as $trackingLink) {
+        //     ShippingLink::create([
+        //         'order_id' => $data['order_id'],
+        //         'tracking_link' => $trackingLink,
+        //     ]);
+        // }
     
     
         return redirect()->route('orders.index');
@@ -655,8 +675,11 @@ class OrderController extends Controller
 
         $trackingLinks = $order->trackingLinks;
 
+        $courierId = ShippingLink::where('order_id', $orderId)->value('courier_id');
+
         return response()->json([
             'tracking_links' => $trackingLinks->pluck('tracking_link')->toArray(),
+            'courier_id' => $courierId,
         ]);
     }
 
@@ -666,9 +689,12 @@ class OrderController extends Controller
 
         $orders = Order::whereIn('id', $orderId)->get();
 
-        $orders = Order::query()->where('order_uuid',$order_uuid)->get()->map(function($item){
+        $orders = Order::query()->whereIn('id', $orderId)->get()->map(function($item){
 
             $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
+
+            $generator = new BarcodeGeneratorPNG();
+            $item['barcode'] = base64_encode($generator->getBarcode($item->order_id, $generator::TYPE_CODE_128));
 
             if ($item->order_vai == "Dukkan" ) {
 
@@ -702,14 +728,17 @@ class OrderController extends Controller
             }
 
             return $item;
-        })->first();
+        });
 
         $data = array(
             'orders' => $orders
         );
+        $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait');
 
+        return $pdf->download('shipping_labels.pdf');
         
-        return $orders ;
+        // return $orders ;
     }
 
+    
 }

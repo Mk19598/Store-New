@@ -305,13 +305,13 @@ class OrderController extends Controller
                         'buyer_pin'    => $order_response['data']['order_meta']['buyer_address']['pin'], 
                         'buyer_landmark' => $order_response['data']['order_meta']['buyer_address']['landmark'], 
                         
-                        'buyer_shipping_address_1' => null, 
-                        'buyer_shipping_address_2' => null, 
-                        'buyer_shipping_city'   => null, 
-                        'buyer_shipping_state'  => null, 
-                        'buyer_shipping_county' => null, 
-                        'buyer_shipping_pin'    => null, 
-                        'buyer_shipping_mobile_number' => null, 
+                        'buyer_shipping_address_1' => $order_response['data']['order_meta']['buyer_address']['line'], 
+                        'buyer_shipping_address_2' => $order_response['data']['order_meta']['buyer_address']['line_1'], 
+                        'buyer_shipping_city'   => $order_response['data']['order_meta']['buyer_address']['city'], 
+                        'buyer_shipping_state'  => $order_response['data']['order_meta']['buyer_address']['state'], 
+                        'buyer_shipping_county' => $order_response['data']['order_meta']['buyer_address']['country'], 
+                        'buyer_shipping_pin'    => $order_response['data']['order_meta']['buyer_address']['pin'], 
+                        'buyer_shipping_mobile_number' => $order_response['data']['order_meta']['buyer_address']['buyer']['mobile'],
                         'unique_id' => $unique_id,
                     ]);
 
@@ -426,7 +426,6 @@ class OrderController extends Controller
                             'unique_id'     => $unique_id,
                         ]);
                     }
-                    
                     
                     // DukaanShipping::create([]);
 
@@ -577,11 +576,11 @@ class OrderController extends Controller
         }
     }
 
-    public function orders_receipt_pdf($order_uuid)
+    public function orders_invoice_pdf($order_uuid)
     {
         $orders = Order::query()->where('order_uuid',$order_uuid)->get()->map(function($item){
 
-            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
+            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
 
             if ($item->order_vai == "Dukkan" ) {
 
@@ -618,12 +617,15 @@ class OrderController extends Controller
         })->first();
 
         $data = array(
-            'orders' => $orders
+            'orders' => $orders,
+            'Get_website_name'  => CustomHelper::Get_website_name(),
+            'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
+            'title'  => "Invoice | ".CustomHelper::Get_website_name(),
         );
 
-        $pdf = Pdf::loadView('orders.PDF.receipt', $data);
+        $pdf = Pdf::loadView('orders.PDF.invoice', $data);
 
-        return $pdf->stream('receipt.pdf');
+        return $pdf->stream('receipt.invoice');
     }
 
 

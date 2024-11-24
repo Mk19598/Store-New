@@ -17,7 +17,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'orders' ], function () {
         Route::get('list', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
         Route::get('store-update', [App\Http\Controllers\OrderController::class, 'orders_store'])->name('orders.store');
-        Route::get('receipt-pdf/{order_uuid}', [App\Http\Controllers\OrderController::class, 'orders_receipt_pdf'])->name('orders.receipt_pdf');
+        Route::get('invoice-pdf/{order_uuid}', [App\Http\Controllers\OrderController::class, 'orders_invoice_pdf'])->name('orders.invoice_pdf');
         Route::post('tracking-links', [App\Http\Controllers\OrderController::class, 'tracking_links'])->name('orders.tracking_links');
         Route::get('tracking-links/{orderId}', [App\Http\Controllers\OrderController::class, 'getTrackingLinks']);
         Route::post('shipping-lable', [App\Http\Controllers\OrderController::class, 'shipping_lable'])->name('orders.shipping_lable');

@@ -4,37 +4,36 @@
 
         <thead>
             <tr>
-                <th> {{ ucwords(__('Select')) }}  </th>
-                <th>#</th>
-                <th>{{ ucwords(__('Order ID')) }} </th>
-                <th>{{ ucwords(__('Order IN')) }} </th>
-                <th>{{ ucwords(__('Customer')) }} </th>
-                <th>{{ ucwords(__('mobile number')) }} </th>
-                <th>{{ ucwords(__('Date & Time')) }} </th>
-                <th>{{ ucwords(__('Status')) }}  </th>
-                <th>{{ ucwords(__('Total')) }}   </th>
-                <th>{{ ucwords(__('Actions')) }} </th>
+                <th align="center"> {{ ucwords(__('Select')) }}  </th>
+                <th align="center">#</th>
+                <th align="center">{{ ucwords(__('Order ID')) }} </th>
+                <th align="center">{{ ucwords(__('Order IN')) }} </th>
+                <th align="center">{{ ucwords(__('Customer')) }} </th>
+                <th align="center">{{ ucwords(__('mobile number')) }} </th>
+                <th align="center">{{ ucwords(__('Date & Time')) }} </th>
+                <th align="center">{{ ucwords(__('Status')) }}  </th>
+                <th align="center">{{ ucwords(__('Total')) }}   </th>
+                <th align="center">{{ ucwords(__('Actions')) }} </th>
             </tr>
         </thead>
 
         <tbody>
             @foreach ($orders as $key => $order)
                 <tr>
-                    <td> <input class="form-check-input order-checkbox" type="checkbox"value="{{ $order->id }}"></td>
-                    <td> {{ $key+1 }} </td>
-                    <td> {{ @$order->order_id }} </td>
-                    <td> {{ @$order->order_vai }} </td>
-                    <td>
+                    <td align="center"> <input class="form-check-input order-checkbox" type="checkbox"value="{{ $order->id }}"></td>
+                    <td align="center"> {{ $key+1 }} </td>
+                    <td align="center"> {{ @$order->order_id }} </td>
+                    <td align="center"> {{ @$order->order_vai }} </td>
+                    <td align="center">
                         <div>{{ ucwords(@$order->buyer_first_name) }}</div>
                         <div class="text-muted">{{ @$order->buyer_email }}</div>
                     </td>
-                    <td>{{ @$order->buyer_mobile_number }}</td>
-                    <td> {{ @$order->order_created_at_format }}</td>
-                    <td> <span class="badge bg-{{ $order->status_color }}">{{ ucwords(@$order->status) }}</span></td>
-                    <td> {{ @$order->currency_symbol.number_format(@$order->total_cost, 2) }}</td>
-                    <td>
-                        <a href="{{ route('orders.receipt_pdf',$order->order_uuid)}}"> <i class="bi bi-receipt"></i> </a>
-                        <a href="{{ route('orders.receipt_pdf',$order->order_uuid)}}"> <i class="bi bi-truck"></i>  </a>
+                    <td align="center">{{ @$order->buyer_mobile_number }}</td>
+                    <td align="center"> {{ @$order->order_created_at_format }}</td>
+                    <td align="center"> <span class="badge bg-{{ $order->status_color }}">{{ ucwords(@$order->status) }}</span></td>
+                    <td align="center"> {{ @$order->currency_symbol.number_format(@$order->total_cost, 2) }}</td>
+                    <td align="center">
+                        <a href="{{ route('orders.invoice_pdf',$order->order_uuid)}}"> <i class="bi bi-receipt"></i> </a>
                         <a href="javascript:void(0);" class="add-tracking-link-btn" data-order-id="{{ $order->order_uuid }}">
                             <i class="bi bi-geo-alt"></i>
                         </a>

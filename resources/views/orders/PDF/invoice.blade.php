@@ -8,7 +8,7 @@
     
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, sans-serif,'DejaVu Sans';
             line-height: 1.6;
             color: #333;
             max-width: 800px;
@@ -58,39 +58,53 @@
         <h2>INVOICE</h2>
     </header>
 
-    <section class="invoice-details" style="padding: 2rem;">
-        <div>
-            <h3>Bill To:</h3>
-            <p>
-                {{ @$orders->buyer_first_name ." ". @$orders->buyer_last_name }}<br>
-                {{ @$orders->buyer_line }}<br>
-                {{ @$orders->buyer_area }}<br>
-                {{ @$orders->buyer_city }}<br>
-                {{ @$orders->buyer_state ." ".  @$orders->buyer_pin }}<br>
-                {{ @$orders->buyer_mobile_number  }}<br>
-            </p>
-        </div>
-        <div>
-            <h3>Ship To:</h3>
-            <p>
-                {{ @$orders->buyer_first_name ." ".@$orders->buyer_last_name }}<br>
-                {{ @$orders->buyer_shipping_address_1 }}<br>
-                {{ @$orders->buyer_shipping_address_2 }}<br>
-                {{ @$orders->buyer_shipping_city }}<br>
-                {{ @$orders->buyer_shipping_state ." ".  @$orders->buyer_shipping_pin }}<br>
-                {{ @$orders->buyer_shipping_mobile_number  }}<br>
-            </p>
-        </div>
-        <div>
-            <p>
-                <strong>Invoice Date:</strong> {{ @$orders->order_created_at_format }}<br>
-                <strong>Order uuid:</strong> {{ @$orders->order_uuid }}<br>
-                <strong>Order Number:</strong> {{ @$orders->order_id }}<br>
-                <strong>Order Date:</strong> {{ @$orders->order_created_at_format }}<br>
-                <strong>Payment Method:</strong> {{ @$orders->payment_mode ? $orders->payment_mode : "-" }}<br>
-            </p>
-        </div>
+    <section class="invoice-details">
+        <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse; border-spacing: 0;">
+            <tr>
+                <!-- Bill To -->
+                <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
+                    <h3>Bill To:</h3>
+                    <p>
+                        {{ @$orders->buyer_first_name ." ". @$orders->buyer_last_name }}<br>
+                        {{ @$orders->buyer_line }}<br>
+                        @if (!empty($orders->buyer_area))
+                            {{ $orders->buyer_area }}<br>
+                        @endif
+                        {{ @$orders->buyer_city }}<br>
+                        {{ @$orders->buyer_state ." ". @$orders->buyer_pin }}<br>
+                        {{ @$orders->buyer_mobile_number  }}<br>
+                    </p>
+                </td>
+    
+                <!-- Ship To -->
+                <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
+                    <h3>Ship To:</h3>
+                    <p>
+                        {{ @$orders->buyer_shipping_first_name ." ".@$orders->buyer_shipping_last_name }}<br>
+                        {{ @$orders->buyer_shipping_address_1 }}<br>
+                        @if (!empty($orders->buyer_shipping_address_2))
+                            {{ $orders->buyer_shipping_address_2 }}<br>
+                        @endif
+                        {{ @$orders->buyer_shipping_city }}<br>
+                        {{ @$orders->buyer_shipping_state ." ". @$orders->buyer_shipping_pin }}<br>
+                        {{ @$orders->buyer_shipping_mobile_number  }}<br>
+                    </p>
+                </td>
+    
+                <!-- Order Details -->
+                <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
+                    <p>
+                        <strong>Invoice Date:</strong> {{ @$orders->order_created_at_format }}<br>
+                        <strong>Order Number:</strong> {{ @$orders->order_id }} <br>
+                        <small> {{ "(". @$orders->order_uuid .")" }}</small><br>
+                        <strong>Order Date:</strong> {{ @$orders->order_created_at_format }}<br>
+                        <strong>Payment Method:</strong> {{ @$orders->payment_mode ? $orders->payment_mode : "-" }}<br>
+                    </p>
+                </td>
+            </tr>
+        </table>
     </section>
+    
 
     <table>
         <thead>
@@ -120,8 +134,8 @@
 
     <div class="total">
         <p><strong>Subtotal:</strong> {{ $orders->currency_symbol . $item['sum_total_cost'] }}</p>
-        <p><strong>Shipping:</strong> Free Shipping</p>
-        <p><strong>Total:</strong> {{ $orders->currency_symbol . $item['sum_total_cost'] }}</p>
+        <p><strong>Shipping:</strong> {{ $orders->delivery_cost ? $orders->currency_symbol . $orders->delivery_cost : "Free Shipping"}}</p>
+        <p><strong>Total:</strong> {{ $orders->currency_symbol . $orders->total_cost }}</p>
     </div>
 
     <div class="notes">

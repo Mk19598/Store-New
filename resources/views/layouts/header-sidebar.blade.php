@@ -201,7 +201,7 @@
                     </li>
 
                     {{-- Shipping --}}
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('shipping.label') }}">
                             <span class="nav-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
@@ -210,7 +210,7 @@
                             </span>
                             <span class="nav-link-text">{{ ucwords(__('Shipping management')) }}</span>
                         </a>
-                    </li>
+                    </li> --}}
 
                     {{-- Messenger --}}
                     <li class="nav-item has-submenu">

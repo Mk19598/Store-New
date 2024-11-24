@@ -109,6 +109,8 @@ class OrderController extends Controller
                     'buyer_county' => $order->billing->country, 
                     'buyer_pin'    => $order->billing->postcode, 
                     
+                    'buyer_shipping_first_name' => $order->shipping->first_name,
+                    'buyer_shipping_last_name'  => $order->shipping->last_name,
                     'buyer_shipping_address_1' => $order->shipping->address_1, 
                     'buyer_shipping_address_2' => $order->shipping->address_2, 
                     'buyer_shipping_city' => $order->shipping->city, 
@@ -573,6 +575,8 @@ class OrderController extends Controller
             
         } catch (\Throwable $th) {
 
+            // return $th->getMessage();
+
             return view('layouts.404-Page');
         }
     }
@@ -591,7 +595,7 @@ class OrderController extends Controller
                 
                 $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
                     $item['product_name'] = $item->product_slug;
-                    $item['total_cost']  = $item->line_item_total_cost;
+                    $item['product_total_cost']  = $item->line_item_total_cost;
                     $item['price']      = $item->selling_price;
                     $item['sum_total_cost'] = $totalCostSum; 
                     return $item;
@@ -606,7 +610,7 @@ class OrderController extends Controller
 
                 $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
                     $item['product_name'] = $item->name;
-                    $item['total_cost'] = $item->total;
+                    $item['product_total_cost'] = $item->total;
                     $item['price']     = $item->price;
                     $item['sum_total_cost'] = $totalCostSum; 
 
@@ -626,7 +630,7 @@ class OrderController extends Controller
 
         $pdf = Pdf::loadView('orders.PDF.invoice', $data);
 
-        return $pdf->stream('receipt.invoice');
+        return $pdf->stream('orders-invoice');
     }
 
 

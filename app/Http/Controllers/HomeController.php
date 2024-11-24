@@ -41,8 +41,8 @@ class HomeController extends Controller
                 'cancelled'  => ['cancelled', '2', '4', '7','-1'],  
                 'failed'     => ['failed', '6'],  
                 'refunded'   => ['refunded', '10'], 
-                'processing' => ['processing', '3'],  
-                'shipped'    => [ '3'],  
+                'processing' => ['processing'],  
+                'shipped'    => [ 'order-shipped','3'],  
                 'default'    => ['default']
             ];
 

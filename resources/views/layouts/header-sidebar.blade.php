@@ -139,10 +139,10 @@
                         <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse"
                             data-bs-target="#submenu-2" aria-expanded="false" aria-controls="submenu-2">
                             <span class="nav-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
-                                    <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
-                                    <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+                                  </svg>
                             </span>
 
                             <span class="nav-link-text">{{ __('Picking' ) }}</span>
@@ -156,8 +156,35 @@
                         </a>
                         <div id="submenu-2" class="collapse submenu submenu-2" data-bs-parent="#menu-accordion">
                             <ul class="submenu-list list-unstyled">
-                                <li class="submenu-item"><a class="submenu-link" href="{{ route('products.warehouse_pickings') }}">{{ ucwords(__('warehouse pickings')) }}</a></li>
-                            </ul>
+                                <li class="submenu-item"><a class="submenu-link" href="{{ route('products-picking.index') }}">{{ ucwords(__('warehouse products pickings')) }}</a></li>
+                            </ul>   
+                        </div>
+                    </li>
+
+                    {{-- Packing Order Products  --}}
+                    <li class="nav-item has-submenu">
+                        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse"
+                            data-bs-target="#submenu-3" aria-expanded="false" aria-controls="submenu-3">
+                            <span class="nav-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
+                                    <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
+                                    <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                                </svg>
+                            </span>
+
+                            <span class="nav-link-text">{{ __('Packing' ) }}</span>
+                            <span class="submenu-arrow">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                </svg>
+                            </span>
+                        </a>
+                        <div id="submenu-3" class="collapse submenu submenu-3" data-bs-parent="#menu-accordion">
+                            <ul class="submenu-list list-unstyled">
+                                <li class="submenu-item"><a class="submenu-link" href="{{ route('products-picking.index') }}">{{ ucwords(__('Packing Order Products')) }}</a></li>
+                            </ul>   
                         </div>
                     </li>
 
@@ -188,7 +215,7 @@
                     {{-- Messenger --}}
                     <li class="nav-item has-submenu">
                         <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#submenu-3" aria-expanded="false" aria-controls="submenu-3">
+                            data-bs-target="#submenu-4" aria-expanded="false" aria-controls="submenu-4">
                             <span class="nav-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-dots" viewBox="0 0 16 16">
                                     <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
@@ -205,7 +232,7 @@
                                 </svg>
                             </span>
                         </a>
-                        <div id="submenu-3" class="collapse submenu submenu-3" data-bs-parent="#menu-accordion">
+                        <div id="submenu-4" class="collapse submenu submenu-4" data-bs-parent="#menu-accordion">
                             <ul class="submenu-list list-unstyled">
                                 <li class="submenu-item"><a class="submenu-link" href="{{ route('email.index') }}">{{ ucwords(__('Send Email')) }}</a></li>
                                 <li class="submenu-item"><a class="submenu-link" href="{{ route('message.index') }}">{{ ucwords(__('Send WhatsApp')) }}</a></li>

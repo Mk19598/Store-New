@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Automattic\WooCommerce\Client;
 use App\Helpers\CustomHelper;
-use App\Models\WoocommerceProduct;
-use App\Models\DukaanProduct;
+use App\Models\WoocommerceOrderProduct;
+use App\Models\DukaanOrderProduct;
 use App\Models\Order;
 
-class ProductController extends Controller
+class ProductPickingController extends Controller
 {
-    public function warehouse_pickings(Request $request)
+    public function index(Request $request)
     {
         try {
             $data = array(
@@ -25,7 +25,7 @@ class ProductController extends Controller
                 'query' => [],
             );
     
-            return view('products.warehouse.index',$data);
+            return view('products-picking.index',$data);
 
         } catch (\Throwable $th) {
 
@@ -33,24 +33,24 @@ class ProductController extends Controller
         }
     }
 
-    public function warehouse_picking_products(Request $request) {
+    public function filter(Request $request) {
 
 
-        $dukaanProductQuery = DukaanProduct::query()->select('orders.status','dukaan_products.*', DB::raw('SUM(quantity) as total_quantity'))
-                                                ->join('orders','orders.order_uuid','=','dukaan_products.order_uuid');
+        $DukaanOrderProductQuery = DukaanOrderProduct::query()->select('orders.status','dukaan_order_products.*', DB::raw('SUM(quantity) as total_quantity'))
+                                                ->join('orders','orders.order_uuid','=','dukaan_order_products.order_uuid');
 
-        $woocommerceProductQuery = WoocommerceProduct::query()->select('orders.status','woocommerce_products.*', DB::raw('SUM(quantity) as total_quantity'))
-                                                ->join('orders','orders.order_uuid','=','woocommerce_products.order_uuid');
+        $WoocommerceOrderProductQuery = WoocommerceOrderProduct::query()->select('orders.status','woocommerce_order_products.*', DB::raw('SUM(quantity) as total_quantity'))
+                                                ->join('orders','orders.order_uuid','=','woocommerce_order_products.order_uuid');
 
         
-        $this->applyFilters($dukaanProductQuery, $request);
-        $this->applyFilters($woocommerceProductQuery, $request);
+        $this->applyFilters($DukaanOrderProductQuery, $request);
+        $this->applyFilters($WoocommerceOrderProductQuery, $request);
         
-        $dukaanProducts = $dukaanProductQuery->groupBy('product_id')->get();
+        $DukaanOrderProducts = $DukaanOrderProductQuery->groupBy('product_id')->get();
     
-        $woocommerceProducts = $woocommerceProductQuery->groupBy('product_id')->get();
+        $WoocommerceOrderProducts = $WoocommerceOrderProductQuery->groupBy('product_id')->get();
         
-        $query = $dukaanProducts->concat($woocommerceProducts);
+        $query = $DukaanOrderProducts->concat($WoocommerceOrderProducts);
 
         $data = [
             'title' =>  "Product Pickup | " .CustomHelper::Get_website_name() ,
@@ -58,7 +58,7 @@ class ProductController extends Controller
             'query' => $query,
         ];
     
-        return view('products.warehouse.index-table', $data)->render();
+        return view('products-picking.index-table', $data)->render();
     }
     
     private function applyFilters($query, $request) {
@@ -85,11 +85,12 @@ class ProductController extends Controller
 
             $statusMap = [
                 'pending'    => ['pending', '0'],
+                'processing' => ['processing'],
                 'completed'  => ['completed', 5],
-                'cancelled'  => ['cancelled', 4, 7],
+                'cancelled'  => ['cancelled', 4, 7 ,7,-1],
                 'failed'     => ['failed', 6],
                 'refunded'   => ['refunded', 10],
-                'processing' => ['processing', 3],
+                'shipped'    => [ 'order-shipped'],  
             ];
         
             if (isset($statusMap[$request->status])) {
@@ -97,7 +98,6 @@ class ProductController extends Controller
             }else{
                 $query->where('orders.status', $request->status);
             }
-        
         }
     }
 }

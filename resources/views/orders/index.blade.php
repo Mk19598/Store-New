@@ -36,17 +36,17 @@
                         <div class="col-md-3">
                             <label for="status" class="form-label">Order Status</label>
                             <select class="form-select" id="status" name="status">
-                                <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}> {{ ucwords(__('All Status')) }}</option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}> {{ ucwords(__('pending')) }} </option>
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}> {{ ucwords(__('completed')) }}  </option>
-                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}> {{ ucwords(__('cancelled')) }} </option>
-                                <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>{{ ucwords(__('failed')) }}  </option>
-                                <option value="refunded" {{ request('status') == 'refunded' ? 'selected' : '' }}>{{ ucwords(__('refunded')) }}  </option>
-                                <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>{{ ucwords(__('processing')) }}  </option>
-                                <option value="on-hold" {{ request('status') == 'on-hold' ? 'selected' : '' }}>{{ ucwords(__('on-hold (woocommerce)')) }} </option>
-                                <option value="-1" {{ request('status') == 'ABANDONED / DRAFT' ? 'selected' : '' }}>{{ ucfirst(__('Abandoned / Draft (Dukkan) ')) }}  </option>
-                                <option value="1" {{ request('status') == 'ACCEPTED' ? 'selected' : '' }}>{{ ucwords(__('accepted (Dukkan)')) }}  </option>
-                                <option value="2" {{ request('status') == 'REJECTED' ? 'selected' : '' }}>{{ ucwords(__('rejected (Dukkan)')) }}  </option>
+                                <option value="all" > {{ ucwords(__('All Status')) }}</option>
+                                <option value="pending" > {{ ucwords(__('pending')) }} </option>
+                                <option value="processing">{{ ucwords(__('processing')) }}  </option>
+                                <option value="shipped" >{{ ucwords(__('shipped')) }}  </option>
+                                <option value="completed" > {{ ucwords(__('completed')) }}  </option>
+                                <option value="cancelled" > {{ ucwords(__('cancelled / failed')) }} </option>
+                                <option value="refunded" >{{ ucwords(__('refunded')) }}  </option>
+                                <option value="on-hold" >{{ ucwords(__('on-hold (woocommerce)')) }} </option>
+                                <option value="-1">{{ ucfirst(__('Abandoned / Draft (Dukkan) ')) }}  </option>
+                                <option value="1" >{{ ucwords(__('accepted (Dukkan)')) }}  </option>
+                                <option value="2" >{{ ucwords(__('rejected (Dukkan)')) }}  </option>
                             </select>
                         </div>
                         
@@ -191,6 +191,8 @@
 
                     success: function(data) {
                         $('.data').html(data);
+                        $('#orders-list-table').DataTable().destroy(); 
+                        $('#orders-list-table').DataTable();
                     },
 
                     error: function(xhr, status, error) {

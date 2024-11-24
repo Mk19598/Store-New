@@ -9,7 +9,7 @@
                 {{-- Filter Card --}}
         <div class="card mb-4">
             <div class="card-body">
-                <form method="post" action="{{ route('products.warehouse_picking_products') }}" id="filter-form">
+                <form method="post" action="{{ route('products-picking.index') }}" id="filter-form">
                     @csrf
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -27,12 +27,12 @@
                             <select class="form-select" id="status" name="status" required>
                                 <option value="all" > {{ ucwords(__('All Status')) }}</option>
                                 <option value="pending" > {{ ucwords(__('pending')) }} </option>
+                                <option value="processing">{{ ucwords(__('processing')) }}  </option>
+                                <option value="shipped" >{{ ucwords(__('shipped')) }}  </option>
                                 <option value="completed" > {{ ucwords(__('completed')) }}  </option>
-                                <option value="cancelled"> {{ ucwords(__('cancelled')) }} </option>
-                                <option value="failed" >{{ ucwords(__('failed')) }}  </option>
+                                <option value="cancelled" > {{ ucwords(__('cancelled / failed')) }} </option>
                                 <option value="refunded" >{{ ucwords(__('refunded')) }}  </option>
-                                <option value="processing" >{{ ucwords(__('processing')) }}  </option>
-                                <option value="on-hold">{{ ucwords(__('on-hold (woocommerce)')) }} </option>
+                                <option value="on-hold" >{{ ucwords(__('on-hold (woocommerce)')) }} </option>
                                 <option value="-1">{{ ucfirst(__('Abandoned / Draft (Dukkan) ')) }}  </option>
                                 <option value="1" >{{ ucwords(__('accepted (Dukkan)')) }}  </option>
                                 <option value="2" >{{ ucwords(__('rejected (Dukkan)')) }}  </option>
@@ -64,7 +64,7 @@
                    {{-- Table Card --}}
                    
         <div class="data">
-            @include('products.warehouse.index-table')
+            @include('products-picking.index-table')
         </div>
     </div>
 @endsection
@@ -90,7 +90,7 @@
             $('#filter-form').on('submit', function(e) {
                 e.preventDefault(); 
                 $.ajax({
-                    url: "{{ route('products.warehouse_picking_products') }}", 
+                    url: "{{ route('products-picking.filter') }}", 
                     method: 'post', 
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}' 

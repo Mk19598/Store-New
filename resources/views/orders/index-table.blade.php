@@ -20,7 +20,7 @@
         <tbody>
             @foreach ($orders as $key => $order)
                 <tr>
-                    <td align="center"> <input class="form-check-input order-checkbox" type="checkbox"value="{{ $order->id }}"></td>
+                    <td align="center"> <input class="form-check-input order-checkbox" type="checkbox" value="{{ $order->id }}"  data-uuid="{{ $order->uuid }}"></td>
                     <td align="center"> {{ $key+1 }} </td>
                     <td align="center"> {{ @$order->order_id }} </td>
                     <td align="center"> {{ @$order->order_vai }} </td>

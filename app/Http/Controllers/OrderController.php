@@ -585,8 +585,10 @@ class OrderController extends Controller
     public function orders_invoice_pdf(Request $request, $order_uuid)
     {
         try {
+
+            $order_uuid = !is_null($request->input('selectedOrders')) ? $request->input('selectedOrders') : [$order_uuid];
     
-            $orders = Order::query()->where('order_uuid',$order_uuid)->get()->map(function($item){
+            $orders_collection = Order::query()->whereIn('order_uuid',$order_uuid)->get()->map(function($item){
 
                 $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
     
@@ -600,6 +602,7 @@ class OrderController extends Controller
                         $item['product_name'] = $item->product_slug;
                         $item['product_total_cost']  = $item->line_item_total_cost;
                         $item['price']      = $item->selling_price;
+                        $item['discount']   = $item->line_item_discount;
                         $item['sum_total_cost'] = $totalCostSum; 
                         return $item;
                     });
@@ -615,6 +618,7 @@ class OrderController extends Controller
                         $item['product_name'] = $item->name;
                         $item['product_total_cost'] = $item->total;
                         $item['price']     = $item->price;
+                        $item['discount']  = null ;
                         $item['sum_total_cost'] = $totalCostSum; 
     
                         return $item;
@@ -622,10 +626,10 @@ class OrderController extends Controller
                 }
     
                 return $item;
-            })->first();
+            });
     
             $data = array(
-                'orders' => $orders,
+                'orders_collection' => $orders_collection,
                 'Get_website_name'  => CustomHelper::Get_website_name(),
                 'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
                 'title'  => "Invoice | ".CustomHelper::Get_website_name(),

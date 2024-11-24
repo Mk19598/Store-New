@@ -9,6 +9,7 @@
     <style>
         body {
             font-family: Arial, sans-serif,'DejaVu Sans';
+            font-size: 14px;
             line-height: 1.6;
             color: #333;
             max-width: 800px;
@@ -47,103 +48,109 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>{{ @$Get_website_name }}</h1>
-        <p>
-            #91, First Floor, Kamarajar Salai,<br>
-            Near Gandhi Stage, Madurai,<br>
-            TamilNadu – 625009<br>
-            Mobile: +91 96770 63560
-        </p>
-        <h2>INVOICE</h2>
-    </header>
+    @foreach ($orders_collection as $key => $orders)
 
-    <section class="invoice-details">
-        <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse; border-spacing: 0;">
-            <tr>
-                <!-- Bill To -->
-                <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
-                    <h3>Bill To:</h3>
-                    <p>
-                        {{ @$orders->buyer_first_name ." ". @$orders->buyer_last_name }}<br>
-                        {{ @$orders->buyer_line }}<br>
-                        @if (!empty($orders->buyer_area))
-                            {{ $orders->buyer_area }}<br>
-                        @endif
-                        {{ @$orders->buyer_city }}<br>
-                        {{ @$orders->buyer_state ." ". @$orders->buyer_pin }}<br>
-                        {{ @$orders->buyer_mobile_number  }}<br>
-                    </p>
-                </td>
-    
-                <!-- Ship To -->
-                <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
-                    <h3>Ship To:</h3>
-                    <p>
-                        {{ @$orders->buyer_shipping_first_name ." ".@$orders->buyer_shipping_last_name }}<br>
-                        {{ @$orders->buyer_shipping_address_1 }}<br>
-                        @if (!empty($orders->buyer_shipping_address_2))
-                            {{ $orders->buyer_shipping_address_2 }}<br>
-                        @endif
-                        {{ @$orders->buyer_shipping_city }}<br>
-                        {{ @$orders->buyer_shipping_state ." ". @$orders->buyer_shipping_pin }}<br>
-                        {{ @$orders->buyer_shipping_mobile_number  }}<br>
-                    </p>
-                </td>
-    
-                <!-- Order Details -->
-                <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
-                    <p>
-                        <strong>Invoice Date:</strong> {{ @$orders->order_created_at_format }}<br>
-                        <strong>Order Number:</strong> {{ @$orders->order_id }} <br>
-                        <small> {{ "(". @$orders->order_uuid .")" }}</small><br>
-                        <strong>Order Date:</strong> {{ @$orders->order_created_at_format }}<br>
-                        <strong>Payment Method:</strong> {{ @$orders->payment_mode ? $orders->payment_mode : "-" }}<br>
-                    </p>
-                </td>
-            </tr>
-        </table>
-    </section>
-    
+        <div style="{{ $key > 0 ? 'page-break-before: always;' : '' }}">
+            <header>
+                <h1>{{ @$Get_website_name }}</h1>
+                <p>
+                    #91, First Floor, Kamarajar Salai,<br>
+                    Near Gandhi Stage, Madurai,<br>
+                    TamilNadu – 625009<br>
+                    Mobile: +91 96770 63560
+                </p>
+                <h2>INVOICE</h2>
+            </header>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Product ID</th>
-                <th>Product</th>
-                <th>Product Price</th>
-                <th>Quantity</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($orders->product_details as $item)
-                <tr>
-                    <td> {{ $item['product_id'] }} </td>
-                    <td>
-                        {{ $item['product_name'] }}<br>
-                        SKU: {{ $item['sku']   }}
-                    </td>
-                    <td> {{ $orders->currency_symbol .$item['price'] }} </td>
-                    <td> {{ $item['quantity']  }} </td>
-                    <td> {{ $orders->currency_symbol .$item['product_total_cost']  }} </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+            <section class="invoice-details">
+                <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse; border-spacing: 0;">
+                    <tr>
+                        <!-- Bill To -->
+                        <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
+                            <h3>Bill To:</h3>
+                            <p>
+                                {{ @$orders->buyer_first_name ." ". @$orders->buyer_last_name }}<br>
+                                {{ @$orders->buyer_line }}<br>
+                                @if (!empty($orders->buyer_area))
+                                    {{ $orders->buyer_area }}<br>
+                                @endif
+                                {{ @$orders->buyer_city }}<br>
+                                {{ @$orders->buyer_state ." ". @$orders->buyer_pin }}<br>
+                                {{ @$orders->buyer_mobile_number  }}<br>
+                            </p>
+                        </td>
+            
+                        <!-- Ship To -->
+                        <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
+                            <h3>Ship To:</h3>
+                            <p>
+                                {{ @$orders->buyer_shipping_first_name ." ".@$orders->buyer_shipping_last_name }}<br>
+                                {{ @$orders->buyer_shipping_address_1 }}<br>
+                                @if (!empty($orders->buyer_shipping_address_2))
+                                    {{ $orders->buyer_shipping_address_2 }}<br>
+                                @endif
+                                {{ @$orders->buyer_shipping_city }}<br>
+                                {{ @$orders->buyer_shipping_state ." ". @$orders->buyer_shipping_pin }}<br>
+                                {{ @$orders->buyer_shipping_mobile_number  }}<br>
+                            </p>
+                        </td>
+            
+                        <!-- Order Details -->
+                        <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
+                            <p>
+                                <strong>Invoice Date:</strong> {{ @$orders->order_created_at_format }}<br>
+                                <strong>Order Number:</strong> {{ @$orders->order_id }} <br>
+                                <small> {{ "(". @$orders->order_uuid .")" }}</small><br>
+                                <strong>Order Date:</strong> {{ @$orders->order_created_at_format }}<br>
+                                <strong>Payment Method:</strong> {{ @$orders->payment_mode ? $orders->payment_mode : "-" }}<br>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </section>
 
-    <div class="total">
-        <p><strong>Subtotal:</strong> {{ $orders->currency_symbol . $item['sum_total_cost'] }}</p>
-        <p><strong>Shipping:</strong> {{ $orders->delivery_cost ? $orders->currency_symbol . $orders->delivery_cost : "Free Shipping"}}</p>
-        <p><strong>Total:</strong> {{ $orders->currency_symbol . $orders->total_cost }}</p>
-    </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">ID</th>
+                        <th style="text-align: center;">Product</th>
+                        <th style="text-align: center;"> Price</th>
+                        <th style="text-align: center;"> Discount</th>
+                        <th style="text-align: center;">Qty</th>
+                        <th style="text-align: center;"> Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($orders->product_details as $item)
+                        <tr>
+                            <td style="text-align: center;"> {{ $item->product_id }} </td>
+                            <td style="text-align: left;">
+                                {{ $item['product_name'] }}<br>
+                                SKU: {{  $item['sku'] ? $item['sku'] : "-"  }}
+                            </td>
+                            <td style="text-align: center;"> {{ $orders->currency_symbol .$item['price'] }} </td>
+                            <td style="text-align: center;"> {{ $item['discount'] ?  $orders->currency_symbol .$item['discount'] : "-" }} </td>
+                            <td style="text-align: center;"> {{ $item['quantity'] ?? $item['quantity'] }} </td>
+                            <td style="text-align: center;"> {{ $orders->currency_symbol .$item['product_total_cost']  }} </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
 
-    <div class="notes">
-        <h3>Note:</h3>
-        <ol>
-            <li>The prices mentioned above include all applicable taxes.</li>
-            <li>In the event of any disputes, they shall be subject to the jurisdiction of Madurai only.</li>
-        </ol>
-    </div>
+            <div class="total">
+                <p><strong>Subtotal:</strong> {{ $orders->currency_symbol . $item['sum_total_cost'] }}</p>
+                <p><strong>Shipping:</strong> {{ $orders->delivery_cost ? $orders->currency_symbol . $orders->delivery_cost : "Free Shipping"}}</p>
+                <p><strong>Total:</strong> {{ $orders->currency_symbol . $orders->total_cost }}</p>
+            </div>
+
+            <div class="notes">
+                <h3>Note:</h3>
+                <ol>
+                    <li>The prices mentioned above include all applicable taxes.</li>
+                    <li>In the event of any disputes, they shall be subject to the jurisdiction of Madurai only.</li>
+                </ol>
+            </div>
+        </div>
+    @endforeach
 </body>
 </html>

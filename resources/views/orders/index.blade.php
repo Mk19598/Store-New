@@ -94,12 +94,12 @@
                     </div>
 
                     <div>
-                        <button class="btn btn-outline-primary btn-sm" onclick="bulkPrint('receipt')">
-                            <i class="bi bi-receipt"></i> Receipts
+                        <button class="btn btn-outline-primary btn-sm" onclick="bulkPrint('invoice')">
+                            <i class="bi bi-receipt"> Invoices </i> 
                         </button>
 
                         <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('shipping')">
-                            <i class="bi bi-tag"></i> Shipping Labels
+                            <i class="bi bi-tag"> Shipping Labels </i> 
                         </button>
                     </div>
                 </div>
@@ -202,6 +202,7 @@
             });
         });
 
+        // Select ALL 
         document.addEventListener('DOMContentLoaded', function() {
             const selectAllCheckbox = document.getElementById('select-all');
             const orderCheckboxes = document.querySelectorAll('.order-checkbox');
@@ -217,21 +218,34 @@
             });
         });
 
-        function getSelectedOrders() {
-            return [...document.querySelectorAll('.order-checkbox:checked')].map(cb => cb.value);
+        // Bulk Print - Invoice , Shipping Labels
+        function getSelectedOrders(type) {
+
+            if (type == 'invoice') {
+                return [...document.querySelectorAll('.order-checkbox:checked')].map(cb => cb.getAttribute('data-uuid'));
+            }
+
+            if (type == 'shipping') {
+                return [...document.querySelectorAll('.order-checkbox:checked')].map(cb => cb.value);
+            }
         }
 
         function bulkPrint(type) {
-            const selectedOrders = getSelectedOrders();
-            if (selectedOrders.length === 0) {
-                alert('Please select at least one order to print.');
-                return;
-            }
-            // console.log(`Bulk ${type} for orders:`, selectedOrders);
-          
+
+            const selectedOrders = getSelectedOrders( type );
+
+            if (!selectedOrders.length) return alert('Please select at least one order to print.');
+
             const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '{{ route('orders.shipping_label') }}'; 
+            if (type == 'invoice') {
+                form.method = 'get';
+                form.action = '{{ route('orders.invoice_pdf',['order_uuid']) }}'; 
+            }
+
+            if (type == 'shipping') {
+                form.method = 'POST';
+                form.action = '{{ route('orders.shipping_label') }}'; 
+            }
 
             // Add CSRF token
             const csrfInput = document.createElement('input');
@@ -250,13 +264,6 @@
 
             document.body.appendChild(form);
             form.submit();
-
         }
-
-        function printOrder(orderId, type) {
-            alert(`Generating ${type} for order ${orderId}.`);
-        }
-
-        
     </script>
 @endpush

@@ -233,24 +233,47 @@
             console.log(`Bulk ${type} for orders:`, selectedOrders);
             // alert(`Generating ${type} for ${selectedOrders.length} orders.`);
 
-                $.ajax({
-                url: '{{ route('orders.shipping_lable') }}',  
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    selectedOrders: selectedOrders
-                },
-                success: function (response) {
-                    console.log("Server response:", response);
-                    // setTimeout(function () {
-                    //     location.reload(); 
-                    // }, 2000);
-                },
-                error: function (error) {
-                    console.log(error);
-                    alert('An error occurred while saving tracking links.');
-                }
+            //     $.ajax({
+            //     url: '{{ route('orders.shipping_lable') }}',  
+            //     method: 'POST',
+            //     data: {
+            //         _token: '{{ csrf_token() }}',
+            //         selectedOrders: selectedOrders
+            //     },
+            //     success: function (response) {
+            //         console.log("Server response:", response);
+            //         // setTimeout(function () {
+            //         //     location.reload(); 
+            //         // }, 2000);
+            //     },
+            //     error: function (error) {
+            //         console.log(error);
+            //         alert('An error occurred while saving tracking links.');
+            //     }
+            // });
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route('orders.shipping_lable') }}'; 
+
+            // Add CSRF token
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = '{{ csrf_token() }}';
+            form.appendChild(csrfInput);
+
+            selectedOrders.forEach(orderId => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'selectedOrders[]';
+                input.value = orderId;
+                form.appendChild(input);
             });
+
+            document.body.appendChild(form);
+            form.submit();
+
         }
 
         function printOrder(orderId, type) {

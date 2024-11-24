@@ -464,7 +464,6 @@ class OrderController extends Controller
     }
 
     // Order Lists
-
     public function index(Request $request)
     {
         try {
@@ -576,63 +575,69 @@ class OrderController extends Controller
         } catch (\Throwable $th) {
 
             // return $th->getMessage();
-
             return view('layouts.404-Page');
         }
     }
 
-    public function orders_invoice_pdf($order_uuid)
+    // Order Invoice PDF
+    public function orders_invoice_pdf(Request $request, $order_uuid)
     {
-        $orders = Order::query()->where('order_uuid',$order_uuid)->get()->map(function($item){
+        try {
+    
+            $orders = Order::query()->where('order_uuid',$order_uuid)->get()->map(function($item){
 
-            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
+                $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
+    
+                if ($item->order_vai == "Dukkan" ) {
+    
+                    $DukaanOrderProducts = DukaanOrderProduct::where('order_uuid', $item->order_uuid)->get();
+    
+                    $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
+                    
+                    $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
+                        $item['product_name'] = $item->product_slug;
+                        $item['product_total_cost']  = $item->line_item_total_cost;
+                        $item['price']      = $item->selling_price;
+                        $item['sum_total_cost'] = $totalCostSum; 
+                        return $item;
+                    });
+                }
+    
+                if ($item->order_vai == "woocommerce") {
+    
+                    $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_uuid', $item->order_uuid)->get();
+    
+                    $totalCostSum = $WoocommerceOrderProduct->sum('total');
+    
+                    $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
+                        $item['product_name'] = $item->name;
+                        $item['product_total_cost'] = $item->total;
+                        $item['price']     = $item->price;
+                        $item['sum_total_cost'] = $totalCostSum; 
+    
+                        return $item;
+                    });
+                }
+    
+                return $item;
+            })->first();
+    
+            $data = array(
+                'orders' => $orders,
+                'Get_website_name'  => CustomHelper::Get_website_name(),
+                'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
+                'title'  => "Invoice | ".CustomHelper::Get_website_name(),
+            );
+    
+            $pdf = Pdf::loadView('orders.PDF.invoice', $data);
+    
+            return $pdf->stream('orders-invoice');
 
-            if ($item->order_vai == "Dukkan" ) {
-
-                $DukaanOrderProducts = DukaanOrderProduct::where('order_uuid', $item->order_uuid)->get();
-
-                $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
-                
-                $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
-                    $item['product_name'] = $item->product_slug;
-                    $item['product_total_cost']  = $item->line_item_total_cost;
-                    $item['price']      = $item->selling_price;
-                    $item['sum_total_cost'] = $totalCostSum; 
-                    return $item;
-                });
-            }
-
-            if ($item->order_vai == "woocommerce") {
-
-                $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_uuid', $item->order_uuid)->get();
-
-                $totalCostSum = $WoocommerceOrderProduct->sum('total');
-
-                $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
-                    $item['product_name'] = $item->name;
-                    $item['product_total_cost'] = $item->total;
-                    $item['price']     = $item->price;
-                    $item['sum_total_cost'] = $totalCostSum; 
-
-                    return $item;
-                });
-            }
-
-            return $item;
-        })->first();
-
-        $data = array(
-            'orders' => $orders,
-            'Get_website_name'  => CustomHelper::Get_website_name(),
-            'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
-            'title'  => "Invoice | ".CustomHelper::Get_website_name(),
-        );
-
-        $pdf = Pdf::loadView('orders.PDF.invoice', $data);
-
-        return $pdf->stream('orders-invoice');
+        } catch (\Throwable $th) {
+            // return $th->getMessage();
+            return view('layouts.404-Page');
+        }
     }
-
 
     public function tracking_links(Request $request)
     {
@@ -690,7 +695,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function shipping_lable(Request $request)
+    public function shipping_label(Request $request)
     {
         $orderId = $request->input('selectedOrders');
 
@@ -746,6 +751,4 @@ class OrderController extends Controller
         
         // return $orders ;
     }
-
-    
 }

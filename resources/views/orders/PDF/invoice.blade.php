@@ -126,7 +126,7 @@
                     </td>
                     <td> {{ $orders->currency_symbol .$item['price'] }} </td>
                     <td> {{ $item['quantity']  }} </td>
-                    <td> {{ $orders->currency_symbol .$item['total_cost']  }} </td>
+                    <td> {{ $orders->currency_symbol .$item['product_total_cost']  }} </td>
                 </tr>
             @endforeach
         </tbody>

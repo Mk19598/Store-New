@@ -64,7 +64,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
         // Shipping
-    Route::group(['prefix' => 'shipping' ], function () {
-        Route::get('label', [App\Http\Controllers\ShippingManagementController::class, 'label'])->name('shipping.label');
-    });
+    // Route::group(['prefix' => 'shipping' ], function () {
+    //     Route::get('label', [App\Http\Controllers\ShippingManagementController::class, 'label'])->name('shipping.label');
+    // });
 });

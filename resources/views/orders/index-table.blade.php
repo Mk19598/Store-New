@@ -54,8 +54,18 @@
             </div>
             <form action="{{ route('orders.tracking_links') }}" id="trackingLinksForm">
                 @csrf
-
+          
                 <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="courier" class="form-label">Select Courier ID</label>
+                        <select class="form-select" id="courier_id" name="courier_id">
+                            <option value="" disabled selected>Choose a courier</option>
+                            <option value="58">ST Courier</option>
+                            <option value="2">Delhivery</option>
+                            <option value="7">DTDC</option>
+                            <option value="673">Borzo</option>
+                        </select>
+                    </div>
                     <div id="tracking-links-container">
                     </div>
                     <button type="button" class="btn btn-outline-primary" id="add-tracking-link">Add More</button>
@@ -103,6 +113,13 @@
                 success: function (response) {
                     const modalBody = document.getElementById("tracking-links-container");
                     modalBody.innerHTML = '';  
+
+                    const courierSelect = document.getElementById("courier_id");
+                    if (response.courier_id) {
+                        courierSelect.value = response.courier_id;
+                    } else {
+                        courierSelect.value = ''; 
+                    }
 
                     if (response.tracking_links && response.tracking_links.length > 0) {
                         response.tracking_links.forEach((link, index) => {

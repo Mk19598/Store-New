@@ -13,6 +13,7 @@
                     <th > {{ ucwords(__('Product Name ')) }} </th>
                     <th > {{ ucwords(__('Product sku ')) }} </th>
                     <th > {{ ucwords(__('quantity to pick')) }}  </th>
+                    <th > {{ ucwords(__('Dated')) }}  </th>
                 </tr>
             </thead>
 
@@ -25,6 +26,7 @@
                         <td> {{ $item->name }}</td>
                         <td> {{ $item->sku_id }}</td>
                         <td> {{ $item->total_quantity }}</td>
+                        <td> {{ $item->order_created_at_format }}  </td>
                     </tr>
                 @endforeach
             </tbody>

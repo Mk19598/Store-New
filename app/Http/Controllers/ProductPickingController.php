@@ -47,11 +47,15 @@ class ProductPickingController extends Controller
         $this->applyFilters($WoocommerceOrderProductQuery, $request);
         
         $DukaanOrderProducts = $DukaanOrderProductQuery->groupBy('product_id')->get()->map(function($item){
+
+            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
             $item['sku_id'] = $item->product_sku_id;
             return $item ;
         });
     
         $WoocommerceOrderProducts = $WoocommerceOrderProductQuery->groupBy('product_id')->get()->map(function($item){
+
+            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
             $item['sku_id'] = $item->sku;
             return $item ;
         });

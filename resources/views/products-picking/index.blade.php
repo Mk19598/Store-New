@@ -105,7 +105,7 @@
 
                             columnDefs: [                   // Columns
                                 { targets: [1, 2], className: 'dt-body-left' },  
-                                { targets: [0, 3, 4, 5], className: 'dt-body-center' } 
+                                { targets: [0, 3, 4, 5, 6], className: 'dt-body-center' } 
                             ],
 
                             headerCallback: function(thead, data, start, end, display) { // Head

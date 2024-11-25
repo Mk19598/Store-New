@@ -183,7 +183,7 @@
                         </a>
                         <div id="submenu-3" class="collapse submenu submenu-3" data-bs-parent="#menu-accordion">
                             <ul class="submenu-list list-unstyled">
-                                <li class="submenu-item"><a class="submenu-link" href="{{ route('products-picking.index') }}">{{ ucwords(__('Packing Order Products')) }}</a></li>
+                                <li class="submenu-item"><a class="submenu-link" href="{{ route('products-packing.index') }}">{{ ucwords(__('Packing Order Products')) }}</a></li>
                             </ul>   
                         </div>
                     </li>

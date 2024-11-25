@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('parent_name', 100)->nullable();
             $table->string('order_created_at')->nullable();
             $table->string('unique_id', 50)->nullable();
+            $table->tinyInteger('packed_status')->default(0);
             $table->timestamps();
         });
     }

@@ -59,6 +59,7 @@ return new class extends Migration
             $table->integer('return_duration_days')->nullable();
             $table->string('order_created_at')->nullable();
             $table->string('unique_id')->nullable();
+            $table->tinyInteger('packed_status')->default(0);
             $table->timestamps();
         });
     }

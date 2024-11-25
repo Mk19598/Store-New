@@ -46,9 +46,15 @@ class ProductPickingController extends Controller
         $this->applyFilters($DukaanOrderProductQuery, $request);
         $this->applyFilters($WoocommerceOrderProductQuery, $request);
         
-        $DukaanOrderProducts = $DukaanOrderProductQuery->groupBy('product_id')->get();
+        $DukaanOrderProducts = $DukaanOrderProductQuery->groupBy('product_id')->get()->map(function($item){
+            $item['sku_id'] = $item->product_sku_id;
+            return $item ;
+        });
     
-        $WoocommerceOrderProducts = $WoocommerceOrderProductQuery->groupBy('product_id')->get();
+        $WoocommerceOrderProducts = $WoocommerceOrderProductQuery->groupBy('product_id')->get()->map(function($item){
+            $item['sku_id'] = $item->sku;
+            return $item ;
+        });
         
         $query = $DukaanOrderProducts->concat($WoocommerceOrderProducts);
 

@@ -41,9 +41,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('filter', [App\Http\Controllers\ProductPickingController::class, 'filter'])->name('products-picking.filter');
     });
 
-        // Packing Orders
-    Route::group(['prefix' => 'products' ], function () {
-        // Route::get('orders-packing', [App\Http\Controllers\ProductController::class, 'pickings'])->name('products.pickings');
+        // Packing  Products
+    Route::group(['prefix' => 'products-packing' ], function () {
+        Route::get('/', [App\Http\Controllers\PackingOrderProductController::class, 'index'])->name('products-packing.index');
     });
 
         // Inventory 

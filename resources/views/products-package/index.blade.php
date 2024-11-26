@@ -15,12 +15,16 @@
                         <hr>
                         <div class="col-md-3"></div>
 
-                        <div class="col-md-5">
+                        <div class="col-md-5"> 
                             <input type="text" class="form-control" placeholder="eg:123456 (Order ID)" name="order_id" value="{{ request('order_id') }}" required>
                         </div>
 
                         <div class="col-md-4">
                             <button type="submit" class="btn app-btn-primary"> {{ __( "Load Order") }} </button>
+                        </div>
+
+                        <div class="col-md-12" style="text-align: -webkit-center;">
+                            <span class="error-message-span"></span>
                         </div>
                     </div>
                 </form>
@@ -31,7 +35,6 @@
             @include('products-package.products-list')
         </div>
     </div>
-    
 @endsection
 
 @push('scripts')
@@ -46,6 +49,9 @@
                 event.preventDefault(); 
                 
                 var formData = $(this).serialize();
+                
+                var errorMessageSpan = $('.error-message-span');
+                errorMessageSpan.text("");
 
                 $.ajax({
                     url: $(this).attr('action'),
@@ -58,9 +64,9 @@
                     },
                     error: function(xhr) {
                         if (xhr.status === 404) {
-                            alert(xhr.responseJSON.message || "Order not found!");
+                            errorMessageSpan.text(xhr.responseJSON.message || "Invalid Order ID, Please check the Order ID!").css('color', 'red');
                         } else {
-                            alert("An error occurred while loading the order.");
+                            errorMessageSpan.text("An error occurred while loading the order.").css('color', 'red');
                         }
                     }
                 });
@@ -70,12 +76,14 @@
 @endpush
 
 @push('styles')
+
     <style>
-        .progress-container {
-            width: 100%;
-            max-width: 400px;
-            margin: 20px 0;
-        }
+        .form-label{ font-size: larger;}
+
+        .progress-container { width: 100%;max-width: 400px;margin: 20px 0; }
+
+        .product-details { display: flex; align-items: center; gap: 0.5rem;  }
+
         .product-item {
             display: flex;
             justify-content: space-evenly;
@@ -84,12 +92,6 @@
             padding: 1rem;
             border-radius: 8px; /* Rounded corners */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-        }
-        
-        .product-details {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem; 
         }
 
         .product-qty {

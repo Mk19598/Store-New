@@ -196,7 +196,7 @@ class OrderController extends Controller
                 foreach($order->line_items as $key => $order_product){
 
                     WoocommerceOrderProduct::create([
-                        'order_id' => $order_product->id ,
+                        'order_id' => $order->id ,
                         'order_vai' => 'woocommerce',
                         'order_uuid' => $order->order_key, 
                         'name'       => $order_product->name,

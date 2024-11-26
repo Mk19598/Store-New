@@ -598,11 +598,14 @@ class OrderController extends Controller
     
                     $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
                     
-                    $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
-                        $item['product_name'] = $item->product_slug;
-                        $item['product_total_cost']  = $item->line_item_total_cost;
+                    $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum,){
+
+                        $item['product_name']   = $item->product_slug;
+                        $item['original_cost']  = $item->original_price;
                         $item['price']      = $item->selling_price;
                         $item['discount']   = $item->line_item_discount;
+                        $item['product_delivery_cost']  = $item->line_item_delivery_cost ;
+                        $item['product_total_cost']  = $item->line_item_total_cost ;
                         $item['sum_total_cost'] = $totalCostSum; 
                         return $item;
                     });
@@ -619,6 +622,7 @@ class OrderController extends Controller
                         $item['product_total_cost'] = $item->total;
                         $item['price']     = $item->price;
                         $item['discount']  = null ;
+                        $item['product_delivery_cost']  = null ;
                         $item['sum_total_cost'] = $totalCostSum; 
     
                         return $item;

@@ -116,6 +116,7 @@
                         <th style="text-align: center;">Product</th>
                         <th style="text-align: center;"> Price</th>
                         <th style="text-align: center;"> Discount</th>
+                        <th style="text-align: center;"> Shipping Cost</th>
                         <th style="text-align: center;">Qty</th>
                         <th style="text-align: center;"> Total Price</th>
                     </tr>
@@ -130,6 +131,7 @@
                             </td>
                             <td style="text-align: center;"> {{ $orders->currency_symbol .$item['price'] }} </td>
                             <td style="text-align: center;"> {{ $item['discount'] ?  $orders->currency_symbol .$item['discount'] : "-" }} </td>
+                            <td style="text-align: center;"> {{ $item['product_delivery_cost'] ? $orders->currency_symbol .$item['product_delivery_cost'] : "-"}}</td>
                             <td style="text-align: center;"> {{ $item['quantity'] ?? $item['quantity'] }} </td>
                             <td style="text-align: center;"> {{ $orders->currency_symbol .$item['product_total_cost']  }} </td>
                         </tr>
@@ -139,8 +141,15 @@
 
             <div class="total">
                 <p><strong>Subtotal:</strong> {{ $orders->currency_symbol . $item['sum_total_cost'] }}</p>
-                <p><strong>Shipping:</strong> {{ $orders->delivery_cost ? $orders->currency_symbol . $orders->delivery_cost : "Free Shipping"}}</p>
+
+                @if ( $orders->order_vai == "woocommerce")
+                    <p><strong>Shipping:</strong> {{ $orders->delivery_cost ? $orders->currency_symbol . $orders->delivery_cost : "Free Shipping"}}</p>
+                @endif
                 <p><strong>Total:</strong> {{ $orders->currency_symbol . $orders->total_cost }}</p>
+
+                @if ( $orders->order_vai == "Dukkan")
+                    <p><strong>Shipping:</strong> {{ $orders->delivery_cost ? $orders->currency_symbol . $orders->delivery_cost : "Free Shipping"}}</p>
+                @endif
             </div>
 
             <div class="notes">

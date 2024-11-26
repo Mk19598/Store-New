@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('date_modified', 100)->nullable();
             $table->string('discount_total', 100)->nullable();
             $table->string('discount_tax', 100)->nullable();
+            $table->tinyInteger('shipped_status')->default(0);
+            $table->string('shipped_created_at')->nullable();
             $table->string('shipping_total', 100)->nullable();
             $table->string('shipping_tax', 100)->nullable();
             $table->string('cart_tax', 100)->nullable();

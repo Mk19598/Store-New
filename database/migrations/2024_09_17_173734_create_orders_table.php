@@ -58,6 +58,7 @@ return new class extends Migration
             $table->string('buyer_shipping_county', 50)->nullable();
             $table->string('buyer_shipping_pin', 20)->nullable();
             $table->string('buyer_shipping_mobile_number', 20)->nullable();
+            $table->string('shipped_created_at')->nullable();
             $table->string('unique_id', 50)->nullable();
             
             $table->timestamps();

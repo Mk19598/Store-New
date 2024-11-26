@@ -48,6 +48,8 @@
             $('#orderDetailsForm').on('submit', function(event) {
                 event.preventDefault(); 
                 
+                $('.div_card_hide').hide();
+
                 var formData = $(this).serialize();
                 
                 var errorMessageSpan = $('.error-message-span');

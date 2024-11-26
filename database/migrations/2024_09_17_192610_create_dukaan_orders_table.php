@@ -45,6 +45,8 @@ return new class extends Migration
             $table->string('utm_query', 100)->nullable();
             $table->string('utm_content', 100)->nullable();
             $table->string('unique_id', 50)->nullable();
+            $table->tinyInteger('shipped_status')->default(0);
+            $table->string('shipped_created_at')->nullable();
             $table->timestamps();
         });
     }

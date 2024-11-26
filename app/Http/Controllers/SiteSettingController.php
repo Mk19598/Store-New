@@ -40,9 +40,7 @@ class SiteSettingController extends Controller
 
     public function update(Request $request)
     {
-
         try {
-
 
             $siteSetting = SiteSetting::first(); 
 
@@ -64,20 +62,16 @@ class SiteSettingController extends Controller
                 $file->move(public_path('uploads/logos/images'), $fileName); 
 
                 $siteSetting->website_logo = 'uploads/logos/images/' . $fileName;
-
             }
+
             $siteSetting->save();
             
             return redirect()->back()->with('success', 'Settings updated successfully!');
-
         } 
 
         catch (\Throwable $th) {
-
             return view('layouts.404-Page');
             //throw $th;
-
         }
     }
-
 }

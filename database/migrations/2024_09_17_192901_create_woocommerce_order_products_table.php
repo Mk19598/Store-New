@@ -33,6 +33,9 @@ return new class extends Migration
             $table->string('order_created_at')->nullable();
             $table->string('unique_id', 50)->nullable();
             $table->tinyInteger('packed_status')->default(0);
+            $table->string('packed_created_at')->nullable();
+            $table->tinyInteger('shipped_status')->default(0);
+            $table->string('shipped_created_at')->nullable();
             $table->timestamps();
         });
     }

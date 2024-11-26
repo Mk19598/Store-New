@@ -7,31 +7,56 @@
 
             {{-- progress --}}
 
-        <div class="progress-container col-md-12 g-3 mx-auto"> 
-            <progress id="progressBar" value="50" max="100" style="width: 100%;"></progress>
-            <label class="form-label" style="font-size: small;"> 0 out of 5 products packed (0%) </label>
+        <div class="progress-container col-md-12 g-3 mx-auto">
+            <progress id="progressBar" value="{{ @$orders_collection['progress_percentage'] }}" max="100" style="width: 100%; height: 28px;"></progress>
+            <label class="form-label" style="font-size: 16px; text-align: center; width: 100%;">
+                {{ @$orders_collection['packed_count'] }} out of {{ @$orders_collection['product_details_count'] }} products packed ({{ number_format(@$orders_collection['progress_percentage'], 2) }}%)
+            </label>
         </div>
 
-        <form method="get" id="MarkProductForm" action="{{ route('products-packing.mark-Pdt-packed') }}" >
-            <div class="row col-md-12 g-3 mx-auto">
-                <div class="col-md-3"></div>
+        @if ( @$orders_collection['packed_count'] < @$orders_collection['product_details_count']  )
 
-                <div class="col-md-5">
-                    <input type="text" class="form-control" placeholder="Enter the Product SKU" name="product_sku_id" required>
+            <form method="get" id="MarkProductForm" action="{{ route('products-packing.mark-Pdt-packed') }}" >
+                <div class="row col-md-12 g-3 mx-auto">
+                    <div class="col-md-3"></div>
+
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" placeholder="Enter the Product SKU" name="product_sku_id" required>
+                    </div>
+        
+                    <input  class="form-control" type="hidden" name="order_id" value="{{ @$orders_collection->order_id }}">
+                    <input  class="form-control" type="hidden" name="order_vai" value="{{ @$orders_collection->order_vai }}">
+
+                    <div class="col-md-4">
+                        <button type="submit" class="btn app-btn-primary"> {{ __( "Mark as Packed ") }} </button> <br>
+                    </div>
+
+                    <div class="col-md-12" style="text-align: -webkit-center;">
+                        <span id="error-message-span"></span>
+                    </div>
                 </div>
-            
+            </form>
+
+        @elseif( (@$orders_collection['packed_count'] == @$orders_collection['product_details_count']) &&  ( @$orders_collection['status'] != 3 && @$orders_collection['status'] != "order-shipped") )
+
+            <form method="get" id="MoveToShip" action="{{ route('products-packing.move-to-ship') }}" >
+
                 <input  class="form-control" type="hidden" name="order_id" value="{{ @$orders_collection->order_id }}">
                 <input  class="form-control" type="hidden" name="order_vai" value="{{ @$orders_collection->order_vai }}">
 
-                <div class="col-md-4">
-                    <button type="submit" class="btn app-btn-primary"> {{ __( "Mark as Packed ") }} </button> <br>
+                <div class="row col-md-12 g-3 mx-auto justify-content-center">
+                    <div class="row col-md-2 justify-content-center">
+                        <button type="submit" class="btn app-btn-primary"> {{ __( "Move to Shipping") }} </button> <br>
+                    </div>
                 </div>
+            </form>
 
-                <div class="col-md-12" style="text-align: -webkit-center;">
-                    <span id="error-message-span"></span>
-                </div>
+        @elseif( @$orders_collection['status'] == 3 || @$orders_collection['status'] == "order-shipped" )
+        
+            <div class="col-md-12" style="text-align: -webkit-center;">
+                <span class="product-qty" style="background-color: #ebdef0; color: #8e44ad;"> &#10004; Shipped</span>
             </div>
-        </form>
+        @endif
     </div>
 </div>
 
@@ -100,6 +125,31 @@
                         errorMessageSpan.text(xhr.responseJSON.message || "Invalid SKU ID, please check the SKU ID!").css('color', 'red');
                     } else {
                         errorMessageSpan.text("An error occurred while loading the order.").css('color', 'red');
+                    }
+                }
+            });
+        });
+
+        $('#MoveToShip').on('submit', function(event) {
+            event.preventDefault(); 
+            
+            var formData = $(this).serialize();
+
+            var errorMessageSpan = $('#error-message-span'); 
+            errorMessageSpan.text("");
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'GET',
+                data: formData,
+                success: function(response) {
+                    $('.data').html(response); 
+                },
+                error: function(xhr) {
+                    if (xhr.status === 404) {
+                        errorMessageSpan.error(xhr.responseJSON.message || "Invalid Error");
+                    } else {
+                        errorMessageSpan.error("An error occurred while loading the order.");
                     }
                 }
             });

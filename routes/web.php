@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'products-packing' ], function () {
         Route::get('/', [App\Http\Controllers\PackingOrderProductController::class, 'index'])->name('products-packing.index');
         Route::get('/mark-product-packed', [App\Http\Controllers\PackingOrderProductController::class, 'MarkProductPacked'])->name('products-packing.mark-Pdt-packed');
+        Route::get('/move-to-ship', [App\Http\Controllers\PackingOrderProductController::class, 'MoveToShip'])->name('products-packing.move-to-ship');
     });
 
         // Inventory 

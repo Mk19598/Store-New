@@ -26,7 +26,6 @@ class TestEmailController extends Controller
         } catch (\Throwable $th) {
             
             return view('layouts.404-Page');
-
         }
     }
 
@@ -55,6 +54,5 @@ class TestEmailController extends Controller
         });
 
         return back()->with('success', 'Your message has been sent successfully!');
-
     }   
 }

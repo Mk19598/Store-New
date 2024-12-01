@@ -65,4 +65,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('cerenditals', [App\Http\Controllers\CerenditalsController::class, 'update'])->name('cerenditals.index');
     });
 
+    // Env Settings 
+
+    Route::group(['prefix' => 'env-settings' ], function () {
+        Route::post('update', [App\Http\Controllers\EnvSettingController::class, 'update'])->name('env_settings.Emailupdate');
+        Route::post('whatsapp-update', [App\Http\Controllers\EnvSettingController::class, 'WhatsAppUpdate'])->name('env_settings.WhatsAppUpdate');
+        Route::post('shipping-update', [App\Http\Controllers\EnvSettingController::class, 'ShippingUpdate'])->name('env_settings.ShippingUpdate');
+    });
+    
+    Route::group(['prefix' => 'whatsapp' ], function () {
+    });
 });

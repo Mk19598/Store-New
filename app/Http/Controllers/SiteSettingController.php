@@ -11,6 +11,7 @@ use App\Helpers\CustomHelper;
 use App\Models\SiteSetting;
 use App\Models\Cerenditals;
 use App\Models\User;
+use App\Models\EnvSetting;
 
 class SiteSettingController extends Controller
 {
@@ -27,7 +28,8 @@ class SiteSettingController extends Controller
                 'SiteSetting' => $SiteSetting ,
                 'Auth_user'   => $Auth_user ,
                 'Cerenditals' => $Cerenditals ,
-            );
+                'EnvSettings' => EnvSetting::first(),
+        );
 
             return view('settings.index',$data);
 

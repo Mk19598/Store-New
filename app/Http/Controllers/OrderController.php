@@ -598,7 +598,7 @@ class OrderController extends Controller
     
                     $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
                     
-                    $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum,){
+                    $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
 
                         $item['product_name']   = $item->product_slug;
                         $item['original_cost']  = $item->original_price;
@@ -654,6 +654,8 @@ class OrderController extends Controller
 
         $data = $request->all();
         
+        $orders = Order::query()->where('order_uuid', $data['order_id'])->first();
+
         $trackingLinks = $data['tracking_links'] ?? [];
 
         $courierId = $data['courier_id'];
@@ -668,24 +670,26 @@ class OrderController extends Controller
                 'tracking_link' => $newLink,
                 'courier_id' => $courierId
             ]);
+
+            $response = Http::post('https://shipway.in/api/PushOrderData', [
+                'username' => CustomHelper::Shipping_Username(),
+                'password' => CustomHelper::Shipping_Password(),
+                'carrier_id' => $courierId,
+                'awb' => $newLink,
+                'order_id' => $orders->order_id,
+                'first_name' => $orders->buyer_first_name,
+                'last_name' => $orders->buyer_last_name,
+                'email' => $orders->buyer_email,
+                'phone' => $orders->buyer_mobile_number,
+                'products' => 'N/A',
+                'company' => Get_website_name(),
+                'shipment_type' => '1',
+            ]);
+        
         }
 
         return redirect()->route('orders.index');
-
-        // $trackingLinks = $data['tracking_links'] ?? [];
-
-        // ShippingLink::where('order_id', $data['order_id'])->delete();
-    
-        // foreach ($trackingLinks as $trackingLink) {
-        //     ShippingLink::create([
-        //         'order_id' => $data['order_id'],
-        //         'tracking_link' => $trackingLink,
-        //     ]);
-        // }
-    
-    
-        return redirect()->route('orders.index');
-
+        
     }
 
     public function getTrackingLinks($orderId)

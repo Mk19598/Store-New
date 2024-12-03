@@ -147,7 +147,7 @@
 
                                 <div class="row d-flex">
                                     <div class="col-md-6 mb-3">
-                                        <small>{{ __('MAIL FROM_NAME')}}</small>
+                                        <small>{{ __('MAIL FROM NAME')}}</small>
                                         <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_FROM_NAME }}" name="MAIL_FROM_NAME" >
                                     </div>
                                 </div>

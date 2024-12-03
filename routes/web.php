@@ -73,6 +73,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('shipping-update', [App\Http\Controllers\EnvSettingController::class, 'ShippingUpdate'])->name('env_settings.ShippingUpdate');
     });
     
-    Route::group(['prefix' => 'whatsapp' ], function () {
+    Route::group(['prefix' => 'template' ], function () {
+        Route::get('index', [App\Http\Controllers\ContentTemplateController::class, 'Index'])->name('template.index');
+        Route::get('create', [App\Http\Controllers\ContentTemplateController::class, 'create'])->name('template.create');
+        Route::post('store', [App\Http\Controllers\ContentTemplateController::class, 'store'])->name('template.store');
+        Route::get('edit/{id}', [App\Http\Controllers\ContentTemplateController::class, 'edit'])->name('template.edit');
+        Route::put('update/{id}', [App\Http\Controllers\ContentTemplateController::class, 'update'])->name('template.update');
+        Route::delete('destroy/{id}', [App\Http\Controllers\ContentTemplateController::class, 'destroy'])->name('template.destroy');
     });
 });

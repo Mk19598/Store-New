@@ -12,6 +12,11 @@ use Automattic\WooCommerce\Client;
 use App\Helpers\CustomHelper;
 use App\Models\InventoryManagement;
 use Picqer\Barcode\BarcodeGeneratorPNG;
+use App\Models\WoocommerceOrder;
+use App\Models\WoocommerceBuyer;
+use App\Models\WoocommerceShipping;
+use App\Models\WoocommerceOrderProduct;
+use App\Models\Cerenditals;
 
 class InventoryManagementController extends Controller
 {
@@ -35,7 +40,8 @@ class InventoryManagementController extends Controller
             //             ]
             //         ]
             //     ]);
-            // }
+            // }                      
+           
             $data = array(
                 'title' => "Inventory Management | " . CustomHelper::Get_website_name() ,
                 'inventory_count' => InventoryManagement::count() ,
@@ -48,6 +54,7 @@ class InventoryManagementController extends Controller
         catch(\Throwable $th)
         {
 
+            return $th;
             return view('layouts.404-Page');
         }
     }
@@ -72,6 +79,53 @@ class InventoryManagementController extends Controller
         {
 
             $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'inventory' => 'required',  'barcode' => 'required', ]);
+
+            $woocommerce_Cerenditals = Cerenditals::first();
+
+            $woocommerce = new Client(
+                $woocommerce_Cerenditals->woocommerce_url,
+                $woocommerce_Cerenditals->woocommerce_customer_key,
+                $woocommerce_Cerenditals->woocommerce_secret_key,
+                [
+                    'wp_api' => true,
+                    'version' => 'wc/v3',
+                ]
+            );
+
+            $products = $woocommerce->get('products');
+            
+            $skuToFind = $validated['sku'];
+            
+            $collection = collect($products);
+            
+            $product = $collection->firstWhere('sku', $skuToFind);
+            
+            if ($product) {
+
+                $productId = $product->id; 
+
+                if($validated['inventory'] > 0 ){
+                    $data = [
+                        'stock_status' => 'instock' 
+                    ];
+                }elseif ($validated['inventory'] == 0 || $validated['inventory'] == null){
+                    $data = [
+                        'stock_status' => 'outofstock' 
+                    ];
+                }else {
+                    $data = [
+                        'stock_status' => 'outofstock' 
+                    ];
+                }
+            
+                $updatedProduct = $woocommerce->put("products/{$productId}", $data);
+            
+            } else {
+                return redirect()->route('inventory.index')
+                ->with('success', 'Product not found! Invalid SKU ID');
+            }
+            
+
 
             $generator = new BarcodeGeneratorPNG();
             $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128);
@@ -119,6 +173,52 @@ class InventoryManagementController extends Controller
         {
 
             $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'inventory' => 'required', 'barcode' => 'required', ]);
+
+            $woocommerce_Cerenditals = Cerenditals::first();
+
+            $woocommerce = new Client(
+                $woocommerce_Cerenditals->woocommerce_url,
+                $woocommerce_Cerenditals->woocommerce_customer_key,
+                $woocommerce_Cerenditals->woocommerce_secret_key,
+                [
+                    'wp_api' => true,
+                    'version' => 'wc/v3',
+                ]
+            );
+
+            $products = $woocommerce->get('products');
+            
+            $skuToFind = $validated['sku'];
+            
+            $collection = collect($products);
+            
+            $product = $collection->firstWhere('sku', $skuToFind);
+            
+            if ($product) {
+
+                $productId = $product->id; 
+
+                if($validated['inventory'] > 0 ){
+                    $data = [
+                        'stock_status' => 'instock' 
+                    ];
+                }elseif ($validated['inventory'] == 0 || $validated['inventory'] == null){
+                    $data = [
+                        'stock_status' => 'outofstock' 
+                    ];
+                }else {
+                    $data = [
+                        'stock_status' => 'outofstock' 
+                    ];
+                }
+            
+                $updatedProduct = $woocommerce->put("products/{$productId}", $data);
+            
+            } else {
+                return redirect()->route('inventory.index')
+                ->with('success', 'Product not found! Invalid SKU ID');
+            }
+            
 
             $inventory = InventoryManagement::findOrFail($id);
 

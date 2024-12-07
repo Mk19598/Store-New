@@ -362,7 +362,7 @@ class WhatsAppController extends Controller
             $EnvSetting = EnvSetting::first(); 
             
 
-                $template = ContentTemplate::where('id','=',3)->first(); 
+                $template = ContentTemplate::where('id','=',6)->first(); 
                 $template_description = $template->template_content ;
                 $accessToken = $EnvSetting->POETS_API_ACCESS_TOKEN;
                 $INSTANCE_ID = $EnvSetting->POETS_API_INSTANCE_ID;

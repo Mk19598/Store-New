@@ -4,10 +4,11 @@
 
 @section('content')
 
-<div class="container py-5">
+<div class="">
     <div class="row justify-content-center">
+
         <div class="col-md-8">
-            {{-- Form Card --}}
+
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
                     <h4 class="card-title mb-4 text-center">{{ $title }}</h4>
@@ -58,14 +59,12 @@
 @section('scripts')
 
     <script>
-        // Automatically hide the success message after 5 seconds
         setTimeout(function() {
             let alert = document.querySelector('.alert');
             if (alert) {
                 alert.classList.remove('show');
                 alert.classList.add('fade');
             }
-        }, 5000); // 5 seconds
+        }, 5000);
     </script>
-
 @endsection

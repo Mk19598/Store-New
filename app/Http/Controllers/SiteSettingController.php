@@ -11,7 +11,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
 use App\Helpers\CustomHelper;
 use App\Models\SiteSetting;
-use App\Models\Cerenditals;
+use App\Models\Credentials;
 use App\Models\User;
 use App\Models\EnvSetting;
 
@@ -23,13 +23,13 @@ class SiteSettingController extends Controller
 
             $SiteSetting = SiteSetting::first();
             $Auth_user = Auth::user();
-            $Cerenditals = Cerenditals::first();
+            $Credentials = Credentials::first();
 
             $data = array(
                 'title'       => "Settings | ".CustomHelper::Get_website_name() ,
                 'SiteSetting' => $SiteSetting ,
                 'Auth_user'   => $Auth_user ,
-                'Cerenditals' => $Cerenditals ,
+                'Credentials' => $Credentials ,
                 'EnvSettings' => EnvSetting::first(),
         );
 

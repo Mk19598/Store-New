@@ -7,9 +7,13 @@
     <h1 class="app-page-title">{{ __('Settings') }}</h1>
     <hr class="mb-4">
 
-    <div id="success-message" class="alert alert-success" style="display: none;">
-        {{ session('success') }}
-    </div>
+      {{-- Success Message --}}
+    @if (session('success'))
+        <div id="success-message" class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <div class="row g-4 settings-section">
         <div class="col-12 col-md-4">
@@ -57,14 +61,12 @@
                             @csrf
 
                             <div class="row d-flex">
-
                                 <label for="setting-input-1" class="form-label">{{ __("Dukkan") }}</label>
 
                                 <div class="col-md-12 mb-3">
                                     <small>{{ __('Dukkan API Token')}}</small>
                                     <input type="text" class="form-control" id="setting-input-1" value="{{ @$Credentials->dukkan_api_token }}" name="dukkan_api_token" required>
                                 </div>
-                                
                             </div>
                             
                             <div class="row d-flex">
@@ -253,17 +255,14 @@
 
 @section('scripts')
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
     <script>
-        $(document).ready(function () {
-            if ($('#success-message').text().trim() !== '') {
-                $('#success-message').fadeIn();
-                setTimeout(function () {
-                    $('#success-message').fadeOut();
-                }, 5000);
+        setTimeout(function() {
+            let alert = document.querySelector('.alert');
+            if (alert) {
+                alert.classList.remove('show');
+                alert.classList.add('fade');
             }
-        });
+        }, 5000); 
     </script>
 
 @endsection

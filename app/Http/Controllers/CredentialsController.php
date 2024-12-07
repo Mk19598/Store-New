@@ -15,7 +15,7 @@ class CredentialsController extends Controller
     {
         try {
 
-            Cerenditals::first()->update($request->all());
+            Credentials::first()->update($request->all());
 
             $data = array(
                 'title' => "Setting | ". CustomHelper::Get_website_name() ,

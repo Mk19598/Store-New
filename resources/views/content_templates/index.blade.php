@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="container py-5">
+    <div>
 
         {{-- Success Message --}}
         @if (session('success'))
@@ -17,20 +17,7 @@
         {{-- Table Card --}}
         <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="select-all">
-                        <label class="form-check-label" for="select-all">
-                            Select All
-                        </label>
-                    </div>
-
-                    <!-- <div>
-                        <a href="{{ route('template.create') }}" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-plus"></i> Create Template
-                        </a>
-                    </div> -->
-                </div>
+                <h5> {{ ucwords(__('Template'))}} </h5> <hr>
 
                 <div class="table-responsive">
                     <table class="table table-striped" id="template-list-table">
@@ -83,31 +70,7 @@
         $(document).ready(function () {
             $('#template-list-table').DataTable();
         });
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const selectAllCheckbox = document.getElementById('select-all');
-            const templateCheckboxes = document.querySelectorAll('.template-checkbox');
-
-            selectAllCheckbox.addEventListener('change', function () {
-                templateCheckboxes.forEach(checkbox => checkbox.checked = this.checked);
-            });
-
-            templateCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function () {
-                    selectAllCheckbox.checked = [...templateCheckboxes].every(c => c.checked);
-                });
-            });
-
-            const successMessage = document.getElementById('success-message');
-            if (successMessage) {
-                setTimeout(() => {
-                    successMessage.style.display = 'none';
-                }, 5000); 
-            }
-        });
-    </script>
-
-    <script>
+    
         setTimeout(function() {
             let alert = document.querySelector('.alert');
             if (alert) {

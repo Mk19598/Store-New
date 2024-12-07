@@ -60,6 +60,9 @@
     {{-- Site Script --}}
     <script src="{{ url('resources\js\sidebar.js') }}"></script>
 
+    {{-- ckeditor --}}
+    <script src="https://cdn.ckeditor.com/ckeditor5/38.1.1/classic/ckeditor.js"></script>
+
     @stack('styles')
 
     @stack('scripts')

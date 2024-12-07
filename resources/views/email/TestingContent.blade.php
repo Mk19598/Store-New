@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="container py-5">
+    <div>
         <div class="row justify-content-center">
             <div class="col-md-8">
                 {{-- Form Card --}}

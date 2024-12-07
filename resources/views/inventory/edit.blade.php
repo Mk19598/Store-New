@@ -4,9 +4,10 @@
 
 @section('content')
 
-    <div class="container py-5">
+    <div class="">
         <div class="row justify-content-center">
             <div class="col-md-8">
+
                 {{-- Success Message --}}
                 @if (session('success'))
                     <div id="success-message" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -16,11 +17,11 @@
                 @endif
 
                 <div class="card">
-                    <div class="card-header">
-                        <h4>Edit Inventory</h4>
-                    </div>
 
                     <div class="card-body">
+
+                        <h5> {{ ucwords(__('Edit Inventory'))}} </h5><hr>
+
                         <form action="{{ route('inventory.update', $inventory->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
@@ -88,7 +89,6 @@
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary">Update Inventory</button>
                             </div>
-
                         </form>
                     </div>
                 </div>
@@ -100,13 +100,12 @@
 
 @push('scripts')
     <script>
-        // Hide the success message after 5 seconds
         document.addEventListener('DOMContentLoaded', function () {
             const successMessage = document.getElementById('success-message');
             if (successMessage) {
                 setTimeout(() => {
                     successMessage.style.display = 'none';
-                }, 5000); // 5000 ms = 5 seconds
+                }, 5000); 
             }
         });
     </script>

@@ -16,19 +16,17 @@ use App\Models\ContentTemplate;
 
 class ContentTemplateController extends Controller
 {
-
     public function index()
     {
-        try
-            {
-                $templates = ContentTemplate::all();
-                $title = "Content Template | " . CustomHelper::Get_website_name();
-                return view('content_templates.index', compact('templates','title'));
-            }
-        catch(\Throwable $th)
-            {
-                return view('layouts.404-Page');
-            }
+        try{
+            $templates = ContentTemplate::all();
+            $title = "Content Template | " . CustomHelper::Get_website_name();
+
+            return view('content_templates.index', compact('templates','title'));
+        }
+        catch(\Throwable $th){
+            return view('layouts.404-Page');
+        }
     }
 
     public function create()

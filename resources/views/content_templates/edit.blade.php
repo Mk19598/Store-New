@@ -3,10 +3,12 @@
 @section('title', 'Edit Content Template')
 
 @section('content')
-    <div class="container py-5">
+    <div class="">
         <div class="card">
             <div class="card-body">
-                <h4 class="mb-4">Edit Content Template</h4>
+
+                <h5> {{ ucwords(__('Edit Content Template'))}} </h5> <hr>
+
                 <form action="{{ route('template.update', $template->id) }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -32,7 +34,7 @@
                     </div>
 
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary">{{ __('Update Template') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
                     </div>
                 </form>
             </div>
@@ -41,16 +43,15 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.ckeditor.com/ckeditor5/38.1.1/classic/ckeditor.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const templateContentElement = document.querySelector('#template_content');
-        if (templateContentElement) {
-            ClassicEditor.create(templateContentElement)
-                .catch(error => {
-                    console.error(error);
-                });
-        }
-    });
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const templateContentElement = document.querySelector('#template_content');
+            if (templateContentElement) {
+                ClassicEditor.create(templateContentElement)
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+        });
+    </script>
 @endpush

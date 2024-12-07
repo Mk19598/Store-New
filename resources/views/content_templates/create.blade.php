@@ -37,42 +37,42 @@
         </div>
     </div>
 @endsection
+
 @push('scripts')
-<script src="https://cdn.ckeditor.com/ckeditor5/38.1.1/classic/ckeditor.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const templateContentElement = document.querySelector('#template_content');
-        let editor;
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const templateContentElement = document.querySelector('#template_content');
+            let editor;
 
-        if (templateContentElement) {
-            // Initialize CKEditor
-            ClassicEditor.create(templateContentElement)
-                .then(ckEditor => {
-                    editor = ckEditor;
-                })
-                .catch(error => {
-                    console.error(error);
+            if (templateContentElement) {
+                // Initialize CKEditor
+                ClassicEditor.create(templateContentElement)
+                    .then(ckEditor => {
+                        editor = ckEditor;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+
+            // Add event listener to the form's submit event
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function (event) {
+                    // Before submitting the form, ensure the CKEditor content is written back to the textarea
+                    if (editor) {
+                        // Set the content of the textarea to CKEditor content
+                        templateContentElement.value = editor.getData();
+                    }
+
+                    // Optionally check if the content is empty (if you have validation in place)
+                    if (!templateContentElement.value.trim()) {
+                        event.preventDefault();
+                        alert('Template Content cannot be empty!');
+                    }
                 });
-        }
-
-        // Add event listener to the form's submit event
-        const form = document.querySelector('form');
-        if (form) {
-            form.addEventListener('submit', function (event) {
-                // Before submitting the form, ensure the CKEditor content is written back to the textarea
-                if (editor) {
-                    // Set the content of the textarea to CKEditor content
-                    templateContentElement.value = editor.getData();
-                }
-
-                // Optionally check if the content is empty (if you have validation in place)
-                if (!templateContentElement.value.trim()) {
-                    event.preventDefault();
-                    alert('Template Content cannot be empty!');
-                }
-            });
-        }
-    });
-</script>
+            }
+        });
+    </script>
 @endpush
 

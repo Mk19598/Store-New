@@ -17,7 +17,7 @@ use App\Models\WoocommerceOrderProduct;
 use App\Models\DukaanOrder;
 use App\Models\DukaanBuyer;
 use App\Models\DukaanOrderProduct;
-use App\Models\Cerenditals;
+use App\Models\Credentials;
 use App\Models\ShippingLink;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
@@ -58,12 +58,12 @@ class OrderController extends Controller
 
     private function WooCommerce(){
 
-        $woocommerce_Cerenditals = Cerenditals::first();
+        $woocommerce_Credentials = Credentials::first();
 
         $woocommerce = new Client(
-            $woocommerce_Cerenditals->woocommerce_url, 
-            $woocommerce_Cerenditals->woocommerce_customer_key,       
-            $woocommerce_Cerenditals->woocommerce_secret_key,    
+            $woocommerce_Credentials->woocommerce_url, 
+            $woocommerce_Credentials->woocommerce_customer_key,       
+            $woocommerce_Credentials->woocommerce_secret_key,    
             [
                 'wp_api' => true,   
                 'version' => 'wc/v3' 
@@ -243,7 +243,7 @@ class OrderController extends Controller
 
     private function Dukaan(){
 
-        $Dukaan_API_TOKEN = Cerenditals::pluck('dukkan_api_token')->first();
+        $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $Dukaan_API_TOKEN, 'Accept' => 'application/json',])
                         ->get('https://api.mydukaan.io/api/seller-front/order-list/', [

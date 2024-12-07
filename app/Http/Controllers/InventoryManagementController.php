@@ -16,7 +16,7 @@ use App\Models\WoocommerceOrder;
 use App\Models\WoocommerceBuyer;
 use App\Models\WoocommerceShipping;
 use App\Models\WoocommerceOrderProduct;
-use App\Models\Cerenditals;
+use App\Models\Credentials;
 
 class InventoryManagementController extends Controller
 {
@@ -77,15 +77,14 @@ class InventoryManagementController extends Controller
     {
         try
         {
-
             $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'inventory' => 'required',  'barcode' => 'required', ]);
 
-            $woocommerce_Cerenditals = Cerenditals::first();
+            $woocommerce_Credentials = Credentials::first();
 
             $woocommerce = new Client(
-                $woocommerce_Cerenditals->woocommerce_url,
-                $woocommerce_Cerenditals->woocommerce_customer_key,
-                $woocommerce_Cerenditals->woocommerce_secret_key,
+                $woocommerce_Credentials->woocommerce_url,
+                $woocommerce_Credentials->woocommerce_customer_key,
+                $woocommerce_Credentials->woocommerce_secret_key,
                 [
                     'wp_api' => true,
                     'version' => 'wc/v3',
@@ -171,15 +170,14 @@ class InventoryManagementController extends Controller
     {
         try
         {
-
             $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'inventory' => 'required', 'barcode' => 'required', ]);
 
-            $woocommerce_Cerenditals = Cerenditals::first();
+            $woocommerce_Credentials = Credentials::first();
 
             $woocommerce = new Client(
-                $woocommerce_Cerenditals->woocommerce_url,
-                $woocommerce_Cerenditals->woocommerce_customer_key,
-                $woocommerce_Cerenditals->woocommerce_secret_key,
+                $woocommerce_Credentials->woocommerce_url,
+                $woocommerce_Credentials->woocommerce_customer_key,
+                $woocommerce_Credentials->woocommerce_secret_key,
                 [
                     'wp_api' => true,
                     'version' => 'wc/v3',

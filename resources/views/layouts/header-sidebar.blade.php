@@ -19,11 +19,12 @@
                         </a>
                     </div>
 
-                    <div class="search-mobile-trigger d-sm-none col">
+                    {{-- Search --}}
+
+                    {{-- <div class="search-mobile-trigger d-sm-none col">
                         <i class="search-mobile-trigger-icon fa-solid fa-magnifying-glass"></i>
                     </div>
 
-                    {{-- Search --}}
                     <div class="app-search-box col">
                         <form class="app-search-form">
                             <input type="text" placeholder="Search..." name="search"
@@ -31,7 +32,7 @@
                             <button type="submit" class="btn search-btn btn-primary" value="Search"><i
                                     class="fa-solid fa-magnifying-glass"></i></button>
                         </form>
-                    </div>
+                    </div> --}}
 
                     <div class="app-utilities col-auto">
 
@@ -55,7 +56,7 @@
                                 <img src="{{ CustomHelper::Get_user_img_url() }}" alt="user profile"></a>
 
                             <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
-                                <li><a class="dropdown-item" href="account.html">Account</a></li>
+                                <li><a class="dropdown-item" href="{{ route('settings.index') }}">Settings</a></li>
 
                                 <li><hr class="dropdown-divider"></li>
 
@@ -82,7 +83,7 @@
         <div class="sidepanel-inner d-flex flex-column">
             <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
             <div class="app-branding">
-                <a class="app-logo" href="index.html"><img class="logo-icon me-2" src="{{ CustomHelper::Get_website_logo_url() }}"
+                <a class="app-logo" href="{{ route('dashboard') }}"><img class="logo-icon me-2" src="{{ CustomHelper::Get_website_logo_url() }}"
                         alt="logo"><span class="logo-text">{{ $Get_website_name }} </span></a>
 
             </div>

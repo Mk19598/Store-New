@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SiteSetting extends Model
+class Credentials extends Model
 {
     use HasFactory;
-
-    protected $table = 'site_settings';
+    
+    protected $table = 'credentials';
 
     protected $guarded = array();
     

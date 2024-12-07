@@ -7,6 +7,10 @@
     <h1 class="app-page-title">{{ __('Settings') }}</h1>
     <hr class="mb-4">
 
+    <div id="success-message" class="alert alert-success" style="display: none;">
+        {{ session('success') }}
+    </div>
+
     <div class="row g-4 settings-section">
         <div class="col-12 col-md-4">
             <h3 class="section-title">{{ __('General') }}</h3>
@@ -26,7 +30,8 @@
 
                         <div class="mb-3">
                             <label for="setting-input-2" class="form-label">{{ __("Website Image") }}</label>
-                            <input type="file" class="form-control" name='website_logo' id="setting-input-2" required>
+                            <div class="p-3"> <img src="{{ App\Helpers\CustomHelper::Get_website_logo_url()}}" alt="logo" style="width:50px"><br></div>
+                            <input type="file" class="form-control" name='website_logo' id="setting-input-2"> <br>
                         </div>
                         
                         <button type="submit" class="btn app-btn-primary">Save Changes</button>
@@ -42,13 +47,13 @@
         <div class="row g-4 settings-section">
 
             <div class="col-12 col-md-4">
-                <h3 class="section-title"> App  &amp; Cerenditals</h3>
-                <div class="section-intro"> Settings section goes here, Admin can set / change the dynamic Cerenditals  </div>
+                <h3 class="section-title"> App Credentials</h3>
+                <div class="section-intro"> Settings section goes here, Admin can set / change the dynamic Credentials  </div>
             </div>
             <div class="col-12 col-md-8">
                 <div class="app-card app-card-settings shadow-sm p-4">
                     <div class="app-card-body">
-                        <form class="settings-form" action="{{ route('cerenditals.index') }}" method="post">
+                        <form class="settings-form" action="{{ route('credentials.index') }}" method="post">
                             @csrf
 
                             <div class="row d-flex">
@@ -57,7 +62,7 @@
 
                                 <div class="col-md-12 mb-3">
                                     <small>{{ __('Dukkan API Token')}}</small>
-                                    <input type="text" class="form-control" id="setting-input-1" value="{{ @$Cerenditals->dukkan_api_token }}" name="dukkan_api_token" required>
+                                    <input type="text" class="form-control" id="setting-input-1" value="{{ @$Credentials->dukkan_api_token }}" name="dukkan_api_token" required>
                                 </div>
                                 
                             </div>
@@ -68,18 +73,18 @@
 
                                 <div class="col-md-12 mb-3">
                                     <small>{{ __('URL')}}</small>
-                                    <input type="text" class="form-control" id="setting-input-1" value="{{ @$Cerenditals->woocommerce_url }}" name="woocommerce_url" required>
+                                    <input type="text" class="form-control" id="setting-input-1" value="{{ @$Credentials->woocommerce_url }}" name="woocommerce_url" required>
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
                                     <small>{{ __('Customer key')}}</small>
-                                    <input type="text" class="form-control" id="setting-input-1" value="{{ @$Cerenditals->woocommerce_customer_key }}" name="woocommerce_customer_key" required>
+                                    <input type="text" class="form-control" id="setting-input-1" value="{{ @$Credentials->woocommerce_customer_key }}" name="woocommerce_customer_key" required>
                                 </div>
 
                                 
                                 <div class="col-md-6 mb-3">
                                     <small>{{ __('Customer Secret Key')}}</small>
-                                    <input type="text" class="form-control" id="setting-input-1" value="{{ @$Cerenditals->woocommerce_secret_key }}" name="woocommerce_secret_key" required>
+                                    <input type="text" class="form-control" id="setting-input-1" value="{{ @$Credentials->woocommerce_secret_key }}" name="woocommerce_secret_key" required>
                                 </div>
                             </div>
 
@@ -99,8 +104,8 @@
         
 
             <div class="col-12 col-md-4">
-                <h3 class="section-title"> Email  &amp; Settings</h3>
-                <div class="section-intro"> Setting configuration section goes here, Admin can set / change the email Cerenditals dynamic</div>
+                <h3 class="section-title"> Email Credentials</h3>
+                <div class="section-intro"> Setting configuration section goes here, Admin can set / change the email Credentials dynamic</div>
             </div>
             <div class="col-12 col-md-8">
                 <div class="app-card app-card-settings shadow-sm p-4">
@@ -169,8 +174,8 @@
         <div class="row g-4 settings-section">
 
             <div class="col-12 col-md-4">
-                <h3 class="section-title"> What'sApp &amp; Cerenditals</h3>
-                <div class="section-intro"> Settings section goes here, Admin can set / change the WhatsApp Cerenditals dynamic Cerenditals  </div>
+                <h3 class="section-title"> What'sApp Credentials</h3>
+                <div class="section-intro"> Settings section goes here, Admin can set / change the WhatsApp Credentials dynamic Credentials  </div>
             </div>
             <div class="col-12 col-md-8">
                 <div class="app-card app-card-settings shadow-sm p-4">
@@ -180,7 +185,7 @@
                             
                             <div class="row d-flex">
 
-                                <label for="setting-input-1" class="form-label">{{ __("WhatsApp Cerenditals") }}</label>
+                                <label for="setting-input-1" class="form-label">{{ __("WhatsApp Credentials") }}</label>
                                 <div class="row d-flex">
 
                                     <div class="col-md-6 mb-3">
@@ -209,8 +214,8 @@
         <div class="row g-4 settings-section">
 
             <div class="col-12 col-md-4">
-                <h3 class="section-title"> Shipping  &amp; Cerenditals</h3>
-                <div class="section-intro"> Settings section goes here, Admin can set / change the dynamic Cerenditals  </div>
+                <h3 class="section-title"> Shipping Credentials</h3>
+                <div class="section-intro"> Settings section goes here, Admin can set / change the Shipping Credentials dynamic Credentials  </div>
             </div>
             <div class="col-12 col-md-8">
                 <div class="app-card app-card-settings shadow-sm p-4">
@@ -220,13 +225,12 @@
                             
                             <div class="row d-flex">
 
-                                <label for="setting-input-1" class="form-label">{{ __("Shipping Cerenditals") }}</label>
+                                <label for="setting-input-1" class="form-label">{{ __("Shipping Credentials") }}</label>
 
                                 <div class="col-md-6 mb-3">
                                     <small>{{ __('Shipping Username')}}</small>
                                     <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->Shipping_Username }}" name="Shipping_Username" required>
                                 </div>
-
                                 
                                 <div class="col-md-6 mb-3">
                                     <small>{{ __('Shipping Password')}}</small>
@@ -244,5 +248,22 @@
         </div>
 
     @endif
+
+@endsection
+
+@section('scripts')
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            if ($('#success-message').text().trim() !== '') {
+                $('#success-message').fadeIn();
+                setTimeout(function () {
+                    $('#success-message').fadeOut();
+                }, 5000);
+            }
+        });
+    </script>
 
 @endsection

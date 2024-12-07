@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http; 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File; 
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
 use App\Helpers\CustomHelper;
 use App\Models\SiteSetting;
@@ -39,41 +41,36 @@ class SiteSettingController extends Controller
         }
     }
 
-
     public function update(Request $request)
     {
         try {
 
-            $siteSetting = SiteSetting::first(); 
+            $SiteSetting = SiteSetting::first();
 
-            if (!$siteSetting) {
-                $siteSetting = new SiteSetting();
-            }
+            $inputs = array( 'website_name' => $request->website_name);
 
-            $siteSetting->website_name = $request->input('website_name');
+            if($request->hasFile('website_logo')){
 
-            if ($request->hasFile('website_logo')) {
+                $file = $request->website_logo;
 
-                if ($siteSetting->website_logo && file_exists(public_path('uploads/' . $siteSetting->website_logo))) {
-                    unlink(public_path('uploads/' . $siteSetting->website_logo));
+                if (File::exists(base_path('public/uploads/Logos/'.$SiteSetting->website_logo))) {
+                    File::delete(base_path('public/uploads/Logos/'.$SiteSetting->website_logo));
                 }
+    
+                $filename = 'site-Logo.'.$file->getClientOriginalExtension();
 
-                $file = $request->file('website_logo');
+                $file->move(public_path('uploads/Logos'), $filename);
 
-                $fileName = time() . '_' . $file->getClientOriginalName(); 
-                $file->move(public_path('uploads/logos/images'), $fileName); 
-
-                $siteSetting->website_logo = 'uploads/logos/images/' . $fileName;
+                $inputs +=  ['website_logo' => $filename ];
             }
 
-            $siteSetting->save();
-            
+            $SiteSetting->update($inputs);
+
             return redirect()->back()->with('success', 'Settings updated successfully!');
         } 
-
         catch (\Throwable $th) {
+
             return view('layouts.404-Page');
-            //throw $th;
         }
     }
 }

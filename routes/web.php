@@ -68,7 +68,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'settings' ], function () {
         Route::get('index', [App\Http\Controllers\SiteSettingController::class, 'index'])->name('settings.index');
         Route::post('update', [App\Http\Controllers\SiteSettingController::class, 'update'])->name('settings.update');
-        Route::post('cerenditals', [App\Http\Controllers\CerenditalsController::class, 'update'])->name('cerenditals.index');
+        Route::post('credentials', [App\Http\Controllers\CerenditalsController::class, 'update'])->name('credentials.index');
     });
 
     // Env Settings 

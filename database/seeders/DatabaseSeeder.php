@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             SiteSettingSeeder::class,
-            CerenditalsSeeder::class,
+            CredentialsSeeder::class,
             ContentTemplateSeeder::class,
         ]);
     }

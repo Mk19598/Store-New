@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cerenditals', function (Blueprint $table) {
+        Schema::create('credentials', function (Blueprint $table) {
             $table->id();
             $table->longText('dukkan_api_token')->nullable();
             $table->longText('woocommerce_url')->nullable();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cerenditals');
+        Schema::dropIfExists('credentials');
     }
 };

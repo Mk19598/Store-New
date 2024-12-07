@@ -239,6 +239,20 @@
                             </ul>
                         </div>
                     </li>
+
+                    {{--  Template management --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('template.index') }}">
+                            <span class="nav-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-layout-text-window" viewBox="0 0 16 16">
+                                    <path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm2-1a1 1 0 0 0-1 1v2h14V3a1 1 0 0 0-1-1H2zm13 4H1v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6z"/>
+                                    <path d="M2 7h4v1H2V7zm0 2h8v1H2V9z"/>
+                                </svg>
+                            </span>
+                            <span class="nav-link-text">{{ ucwords(__('Content Template')) }}</span>
+                        </a>
+                    </li>
+
                 </ul>
             </nav>
 

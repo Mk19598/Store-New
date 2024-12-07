@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SiteSettingSeeder::class,
             CerenditalsSeeder::class,
+            ContentTemplateSeeder::class,
         ]);
     }
 }

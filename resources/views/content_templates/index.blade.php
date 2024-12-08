@@ -23,7 +23,6 @@
                     <table class="table table-striped" id="template-list-table">
                         <thead>
                             <tr>
-                                <th>{{ ucwords(__('Select')) }}</th>
                                 <th>#</th>
                                 <th>{{ ucwords(__('Template Type')) }}</th>
                                 <th>{{ ucwords(__('Subject')) }}</th>
@@ -34,7 +33,6 @@
                         <tbody>
                             @foreach ($templates as $key => $template)
                                 <tr>
-                                    <td><input class="form-check-input template-checkbox" type="checkbox" value="{{ $template->id }}"></td>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $template->template_type }}</td>
                                     <td>{{ $template->template_subject }}</td>

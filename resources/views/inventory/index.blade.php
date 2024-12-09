@@ -52,7 +52,7 @@
                                     <td>{{ @$inventory->product_name }}</td>
                                     <td>{{ @$inventory->weight }}</td>
                                     <td>{{ @$inventory->sku }}</td>
-                                    <td>{{ @$inventory->inventory }}</td>
+                                    <td>{{ @$inventory->inventory == 1 ? 'InStock' : 'OutofStock' }}</td>
                                     <td>{{ @$inventory->barcode }}</td>
                                     <td>
                                         <img src="{{ URL::to('storage/app/private/public/barcodes'.'/'.$inventory->barcode_image) }}" alt="Barcode Image" width="150" />

@@ -77,7 +77,7 @@ class InventoryManagementController extends Controller
     {
         try
         {
-            $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'inventory' => 'required',  'barcode' => 'required', ]);
+            $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'barcode' => 'required', ]);
 
             $woocommerce_Credentials = Credentials::first();
 
@@ -103,19 +103,32 @@ class InventoryManagementController extends Controller
 
                 $productId = $product->id; 
 
-                if($validated['inventory'] > 0 ){
+                
+                if(!empty($request->inventory) && $request->inventory == 'on' ){
                     $data = [
                         'stock_status' => 'instock' 
                     ];
-                }elseif ($validated['inventory'] == 0 || $validated['inventory'] == null){
-                    $data = [
-                        'stock_status' => 'outofstock' 
-                    ];
+                    $validated['inventory'] = 1;
                 }else {
                     $data = [
                         'stock_status' => 'outofstock' 
                     ];
+                    $validated['inventory'] = 0;
                 }
+
+                // if($validated['inventory'] > 0 ){
+                //     $data = [
+                //         'stock_status' => 'instock' 
+                //     ];
+                // }elseif ($validated['inventory'] == 0 || $validated['inventory'] == null){
+                //     $data = [
+                //         'stock_status' => 'outofstock' 
+                //     ];
+                // }else {
+                //     $data = [
+                //         'stock_status' => 'outofstock' 
+                //     ];
+                // }
             
                 $updatedProduct = $woocommerce->put("products/{$productId}", $data);
             
@@ -170,7 +183,8 @@ class InventoryManagementController extends Controller
     {
         try
         {
-            $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'inventory' => 'required', 'barcode' => 'required', ]);
+            $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required',  'barcode' => 'required', ]);
+            // dd();
 
             $woocommerce_Credentials = Credentials::first();
 
@@ -191,23 +205,20 @@ class InventoryManagementController extends Controller
             $collection = collect($products);
             
             $product = $collection->firstWhere('sku', $skuToFind);
-            
             if ($product) {
 
                 $productId = $product->id; 
 
-                if($validated['inventory'] > 0 ){
+                if(!empty($request->inventory) && $request->inventory == 'on' ){
                     $data = [
                         'stock_status' => 'instock' 
                     ];
-                }elseif ($validated['inventory'] == 0 || $validated['inventory'] == null){
-                    $data = [
-                        'stock_status' => 'outofstock' 
-                    ];
+                    $validated['inventory'] = 1;
                 }else {
                     $data = [
                         'stock_status' => 'outofstock' 
                     ];
+                    $validated['inventory'] = 0;
                 }
             
                 $updatedProduct = $woocommerce->put("products/{$productId}", $data);
@@ -247,6 +258,7 @@ class InventoryManagementController extends Controller
         catch(\Throwable $th)
         {
 
+            return $th;
             return view('layouts.404-Page');
         }
 

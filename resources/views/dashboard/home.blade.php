@@ -125,7 +125,7 @@
             }
 
             .stat-item {
-                display: flex;
+                display: flow;
                 align-items: center;
             }
 

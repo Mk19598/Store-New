@@ -52,8 +52,8 @@
                         </div>
 
                         <div class="row d-flex col-md-12 mb-0">
-                            <div class=" offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                            <div class="offset-md-4">
+                                <button type="submit" class="btn app-btn-primary">
                                     {{ __('Login') }}
                                 </button>
 

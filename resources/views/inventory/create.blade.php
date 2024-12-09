@@ -53,7 +53,7 @@
                         </div>
         
                         <div class=" justify-content-end">
-                            <button type="submit" class="btn btn-primary">{{ __('Create Inventory') }}</button>
+                            <button type="submit" class="btn app-btn-primary">{{ __('Create Inventory') }}</button>
                         </div>
                     </div>
                 </form>

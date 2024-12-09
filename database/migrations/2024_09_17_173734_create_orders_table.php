@@ -50,7 +50,8 @@ return new class extends Migration
             $table->string('buyer_pin', 20)->nullable();
             $table->longtext('buyer_landmark')->nullable();
 
-            
+            $table->string('buyer_shipping_first_name')->nullable();
+            $table->string('buyer_shipping_last_name')->nullable();
             $table->longtext('buyer_shipping_address_1', 100)->nullable();
             $table->string('buyer_shipping_address_2', 100)->nullable();
             $table->string('buyer_shipping_city', 50)->nullable();

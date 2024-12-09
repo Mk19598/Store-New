@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('product_id', 100)->nullable();
             $table->string('variation_id', 100)->nullable();
             $table->string('quantity', 100)->nullable();
+            $table->integer('remaining_quantity_packed')->default(0);
             $table->string('tax_class', 100)->nullable();
             $table->string('subtotal', 100)->nullable();
             $table->string('subtotal_tax', 100)->nullable();

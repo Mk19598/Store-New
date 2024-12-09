@@ -96,7 +96,7 @@
 
                             {{-- Submit Button --}}
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Update Inventory</button>
+                                <button type="submit" class="btn app-btn-primary">Update Inventory</button>
                             </div>
                         </form>
                     </div>

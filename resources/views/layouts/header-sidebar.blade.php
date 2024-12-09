@@ -8,6 +8,7 @@
         <div class="container-fluid py-2">
             <div class="app-header-content">
                 <div class="row justify-content-between align-items-center">
+
                     <div class="col-auto">
                         <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"
@@ -84,8 +85,7 @@
             <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
             <div class="app-branding">
                 <a class="app-logo" href="{{ route('dashboard') }}"><img class="logo-icon me-2" src="{{ CustomHelper::Get_website_logo_url() }}"
-                        alt="logo"><span class="logo-text">{{ $Get_website_name }} </span></a>
-
+                    alt="logo"><span class="logo-text">{{ $Get_website_name }} </span></a>
             </div>
 
             <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
@@ -281,3 +281,64 @@
         </div>
     </div>
 </header>
+
+<script>
+
+    /* ===== Enable Bootstrap Popover (on element  ====== */
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+    const alertList = document.querySelectorAll('.alert')
+    const alerts = [...alertList].map(element => new bootstrap.Alert(element))
+
+
+    /* ===== Responsive Sidepanel ====== */
+    const sidePanelToggler = document.getElementById('sidepanel-toggler'); 
+    const sidePanel = document.getElementById('app-sidepanel');  
+    const sidePanelDrop = document.getElementById('sidepanel-drop'); 
+    const sidePanelClose = document.getElementById('sidepanel-close'); 
+
+    window.addEventListener('load', function(){
+        responsiveSidePanel(); 
+    });
+
+    window.addEventListener('resize', function(){
+        responsiveSidePanel(); 
+    });
+
+    function responsiveSidePanel() {
+        let w = window.innerWidth;
+        if(w >= 1200) {
+        
+            sidePanel.classList.remove('sidepanel-hidden');
+            sidePanel.classList.add('sidepanel-visible');
+            
+        } else {
+            sidePanel.classList.remove('sidepanel-visible');
+            sidePanel.classList.add('sidepanel-hidden');
+        }
+    };
+
+    sidePanelToggler.addEventListener('click', () => {
+        if (sidePanel.classList.contains('sidepanel-visible')) {
+            console.log('visible');
+            sidePanel.classList.remove('sidepanel-visible');
+            sidePanel.classList.add('sidepanel-hidden');
+            
+        } else {
+            console.log('hidden');
+            sidePanel.classList.remove('sidepanel-hidden');
+            sidePanel.classList.add('sidepanel-visible');
+        }
+    });
+
+
+    sidePanelClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        sidePanelToggler.click();
+    });
+
+    sidePanelDrop.addEventListener('click', (e) => {
+        sidePanelToggler.click();
+    });
+</script>

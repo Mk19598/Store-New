@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http; 
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Swift_TransportException;
+use App\Mail\OrderSendEmail;
 use Carbon\Carbon;
 use Automattic\WooCommerce\Client;
 use App\Helpers\CustomHelper;
@@ -218,6 +222,53 @@ class OrderController extends Controller
                         'order_created_at'  => $order->date_created, 
                         'unique_id' => $unique_id,
                     ]);
+                }
+
+                // Mail Sending 
+                try {
+
+                    $orders_collection = Order::query()->where('order_id',$order->id)->get()->map(function($item){
+        
+                        $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
+            
+                        $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_id', $item->order_id )->get();
+                        $item['order_vai'] = 'woocommerce';
+            
+                        $totalCostSum = $WoocommerceOrderProduct->sum('total');
+            
+                        $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
+                            $item['product_name'] = $item->name;
+                            $item['product_total_cost'] = $item->total;
+                            $item['price']     = $item->price;
+                            $item['discount']  = null ;
+                            $item['product_delivery_cost']  = null ;
+                            $item['sum_total_cost'] = $totalCostSum; 
+            
+                            return $item;
+                        });
+            
+                        return $item;
+                    })->first();
+
+                    $data = [
+                        'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
+                        'Get_website_name' => CustomHelper::Get_website_name(),
+                        'orders_collection'  => $orders_collection,
+                    ];
+                    
+                    // Mail::to('manikandan19598@gmail.com')->send(new OrdserSendEmail($data));
+        
+                } catch (\Illuminate\Mail\TransportException $e) {
+                   
+                    Log::error('Mail Transport Error: ' . $e->getMessage());
+                
+                } catch (\Exception $e) {
+                   
+                    Log::error('Failed to send email: ' . $e->getMessage());
+                
+                } catch (\Throwable $th) {
+                    
+                    Log::critical('Critical Error while sending mail: ' . $th->getMessage());
                 }
 
                 $result = array(
@@ -435,6 +486,54 @@ class OrderController extends Controller
                     }
                     
                     // DukaanShipping::create([]);
+
+                    // Mail Sending
+                    try {
+                        
+                        $orders_collection = Order::query()->where('order_id',$order_response['data']['display_order_id'],)->get()->map(function($item){
+
+                            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
+                            $item['order_vai'] = 'Dukkan';
+                
+                            $DukaanOrderProducts = DukaanOrderProduct::where('order_id', $item->order_id)->get();
+                
+                            $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
+                            
+                            $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
+                
+                                $item['product_name']   = $item->product_slug;
+                                $item['original_cost']  = $item->original_price;
+                                $item['price']      = $item->selling_price;
+                                $item['discount']   = $item->line_item_discount;
+                                $item['product_delivery_cost']  = $item->line_item_delivery_cost ;
+                                $item['product_total_cost']  = $item->line_item_total_cost ;
+                                $item['sum_total_cost'] = $totalCostSum; 
+                                return $item;
+                            });
+                
+                            return $item;
+                        })->first();
+                
+                        $data = [
+                            'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
+                            'Get_website_name' => CustomHelper::Get_website_name(),
+                            'orders_collection'  => $orders_collection,
+                        ];
+                
+                        // Mail::to('manikandan19598@gmail.com')->send(new OrderSendEmail($data));
+
+                    } catch (\Illuminate\Mail\TransportException $e) {
+                   
+                        Log::error('Mail Transport Error: ' . $e->getMessage());
+                    
+                    } catch (\Exception $e) {
+                       
+                        Log::error('Failed to send email: ' . $e->getMessage());
+                    
+                    } catch (\Throwable $th) {
+                        
+                        Log::critical('Critical Error while sending mail: ' . $th->getMessage());
+                    }
 
                     $result = array(
                         'status'      => true,

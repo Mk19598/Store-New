@@ -18,6 +18,7 @@ return new class extends Migration
             $table->longText('order_vai', 100)->nullable();
             $table->string('product_id')->nullable();
             $table->integer('quantity')->nullable();
+            $table->integer('remaining_quantity_packed')->default(0);
             $table->string('is_sku_edited')->nullable();
             $table->integer('quantity_freed')->nullable();
             $table->string('product_slug')->nullable();

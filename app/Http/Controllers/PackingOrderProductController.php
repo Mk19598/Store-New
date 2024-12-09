@@ -103,25 +103,53 @@ class PackingOrderProductController extends Controller
             if ( $request->order_vai == "Dukkan" ) {
 
                 $order = DukaanOrderProduct::query()->where('order_id',$request->order_id)->where('order_vai',$request->order_vai)
-                                        ->where('product_sku_id',$request->product_sku_id)->first();
+                                                    ->where('product_sku_id',$request->product_sku_id)->first();
 
                 if (!$order) {
                     return response()->json(['status' => 'error', 'message' => 'Invalid SKU ID, please check the SKU ID'], 404);
                 }
 
-                $order->update([ 'packed_status' => 1 , 'packed_created_at' => Carbon::now() ]);
+                if ($order->packed_status == 1) {
+                    return response()->json(['status' => 'error', 'message' => 'Already Packed, please check the Product Status'], 404);
+                }
+
+                if ($order->quantity >= $order->remaining_quantity_packed) {
+
+                    $order->update([ 'remaining_quantity_packed' => $order->remaining_quantity_packed + 1 ]);
+
+                    if ($order->quantity == $order->remaining_quantity_packed) {
+                        $order->update([ 'packed_status' => 1 , 'packed_created_at' => Carbon::now() ]);
+                    }
+                }else{
+                    
+                    return response()->json(['status' => 'error', 'message' => 'Internal error'], 404);
+                }
             }
 
             if ( $request->order_vai == "woocommerce"  ) {
 
                 $order = WoocommerceOrderProduct::query()->where('order_id',$request->order_id)->where('order_vai',$request->order_vai)
-                                        ->where('sku',$request->product_sku_id)->first();
+                                                        ->where('sku',$request->product_sku_id)->first();
 
                 if (!$order) {
-                    return response()->json(['status' => 'error', 'message' => 'Invalid SKU ID, please check the SKU ID'], 404);
+                    return response()->json(['status' => 'error', 'message' => 'Invalid SKU ID, Please check the SKU ID'], 404);
                 }
 
-                $order->update([ 'packed_status' => 1 , 'packed_created_at' => Carbon::now() ]);
+                if ($order->packed_status == 1) {
+                    return response()->json(['status' => 'error', 'message' => 'Already Packed, Please check the Product Status'], 404);
+                }
+
+                if ($order->quantity  >= $order->remaining_quantity_packed) {
+
+                    $order->update([ 'remaining_quantity_packed' => $order->remaining_quantity_packed + 1 ]);
+
+                    if ($order->quantity == $order->remaining_quantity_packed) {
+                        $order->update([ 'packed_status' => 1 , 'packed_created_at' => Carbon::now() ]);
+                    }
+                }else{
+
+                    return response()->json(['status' => 'error', 'message' => 'Internal error'], 404);
+                }
             }
 
               // Render  

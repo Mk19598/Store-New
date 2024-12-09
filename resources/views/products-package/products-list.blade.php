@@ -80,12 +80,13 @@
                                 <span> 
                                     {{ $item->product_name }}  <br> 
                                     {{ "SKU - {$item->sku_id}" }} <br>
-                                    {{ "Pdt - {$item->product_id}" }} <br>
                                 </span>  
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-4">
+
                             <span class="product-qty"> {{ "Qty:{$item->quantity}" }}</span>
+                            <span class="product-qty"> {{ "Qty packed:{$item->remaining_quantity_packed}" }}</span>
 
                             @if ( $item->packed_status == 1 )
                                 <span class="product-qty" style="background-color: #abebc6; color: #1d8348;"> &#10004; {{ 'Packed' }}</span>

@@ -84,8 +84,7 @@
             <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
             <div class="app-branding">
                 <a class="app-logo" href="{{ route('dashboard') }}"><img class="logo-icon me-2" src="{{ CustomHelper::Get_website_logo_url() }}"
-                        alt="logo"><span class="logo-text">{{ $Get_website_name }} </span></a>
-
+                    alt="logo"><span class="logo-text">{{ $Get_website_name }} </span></a>
             </div>
 
             <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">

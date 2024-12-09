@@ -37,7 +37,7 @@ class CustomHelper
 
     public static function Shipping_Password()
     {
-        $Shipping_Password = SiteSetting::query()->pluck('Shipping_Password')->first();
+        $Shipping_Password = EnvSetting::query()->pluck('Shipping_Password')->first();
         return $Shipping_Password;
     }
 

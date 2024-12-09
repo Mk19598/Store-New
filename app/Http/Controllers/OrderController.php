@@ -20,6 +20,8 @@ use App\Models\DukaanOrderProduct;
 use App\Models\Credentials;
 use App\Models\ShippingLink;
 use Picqer\Barcode\BarcodeGeneratorPNG;
+use App\Models\ContentTemplate;
+use App\Models\EnvSetting;
 
 class OrderController extends Controller
 {
@@ -664,6 +666,12 @@ class OrderController extends Controller
 
         $newLinks = array_diff($trackingLinks, $existingLinks);
 
+        $template = ContentTemplate::where('id','=',4)->first(); 
+        $template_description = $template->template_content ;
+        $EnvSetting = EnvSetting::first(); 
+        $accessToken = $EnvSetting->POETS_API_ACCESS_TOKEN;
+        $INSTANCE_ID = $EnvSetting->POETS_API_INSTANCE_ID;
+
         foreach ($newLinks as $newLink) {
             ShippingLink::create([
                 'order_id' => $data['order_id'],
@@ -682,13 +690,33 @@ class OrderController extends Controller
                 'email' => $orders->buyer_email,
                 'phone' => $orders->buyer_mobile_number,
                 'products' => 'N/A',
-                'company' => Get_website_name(),
+                'company' => CustomHelper::Get_website_name(),
                 'shipment_type' => '1',
             ]);
         
+            $template_change = [
+                "{Name}",
+                "{orderno}",
+            ];
+        
+            $template_content = [
+                $orders->buyer_first_name.' '.$orders->buyer_last_name,      
+                $orders->order_id, 
+            ];
+        
+            $personalized_message = str_replace($template_change, $template_content, $template_description);
+                             
+            $response = Http::asForm()->post('https://app.poetsmediagroup.com/api/send', [
+                'number' => '91' . $orders->buyer_mobile_number,
+                'type' => 'text',
+                'message' => html_entity_decode($personalized_message),
+                'instance_id' => $INSTANCE_ID,
+                'access_token' => $accessToken,
+            ]);
+
         }
 
-        return redirect()->route('orders.index');
+        return $response;
         
     }
 

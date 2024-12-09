@@ -101,16 +101,25 @@ class WhatsAppController extends Controller
                     ];
                 
                     $personalized_message = str_replace($template_change, $template_content, $template_description);
-                                     
-                    $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
-                        'form_params' => [
-                            'number' => '91' . $singleOrder->buyer_mobile_number, 
-                            'type' => 'text',          
-                            'message' => html_entity_decode($personalized_message),     
-                            'instance_id' => $INSTANCE_ID, 
-                            'access_token' => $accessToken,  
-                        ],
+                    
+                    $response = Http::asForm()->post('https://app.poetsmediagroup.com/api/send', [
+                        'number' => '91' . $singleOrder->buyer_mobile_number,
+                        'type' => 'text',
+                        'message' => html_entity_decode($personalized_message),
+                        'instance_id' => $INSTANCE_ID,
+                        'access_token' => $accessToken,
                     ]);
+
+                                     
+                    // $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
+                    //     'form_params' => [
+                    //         'number' => '91' . $singleOrder->buyer_mobile_number, 
+                    //         'type' => 'text',          
+                    //         'message' => html_entity_decode($personalized_message),     
+                    //         'instance_id' => $INSTANCE_ID, 
+                    //         'access_token' => $accessToken,  
+                    //     ],
+                    // ]);
                 
                 }
                     return $response->getBody()->getContents();
@@ -212,16 +221,24 @@ class WhatsAppController extends Controller
                     ];
                 
                     $personalized_message = str_replace($template_change, $template_content, $template_description);
-                                     
-                    $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
-                        'form_params' => [
-                            'number' => '91' . $singleOrder->buyer_mobile_number, 
-                            'type' => 'text',          
-                            'message' => html_entity_decode($personalized_message),     
-                            'instance_id' => $INSTANCE_ID, 
-                            'access_token' => $accessToken,  
-                        ],
+        
+                    $response = Http::asForm()->post('https://app.poetsmediagroup.com/api/send', [
+                        'number' => '91' . $singleOrder->buyer_mobile_number,
+                        'type' => 'text',
+                        'message' => html_entity_decode($personalized_message),
+                        'instance_id' => $INSTANCE_ID,
+                        'access_token' => $accessToken,
                     ]);
+
+                    // $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
+                    //     'form_params' => [
+                    //         'number' => '91' . $singleOrder->buyer_mobile_number, 
+                    //         'type' => 'text',          
+                    //         'message' => html_entity_decode($personalized_message),     
+                    //         'instance_id' => $INSTANCE_ID, 
+                    //         'access_token' => $accessToken,  
+                    //     ],
+                    // ]);
                 
                 }
                     return $response->getBody()->getContents();
@@ -269,15 +286,23 @@ class WhatsAppController extends Controller
                 
                     $personalized_message = str_replace($template_change, $template_content, $template_description);
                                      
-                    $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
-                        'form_params' => [
-                            'number' => '91' . $singleOrder->buyer_mobile_number, 
-                            'type' => 'text',          
-                            'message' => html_entity_decode($personalized_message),     
-                            'instance_id' => $INSTANCE_ID, 
-                            'access_token' => $accessToken,  
-                        ],
+                    $response = Http::asForm()->post('https://app.poetsmediagroup.com/api/send', [
+                        'number' => '91' . $singleOrder->buyer_mobile_number,
+                        'type' => 'text',
+                        'message' => html_entity_decode($personalized_message),
+                        'instance_id' => $INSTANCE_ID,
+                        'access_token' => $accessToken,
                     ]);
+
+                    // $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
+                    //     'form_params' => [
+                    //         'number' => '91' . $singleOrder->buyer_mobile_number, 
+                    //         'type' => 'text',          
+                    //         'message' => html_entity_decode($personalized_message),     
+                    //         'instance_id' => $INSTANCE_ID, 
+                    //         'access_token' => $accessToken,  
+                    //     ],
+                    // ]);
                 
                 }
                     return $response->getBody()->getContents();
@@ -323,16 +348,24 @@ class WhatsAppController extends Controller
                     ];
                 
                     $personalized_message = str_replace($template_change, $template_content, $template_description);
-                                     
-                    $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
-                        'form_params' => [
-                            'number' => '91' . $singleOrder->buyer_mobile_number, 
-                            'type' => 'text',          
-                            'message' => html_entity_decode($personalized_message),     
-                            'instance_id' => $INSTANCE_ID, 
-                            'access_token' => $accessToken,  
-                        ],
+                               
+                    $response = Http::asForm()->post('https://app.poetsmediagroup.com/api/send', [
+                        'number' => '91' . $singleOrder->buyer_mobile_number,
+                        'type' => 'text',
+                        'message' => html_entity_decode($personalized_message),
+                        'instance_id' => $INSTANCE_ID,
+                        'access_token' => $accessToken,
                     ]);
+
+                    // $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
+                    //     'form_params' => [
+                    //         'number' => '91' . $singleOrder->buyer_mobile_number, 
+                    //         'type' => 'text',          
+                    //         'message' => html_entity_decode($personalized_message),     
+                    //         'instance_id' => $INSTANCE_ID, 
+                    //         'access_token' => $accessToken,  
+                    //     ],
+                    // ]);
                 
                 }
                     return $response->getBody()->getContents();
@@ -381,22 +414,18 @@ class WhatsAppController extends Controller
                     ];
                 
                     $personalized_message = str_replace($template_change, $template_content, $template_description);
-                                     
-                    $response = $this->client->post('https://app.poetsmediagroup.com/api/send', [
-                        'form_params' => [
-                            'number' => '91' . $singleOrder->buyer_mobile_number, 
-                            'type' => 'text',          
-                            'message' => html_entity_decode($personalized_message),     
-                            'instance_id' => $INSTANCE_ID, 
-                            'access_token' => $accessToken,  
-                        ],
-                    ]);
-                
-                }
-                    return $response->getBody()->getContents();
 
-     
-            
+                    $response = Http::asForm()->post('https://app.poetsmediagroup.com/api/send', [
+                        'number' => '91' . $singleOrder->buyer_mobile_number,
+                        'type' => 'text',
+                        'message' => html_entity_decode($personalized_message),
+                        'instance_id' => $INSTANCE_ID,
+                        'access_token' => $accessToken,
+                    ]);
+
+                }
+            return $response->getBody()->getContents();
+        
 
             // return back()->with('success', 'Your message has been sent successfully!');
 

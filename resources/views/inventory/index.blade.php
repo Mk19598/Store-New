@@ -42,6 +42,7 @@
                                 <th>{{ ucwords(__('Inventory')) }}</th>
                                 <th>{{ ucwords(__('BarCode')) }}</th>
                                 <th>{{ ucwords(__('Barcode Image')) }}</th>
+                                <th>{{ ucwords(__('Stock Status')) }}</th>
                                 <th>{{ ucwords(__('Actions')) }}</th>
                             </tr>
                         </thead>
@@ -56,6 +57,13 @@
                                     <td>{{ @$inventory->barcode }}</td>
                                     <td>
                                         <img src="{{ URL::to('storage/app/private/public/barcodes'.'/'.$inventory->barcode_image) }}" alt="Barcode Image" width="150" />
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input toggle-inventory-status" type="checkbox" 
+                                                data-id="{{ $inventory->id }}" 
+                                                {{ $inventory->inventory == 1 ? 'checked' : '' }}>
+                                        </div>
                                     </td>
                                     <td>
                                         {{-- Edit button --}}
@@ -96,4 +104,47 @@
             }
         }, 5000); 
     </script>
+    <script>
+    $(document).ready(function () {
+        $('#Inventory-list-table').DataTable();
+
+        $('.toggle-inventory-status').on('change', function () {
+            let inventoryId = $(this).data('id');
+            let status = $(this).is(':checked') ? 1 : 0;
+
+            $.ajax({
+                url: '{{ route("inventory.updateStatus") }}', 
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: inventoryId,
+                    status: status
+                },
+                success: function (response) {
+                    // Show success message
+                    if (response.success) {
+                        alert('Inventory status updated successfully!');
+                        location.reload();
+                    }else if (response.error) {
+                        alert('Product not found! Invalid SKU ID!');
+                    } else {
+                        alert('Something went wrong!');
+                    }
+                },
+                error: function () {
+                    alert('Error updating inventory status!');
+                }
+            });
+        });
+
+        setTimeout(function () {
+            let alert = document.querySelector('.alert');
+            if (alert) {
+                alert.classList.remove('show');
+                alert.classList.add('fade');
+            }
+        }, 5000);
+    });
+</script>
+
 @endpush

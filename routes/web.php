@@ -62,6 +62,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('edit/{id}', [App\Http\Controllers\InventoryManagementController::class, 'edit'])->name('inventory.edit');
         Route::put('update/{id}', [App\Http\Controllers\InventoryManagementController::class, 'update'])->name('inventory.update');
         Route::delete('destroy/{id}', [App\Http\Controllers\InventoryManagementController::class, 'destroy'])->name('inventory.destroy');
+        Route::post('/update-status', [App\Http\Controllers\InventoryManagementController::class, 'updateStatus'])->name('inventory.updateStatus');
     });
     
         // Settings 

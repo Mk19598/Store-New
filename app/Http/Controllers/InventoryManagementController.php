@@ -184,7 +184,6 @@ class InventoryManagementController extends Controller
         try
         {
             $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required',  'barcode' => 'required', ]);
-            // dd();
 
             $woocommerce_Credentials = Credentials::first();
 
@@ -281,5 +280,63 @@ class InventoryManagementController extends Controller
             return view('layouts.404-Page');
         }
     }
+
+    public function updateStatus(Request $request)
+    {
+        $inventory = InventoryManagement::find($request->id);
+
+
+        
+        $woocommerce_Credentials = Credentials::first();
+
+        $woocommerce = new Client(
+            $woocommerce_Credentials->woocommerce_url,
+            $woocommerce_Credentials->woocommerce_customer_key,
+            $woocommerce_Credentials->woocommerce_secret_key,
+            [
+                'wp_api' => true,
+                'version' => 'wc/v3',
+            ]
+        );
+
+        $products = $woocommerce->get('products');
+        
+        $skuToFind = $inventory->sku;
+        
+        $collection = collect($products);
+        
+        $product = $collection->firstWhere('sku', $skuToFind);
+        if ($product) {
+
+            $productId = $product->id; 
+
+            if(!empty($request->status) && $request->inventory == 1 ){
+                $data = [
+                    'stock_status' => 'instock' 
+                ];
+            }else {
+                $data = [
+                    'stock_status' => 'outofstock' 
+                ];
+            }
+        
+            $updatedProduct = $woocommerce->put("products/{$productId}", $data);
+        
+        } else {
+
+            return response()->json(['error' => 'Product not found! Invalid SKU ID']);
+            
+        }
+
+        if ($inventory) {
+            $inventory->inventory = $request->status;
+            $inventory->save();
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
+    }
+
 }
 

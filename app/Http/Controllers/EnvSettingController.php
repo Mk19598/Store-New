@@ -16,12 +16,10 @@ use App\Models\EnvSetting;
 
 class EnvSettingController extends Controller
 {
-    
     public function update(Request $request)
     {
         try
         {
-
             $request->validate([
                 'MAIL_HOST' => 'required|string',
                 'MAIL_PORT' => 'required|integer',
@@ -64,17 +62,14 @@ class EnvSettingController extends Controller
         }
         catch(\Throwable $th)
         {
-            // return $th ;
             return view('layouts.404-Page');
         }
-
     }
 
     private function updateEnv(array $data)
     {
         try
             {
-
                 $envPath = base_path('.env');
                 $envContent = File::get($envPath);
             
@@ -100,46 +95,43 @@ class EnvSettingController extends Controller
             }
     }
 
-    public function WhatsAppUpdate(Request $request)
-    {
-        try
-        {
-            $request->validate([
-                'POETS_API_ACCESS_TOKEN' => 'required|string',
-                'POETS_API_INSTANCE_ID' => 'required|string',
-            ]);
+    // public function WhatsAppUpdate(Request $request)
+    // {
+    //     try{
 
-            $WhatsAppSetting = EnvSetting::first(); 
+    //         $request->validate([
+    //             'POETS_API_ACCESS_TOKEN' => 'required|string',
+    //             'POETS_API_INSTANCE_ID' => 'required|string',
+    //         ]);
 
-            if (!$WhatsAppSetting) {
-                $WhatsAppSetting = new EnvSetting();
-            }
+    //         $WhatsAppSetting = EnvSetting::first(); 
 
-            $WhatsAppSetting->POETS_API_ACCESS_TOKEN = $request->POETS_API_ACCESS_TOKEN;
-            $WhatsAppSetting->POETS_API_INSTANCE_ID = $request->POETS_API_INSTANCE_ID;        
-            $WhatsAppSetting->save();
+    //         if (!$WhatsAppSetting) {
+    //             $WhatsAppSetting = new EnvSetting();
+    //         }
+
+    //         $WhatsAppSetting->POETS_API_ACCESS_TOKEN = $request->POETS_API_ACCESS_TOKEN;
+    //         $WhatsAppSetting->POETS_API_INSTANCE_ID = $request->POETS_API_INSTANCE_ID;        
+    //         $WhatsAppSetting->save();
             
-            $this->updateEnv([
-                'POETS_API_ACCESS_TOKEN' => $request->POETS_API_ACCESS_TOKEN,
-                'POETS_API_INSTANCE_ID' => $request->POETS_API_INSTANCE_ID,
-            ]);
+    //         $this->updateEnv([
+    //             'POETS_API_ACCESS_TOKEN' => $request->POETS_API_ACCESS_TOKEN,
+    //             'POETS_API_INSTANCE_ID' => $request->POETS_API_INSTANCE_ID,
+    //         ]);
 
-            return redirect()->back()->with('success', 'WhatsApp configuration updated successfully.');
+    //         return redirect()->back()->with('success', 'WhatsApp configuration updated successfully.');
 
-        }
-        catch(\Throwable $th)
-        {
-            return view('layouts.404-Page');
-        }
-
-    }
-
-
+    //     }
+    //     catch(\Throwable $th)
+    //     {
+    //         return view('layouts.404-Page');
+    //     }
+    // }
     
     public function ShippingUpdate(Request $request)
     {
-        try
-        {
+        try{
+
             $request->validate([
                 'Shipping_Username' => 'required|string',
                 'Shipping_Password' => 'required|string',
@@ -162,7 +154,5 @@ class EnvSettingController extends Controller
         {
             return view('layouts.404-Page');
         }
-
     }
-
 }

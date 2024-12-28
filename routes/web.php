@@ -10,6 +10,28 @@ Auth::routes(['register' => false]);
 
 Route::group(['middleware' => 'auth'], function () {
 
+        // Message
+    // Route::group(['prefix' => 'message' ], function () {
+    //     Route::get('index', [App\Http\Controllers\WhatsAppController::class, 'index'])->name('message.index');
+    //     Route::post('/sendMessageText', [App\Http\Controllers\WhatsAppController::class, 'sendMessageText'])->name('message.sendMessageText');
+    //     Route::get('/OrderRejected', [App\Http\Controllers\WhatsAppController::class, 'OrderRejected'])->name('message.OrderRejected');
+    //     Route::get('/OrderCancelledbyCustomer', [App\Http\Controllers\WhatsAppController::class, 'OrderCancelledbyCustomer'])->name('message.OrderCancelledbyCustomer');
+    //     Route::get('/OrderDelivered', [App\Http\Controllers\WhatsAppController::class, 'OrderDelivered'])->name('message.OrderDelivered');
+    //     Route::get('/OrderShipped', [App\Http\Controllers\WhatsAppController::class, 'OrderShipped'])->name('message.OrderShipped');
+    //     Route::get('/CartAbandonment', [App\Http\Controllers\WhatsAppController::class, 'CartAbandonment'])->name('message.CartAbandonment');
+    //     Route::get('/NewOrderReceived', [App\Http\Controllers\WhatsAppController::class, 'NewOrderReceived'])->name('message.NewOrderReceived');
+    // });
+
+        // Template
+    // Route::group(['prefix' => 'template' ], function () {
+    //     Route::get('index', [App\Http\Controllers\ContentTemplateController::class, 'Index'])->name('template.index');
+    //     Route::get('create', [App\Http\Controllers\ContentTemplateController::class, 'create'])->name('template.create');
+    //     Route::post('store', [App\Http\Controllers\ContentTemplateController::class, 'store'])->name('template.store');
+    //     Route::get('edit/{id}', [App\Http\Controllers\ContentTemplateController::class, 'edit'])->name('template.edit');
+    //     Route::put('update/{id}', [App\Http\Controllers\ContentTemplateController::class, 'update'])->name('template.update');
+    //     Route::delete('destroy/{id}', [App\Http\Controllers\ContentTemplateController::class, 'destroy'])->name('template.destroy');
+    // });
+
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
 
@@ -27,18 +49,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'email' ], function () {
         Route::get('index', [App\Http\Controllers\TestEmailController::class, 'index'])->name('email.index');
         Route::post('/sendMail', [App\Http\Controllers\TestEmailController::class, 'sendMail'])->name('email.sendMail');
-    });
-
-        // Message
-    Route::group(['prefix' => 'message' ], function () {
-        Route::get('index', [App\Http\Controllers\WhatsAppController::class, 'index'])->name('message.index');
-        Route::post('/sendMessageText', [App\Http\Controllers\WhatsAppController::class, 'sendMessageText'])->name('message.sendMessageText');
-        Route::get('/OrderRejected', [App\Http\Controllers\WhatsAppController::class, 'OrderRejected'])->name('message.OrderRejected');
-        Route::get('/OrderCancelledbyCustomer', [App\Http\Controllers\WhatsAppController::class, 'OrderCancelledbyCustomer'])->name('message.OrderCancelledbyCustomer');
-        Route::get('/OrderDelivered', [App\Http\Controllers\WhatsAppController::class, 'OrderDelivered'])->name('message.OrderDelivered');
-        Route::get('/OrderShipped', [App\Http\Controllers\WhatsAppController::class, 'OrderShipped'])->name('message.OrderShipped');
-        Route::get('/CartAbandonment', [App\Http\Controllers\WhatsAppController::class, 'CartAbandonment'])->name('message.CartAbandonment');
-        Route::get('/NewOrderReceived', [App\Http\Controllers\WhatsAppController::class, 'NewOrderReceived'])->name('message.NewOrderReceived');
     });
 
         // Pickings Products
@@ -67,25 +77,15 @@ Route::group(['middleware' => 'auth'], function () {
     
         // Settings 
     Route::group(['prefix' => 'settings' ], function () {
-        Route::get('index', [App\Http\Controllers\SiteSettingController::class, 'index'])->name('settings.index');
+        Route::get('/', [App\Http\Controllers\SiteSettingController::class, 'index'])->name('settings.index');
         Route::post('update', [App\Http\Controllers\SiteSettingController::class, 'update'])->name('settings.update');
         Route::post('credentials', [App\Http\Controllers\CredentialsController::class, 'update'])->name('credentials.index');
     });
 
-    // Env Settings 
-
+        // Env Settings 
     Route::group(['prefix' => 'env-settings' ], function () {
         Route::post('update', [App\Http\Controllers\EnvSettingController::class, 'update'])->name('env_settings.Emailupdate');
-        Route::post('whatsapp-update', [App\Http\Controllers\EnvSettingController::class, 'WhatsAppUpdate'])->name('env_settings.WhatsAppUpdate');
         Route::post('shipping-update', [App\Http\Controllers\EnvSettingController::class, 'ShippingUpdate'])->name('env_settings.ShippingUpdate');
-    });
-    
-    Route::group(['prefix' => 'template' ], function () {
-        Route::get('index', [App\Http\Controllers\ContentTemplateController::class, 'Index'])->name('template.index');
-        Route::get('create', [App\Http\Controllers\ContentTemplateController::class, 'create'])->name('template.create');
-        Route::post('store', [App\Http\Controllers\ContentTemplateController::class, 'store'])->name('template.store');
-        Route::get('edit/{id}', [App\Http\Controllers\ContentTemplateController::class, 'edit'])->name('template.edit');
-        Route::put('update/{id}', [App\Http\Controllers\ContentTemplateController::class, 'update'])->name('template.update');
-        Route::delete('destroy/{id}', [App\Http\Controllers\ContentTemplateController::class, 'destroy'])->name('template.destroy');
+        // Route::post('whatsapp-update', [App\Http\Controllers\EnvSettingController::class, 'WhatsAppUpdate'])->name('env_settings.WhatsAppUpdate');
     });
 });

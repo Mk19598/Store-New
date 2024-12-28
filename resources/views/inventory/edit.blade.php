@@ -6,7 +6,7 @@
 
     <div class="">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
 
                 {{-- Success Message --}}
                 @if (session('success'))
@@ -55,18 +55,18 @@
 
                             {{-- Inventory --}}
                             <div class="mb-3">
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <label for="Inventory" class="form-label">Inventory Status</label>
 
                                     <div class="d-flex justify-content-around align-items-center" style="width:50%;">
-                                        <div style="color:red;">outofstock</div>
+                                        <div style="color:red;">Out of Stock</div>
                                             <div class="mt-1">
                                                 <label class="switch">
                                                     <input name="inventory"  id="inventory" type="checkbox" @if( $inventory->inventory  == "1") checked  @endif >
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
-                                        <div style="color:green;margin-left: 11%;">instock</div>
+                                        <div style="color:green;margin-left: 11%;">In-stock</div>
                                     </div>
                                 </div>
                             </div>

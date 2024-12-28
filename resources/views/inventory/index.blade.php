@@ -56,7 +56,7 @@
                                     <td>{{ @$inventory->inventory == 1 ? 'InStock' : 'OutofStock' }}</td>
                                     <td>{{ @$inventory->barcode }}</td>
                                     <td>
-                                        <img src="{{ URL::to('storage/app/private/public/barcodes'.'/'.$inventory->barcode_image) }}" alt="Barcode Image" width="150" />
+                                        <img src="{{ URL::to('storage/app/private/public/barcodes/'.$inventory->barcode_image) }}" alt="Barcode Image" width="150" />
                                     </td>
                                     <td>
                                         <div class="form-check form-switch">
@@ -65,9 +65,10 @@
                                                 {{ $inventory->inventory == 1 ? 'checked' : '' }}>
                                         </div>
                                     </td>
+
                                     <td>
                                         {{-- Edit button --}}
-                                        <a href="{{ route('inventory.edit', $inventory->id) }}" class="btn btn-sm btn-outline-primary">
+                                        <a href="{{ route('inventory.edit', $inventory->id) }}">
                                             <i class="bi bi-pencil-square"></i> 
                                         </a>
 
@@ -92,10 +93,7 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function () {
-            $('#Inventory-list-table').DataTable();
-        });
-    
+
         setTimeout(function() {
             let alert = document.querySelector('.alert');
             if (alert) {
@@ -103,48 +101,47 @@
                 alert.classList.add('fade');
             }
         }, 5000); 
-    </script>
-    <script>
-    $(document).ready(function () {
-        $('#Inventory-list-table').DataTable();
 
-        $('.toggle-inventory-status').on('change', function () {
-            let inventoryId = $(this).data('id');
-            let status = $(this).is(':checked') ? 1 : 0;
+        $(document).ready(function () {
 
-            $.ajax({
-                url: '{{ route("inventory.updateStatus") }}', 
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: inventoryId,
-                    status: status
-                },
-                success: function (response) {
-                    // Show success message
-                    if (response.success) {
-                        alert('Inventory status updated successfully!');
-                        location.reload();
-                    }else if (response.error) {
-                        alert('Product not found! Invalid SKU ID!');
-                    } else {
-                        alert('Something went wrong!');
+            $('#Inventory-list-table').DataTable();
+        
+            $('.toggle-inventory-status').on('change', function () {
+                let inventoryId = $(this).data('id');
+                let status = $(this).is(':checked') ? 1 : 0;
+
+                $.ajax({
+                    url: '{{ route("inventory.updateStatus") }}', 
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: inventoryId,
+                        status: status
+                    },
+                    success: function (response) {
+                        // Show success message
+                        if (response.success) {
+                            alert('Inventory status updated successfully!');
+                            location.reload();
+                        }else if (response.error) {
+                            alert('Product not found! Invalid SKU ID!');
+                        } else {
+                            alert('Something went wrong!');
+                        }
+                    },
+                    error: function () {
+                        alert('Error updating inventory status!');
                     }
-                },
-                error: function () {
-                    alert('Error updating inventory status!');
-                }
+                });
             });
+
+            setTimeout(function () {
+                let alert = document.querySelector('.alert');
+                if (alert) {
+                    alert.classList.remove('show');
+                    alert.classList.add('fade');
+                }
+            }, 5000);
         });
-
-        setTimeout(function () {
-            let alert = document.querySelector('.alert');
-            if (alert) {
-                alert.classList.remove('show');
-                alert.classList.add('fade');
-            }
-        }, 5000);
-    });
-</script>
-
+    </script>
 @endpush

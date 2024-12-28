@@ -2,12 +2,16 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Models\InventoryManagement;
 
-class ProductSeeder extends Seeder
+class InventoryProductSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run()
     {
         $filePath = storage_path('app/private/Products.csv');
@@ -16,6 +20,8 @@ class ProductSeeder extends Seeder
             $this->command->error('CSV file not found: ' . $filePath);
             return;
         }
+
+        InventoryManagement::truncate();
 
         $file = fopen($filePath, 'r');
         $header = fgetcsv($file); 
@@ -32,7 +38,9 @@ class ProductSeeder extends Seeder
         fclose($file);
 
         if (!empty($products)) {
-            DB::table('products')->insert($products);
+            InventoryManagement::insert($products);
+            InventoryManagement::query()->update(['inventory' => 1, 'status' => 1]);
+
             $this->command->info('Product seeding completed successfully!');
         } else {
             $this->command->info('No valid data found to seed.');

@@ -36,8 +36,7 @@ class SiteSettingController extends Controller
             return view('settings.index',$data);
 
         } catch (\Throwable $th) {
-
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 
@@ -69,8 +68,7 @@ class SiteSettingController extends Controller
             return redirect()->back()->with('success', 'Settings updated successfully!');
         } 
         catch (\Throwable $th) {
-
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 }

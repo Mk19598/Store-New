@@ -14,7 +14,6 @@ use Mail;
 
 class TestEmailController extends Controller
 {
-
     public function index()
     {
         try {
@@ -24,8 +23,7 @@ class TestEmailController extends Controller
             return view('email.TestingContent', $data);
 
         } catch (\Throwable $th) {
-            
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 

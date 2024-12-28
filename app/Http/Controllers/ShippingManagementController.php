@@ -18,7 +18,6 @@ class ShippingManagementController extends Controller
     {
         try
         {
-
             $orderId = '81844';
             $generator = new BarcodeGeneratorPNG();
             $barcode = base64_encode($generator->getBarcode($orderId, $generator::TYPE_CODE_128));
@@ -46,8 +45,7 @@ class ShippingManagementController extends Controller
         }
         catch(\Throwable $th)
         {
-
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 }

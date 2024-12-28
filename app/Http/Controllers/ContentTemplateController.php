@@ -25,7 +25,7 @@ class ContentTemplateController extends Controller
             return view('content_templates.index', compact('templates','title'));
         }
         catch(\Throwable $th){
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 
@@ -38,7 +38,7 @@ class ContentTemplateController extends Controller
             }
         catch(\Throwable $th)
             {
-                return view('layouts.404-Page');
+                return view('layouts.error-pages.404-Page');
             }
     }
 
@@ -58,10 +58,9 @@ class ContentTemplateController extends Controller
             }
         catch(\Throwable $th)
             {
-                return view('layouts.404-Page');
+                return view('layouts.error-pages.404-Page');
             }
     }
-
 
     public function edit($id)
     {
@@ -73,7 +72,7 @@ class ContentTemplateController extends Controller
             }
         catch(\Throwable $th)
             {
-                return view('layouts.404-Page');
+                return view('layouts.error-pages.404-Page');
             }
     }
 
@@ -94,11 +93,10 @@ class ContentTemplateController extends Controller
             }
         catch(\Throwable $th)
             {
-                return view('layouts.404-Page');
+                return view('layouts.error-pages.404-Page');
                 // return $th;
             }
     }
-
 
     public function destroy($id)
     {
@@ -110,9 +108,7 @@ class ContentTemplateController extends Controller
             }
         catch(\Throwable $th)
             {
-                return view('layouts.404-Page');
+                return view('layouts.error-pages.404-Page');
             }
     }
-
-
 }

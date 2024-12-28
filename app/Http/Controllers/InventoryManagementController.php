@@ -22,8 +22,7 @@ class InventoryManagementController extends Controller
 {
     public function Index()
     {
-        try
-        {
+        try{
 
             // if(InventoryManagement::where('status',1)->count() > 0){
             //     $Dukaan_API_TOKEN = env('DUKAAN_API_TOKEN');
@@ -53,30 +52,24 @@ class InventoryManagementController extends Controller
         }
         catch(\Throwable $th)
         {
-
-            return $th;
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 
     public function create()
     {
-        try
-        {
+        try{
             return view('inventory.create');
-
         }
         catch(\Throwable $th)
         {
-            return view('layouts.404-Page');
-
+            return view('layouts.error-pages.404-Page');
         }
     }
 
     public function store(Request $request)
     {
-        try
-        {
+        try{
             $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'barcode' => 'required', ]);
 
             $woocommerce_Credentials = Credentials::first();
@@ -136,8 +129,6 @@ class InventoryManagementController extends Controller
                 return redirect()->route('inventory.index')
                 ->with('success', 'Product not found! Invalid SKU ID');
             }
-            
-
 
             $generator = new BarcodeGeneratorPNG();
             $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128);
@@ -151,38 +142,32 @@ class InventoryManagementController extends Controller
 
             InventoryManagement::create($validated);
 
-            return redirect()->route('inventory.index')
-                ->with('success', 'Inventory created successfully!');
+            return redirect()->route('inventory.index')->with('success', 'Inventory created successfully!');
 
         }
         catch(\Throwable $th)
         {
-
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
-
     }
 
     public function edit($id)
     {
-        try
-        {
+        try{
 
             $inventory = InventoryManagement::findOrFail($id);
             return view('inventory.edit', compact('inventory'));
-
         }
         catch(\Throwable $th)
         {
-
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 
     public function update(Request $request, $id)
     {
-        try
-        {
+        try{
+
             $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required',  'barcode' => 'required', ]);
 
             $woocommerce_Credentials = Credentials::first();
@@ -256,9 +241,7 @@ class InventoryManagementController extends Controller
         }
         catch(\Throwable $th)
         {
-
-            return $th;
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
 
     }
@@ -269,23 +252,17 @@ class InventoryManagementController extends Controller
         {
             $inventory = InventoryManagement::findOrFail($id)->delete();
 
-            return redirect()
-                ->route('inventory.index')
-                ->with('success', 'Inventory item deleted successfully.');
-
+            return redirect()->route('inventory.index')->with('success', 'Inventory item deleted successfully.');
         }
         catch(\Throwable $th)
         {
-
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 
     public function updateStatus(Request $request)
     {
         $inventory = InventoryManagement::find($request->id);
-
-
         
         $woocommerce_Credentials = Credentials::first();
 
@@ -334,9 +311,6 @@ class InventoryManagementController extends Controller
 
             return response()->json(['success' => true]);
         }
-
         return response()->json(['success' => false]);
     }
-
 }
-

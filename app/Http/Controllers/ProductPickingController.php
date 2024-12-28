@@ -29,7 +29,7 @@ class ProductPickingController extends Controller
 
         } catch (\Throwable $th) {
 
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 

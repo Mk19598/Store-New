@@ -1,0 +1,344 @@
+product_name,weight,sku,barcode,shelf_life
+GINGELLY OIL,200 ML,GIN-200ML,8900001771263,6 month
+GINGELLY OIL,500 ML,GIN-500ML,8900001771324,6 month
+GINGELLY OIL,1 LITRE,GIN-1L,8900001771430,6 month
+GINGELLY OIL,5 LITRES,GIN-5L,8900001771485,6 month
+GINGELLY OIL,15 LITRES,GIN-15L,8900001772468,6 month
+GINGELLY OIL (15 Kg TIN),16.5 LITRES,GIN-16.5L,8900001771515,6 month
+GROUNDNUT OIL,200 ML,GRO-200ML,8900001771256,6 month
+GROUNDNUT OIL,500 ML,GRO-500ML,8900001771317,6 month
+GROUNDNUT OIL,1 LITRE,GRO-1L,8900001771461,6 month
+GROUNDNUT OIL,5 LITRES,GRO-5L,8900001771478,6 month
+GROUNDNUT OIL,15 LITRES,GRO-15L,8900001772475,6 month
+GROUNDNUT OIL (15 Kg TIN),16.5 LITRES,GRO-16.5L,8900001771508,6 month
+COCONUT OIL,200ML,COC-200ML,8900001771270,6 month
+COCONUT OIL,500 ML,COC-500ML,8900001771348,6 month
+COCONUT OIL,1 LITRE,COC-1L,8900001771447,6 month
+COCONUT OIL,5 LITRE,COC-5L,8900001771492,6 month
+COCONUT OIL,15 LITRES,COC-15L,8900001772482,6 month
+COCONUT OIL (15 Kg TIN),16.5 LITRES,COC-16.5L,8900001771522,6 month
+,,,,
+WHITE SESAME OIL,200 ML,WHI-200ML,8900001771706,6 month
+WHITE SESAME OIL,500 ML,WHI-500ML,8900001771713,6 month
+WHITE SESAME OIL,1 LITRE,WHI-1L,8900001771720,6 month
+WHITE SESAME OIL,5 LITRES,WHI-5L,8900001771737,6 month
+WHITE SESAME OIL,15 LITRES,WHI-15L,8900001772499,6 month
+WHITE SESAME OIL (15 Kg TIN),16.5 LITRES,WHI-16.5L,8900001771744,6 month
+,,,,6 month
+SUNFLOWER OIL,200 ML,SUN-200ML,8900001772420,6 month
+SUNFLOWER OIL,500 ML,SUN-500ML,8900001772437,6 month
+SUNFLOWER OIL,1 LITRE,SUN-1L,8900001772444,6 month
+SUNFLOWER OIL,3 LITRES,SUN-3L,NO,6 month
+SUNFLOWER OIL,5 LITRES,SUN-5L,8900001772505,6 month
+SUNFLOWER OIL,15 LITRE,SUN-15L,8900001772512,6 month
+SUNFLOWER OIL (15 Kg TIN),16.5 LITRES,SUN-16.5L,8900001772529,6 month
+,,,,
+NEEM OIL,200 ML,NEM-200ML,8900001771287,12 month
+NEEM OIL,500 ML,NEM-500ML,8900001771645,12 month
+NEEM OIL,1 LITRE,NEM-1L,8900001771652,12 month
+NEEM OIL,5 LITRES,NEM-5L,8900001771676,12 month
+NEEM OIL,15 LITRES,NEM-15L,8900001772543,12 month
+NEEM OIL (15 Kg TIN),16.5 LITRES,NEM-16.5L,8900001771539,12 month
+,,,,
+CASTOR OIL,200 ML,CAS-200ML,8900001771294,6 month
+CASTOR OIL,500 ML,CAS-500ML,8900001771638,6 month
+CASTOR OIL,1 LITRE,CAS-1L,8900001771669,6 month
+CASTOR OIL,5 LITRES,CAS-5L,8900001772079,6 month
+CASTOR OIL,15 LITRES,CAS-15L,8900001772550,6 month
+CASTOR OIL (15 Kg TIN),16.5 LITRES,CAS-16.5L,8900001771546,6 month
+,,,,
+MAHUA OIL,200 ML,MAH-200ML,8900001771300,12 month
+MAHUA OIL,500 ML,MAH-500ML,8900001771836,12 month
+MAHUA OIL,1 LITRE,MAH-1L,8900001771850,12 month
+MAHUA OIL,5 LITRES,MAH-5L,8900001772567,12 month
+MAHUA OIL,15 LITRE,MAH-15L,8900001771874,12 month
+MAHUA OIL (15 Kg TIN),16.5 LITRES,MAH-16.5L,8900001771867,12 month
+,,,,
+GHEE,,,,
+Cow Ghee,200 ML,GHE-200ML,8900001771225,6 month
+,500 ML,GHE-500ML,8900001771249,6 month
+,,,,
+,,,,
+Berry Honey,300 GM,HBER-500G,8900001778071,36 month
+Neem Honey ,300 GM,HNEE-500G,8900001778064,36 month
+Kashmiri Acacia Honey,500 GM,HKAS-500G,8900001778057,36 month
+Litchi Honey,500 GM,HLIT-500G,8900001778026,36 month
+Tulsi Honey,500 GM,HTUL-500G,8900001778019,36 month
+Mustard Honey,500 GM,HMUS-500G,8900001778040,36 month
+Wild Forest Honey,300 GM,HWIL-300G,8900001772796,36 month
+Wild Forest Honey,500 GM,HWIL-500G,no,36 month
+Multi Floral Honey,30 GM,HMUL-30G,8900001772789,36 month
+Multi Floral Honey,300 GM,HMUL-300G,8900001771201,36 month
+Multi Floral Honey,500 GM,HMUL-500G,no,36 month
+,,,,
+,,,,
+,,,,
+Himalayan Salt 500 g,500g,HIS-500G,8900001771751,24 month
+Himalayan Salt 1 Kg ,1Kg,HIS-1KG,8900001771768,24 month
+Himalayan Salt 500 g - Crystal,500g,HIC-500G,8900001771799,24 month
+Himalayan Salt 1 Kg - Crystal,1Kg,HIC-1KG,8900001771805,24 month
+,,,,
+Palm Jaggery,500g,PAL-500G,8900001771393,9 month
+Palm Jaggery,1Kg,PAL-1KG,8900001771409,9 month
+,,,,
+Cane Sugar,500g,CAN-500G,8900001771416,6 month
+Cane Sugar,1Kg,CAN-1KG,8900001771423,6 month
+,,,,
+Cane Sugar sachet Box - 25 pcs,250g,CAN-250G,8900001772802,6 month
+16 Mooligai Nattu Sakkarai,500g,MOO-500G,8900001771355,6 month
+,,,,
+Instant Copper & Brass Cleaner,100 ML,ICB-100ML,8900001772604,24 month
+Instant Silver Cleaner,50 ML,INS-50ML,8900001772741,24 month
+,,,,
+,,,,
+Kodo Millets - Varagu,500 g,RKO-500G,8900001773731,6 month
+Banyard Millet - Kuthirai Vali,500 g,RBA-500G,8900001773748,6 month
+Little Millet - Saamai  ,500 g,RLI-500G,8900001771928,6 month
+Foxtail Millet - Thinai  ,500 g,RFO-500G,8900001771935,6 month
+Proso Millet - Pani Varagu  ,500 g,RPR-500G,8900001771942,6 month
+Finger Millet - Ragi ,500 g,RFI-500G,8900001771959,6 month
+Pearl millet - Nattu Kambu,500 g,RPE-500G,8900001771966,6 month
+Horsegram - Kollu,500 g,RHO-500G,8900001772024,6 month
+,,,,
+Kodo Millets - Varagu,5kg,RKO-5KG,8900001776633,6 month
+Banyard Millet - Kuthirai Vali,5kg,RBA-5KG,8900001776640,6 month
+Little Millet - Saamai  ,5kg,RLI-5KG,8900001776657,6 month
+Foxtail Millet - Thinai  ,5kg,RFO-5KG,8900001776664,6 month
+Proso Millet - Pani Varagu  ,5kg,RPR-5KG,8900001776671,6 month
+Finger Millet - Ragi ,5kg,RFI-5KG,8900001776688,6 month
+Pearl millet - Nattu Kambu,5kg,RPE-5KG,8900001776695,6 month
+Horsegram - Kollu,5kg,RHO-5KG,8900001776701,6 month
+,,,,
+,,,,
+Seeraga Samba Rice,500 g,RSE-500G,8900001771973,6 month
+Bridegroom Rice - Mapila Samba,500 g,RBR-500G,8900001771980,6 month
+Kattuyanam Rice,500 g,RKAT-500G,8900001771997,6 month
+Ponni Hand Pound ,500 g,RPH-500G,8900001772000,6 month
+AruVatham Kuruvai Rice,500 g,RAR-500G,8900001773755,6 month
+Karuppu Kavuni Boiled ,500 g,RKAK-500G,8900001773762,6 month
+Karunkuruvai Rice,500 g,RKAR-500G,8900001773779,6 month
+Kudavazhai Rice ,500 g,RKUD-500G,8900001773786,6 month
+Kullakar Rice,500 g,RKUL-500G,8900001773793,6 month
+Kichili Samba Rice,500 g,RKIC-500G,8900001773809,6 month
+Idly Rice,500 g,RID-500G,8900001776558,6 month
+Ponni Boiled Rice,500 g,RPOB-500G,8900001776565,6 month
+Ponni Raw Rice,500 g,RPOR-500G,8900001776572,6 month
+Salem Sanna Rice,500 g,RSA-500G,8900001776589,6 month
+Thooyamalli Rice,500 g,RTHB-500G,8900001776596,6 month
+Thooyamalli Raw Rice,500 g,RTHR-500G,8900001776602,6 month
+Poongar Red Rice,500 g,RPOO-500G,8900001776619,6 month
+Red Puttu Rice,500 g,RREP-500G,8900001776626,6 month
+,,,,
+Seeraga Samba Rice,5Kg,RSE-5KG,8900001776718,6 month
+Bridegroom Rice - Mapila Samba,5Kg,RBR-5KG,8900001776725,6 month
+Kattuyanam Rice / Red Rice,5Kg,RKAT-5KG,8900001776732,6 month
+Ponni Hand Pound - Kai Kuthal Rice,5Kg,RPH-5KG,8900001776749,6 month
+AruVatham Kuruvai Rice,5Kg,RAR-5KG,8900001773045,6 month
+Karuppu Kavuni Boiled,5Kg,RKAK-5KG,8900001773052,6 month
+Karunkuruvai Rice,5Kg,RKAR-5KG,8900001773069,6 month
+Kudavazhai Rice ,5Kg,RKUD-5KG,8900001773076,6 month
+Kullakar Rice,5Kg,RKUL-5KG,8900001773083,6 month
+Kichili Samba Rice,5Kg,RKIC-5KG,8900001773090,6 month
+Idly Rice,5Kg,RID-5KG,8900001773106,6 month
+Ponni Boiled Rice,5Kg,RPOB-5KG,8900001773113,6 month
+Ponni Raw Rice,5Kg,RPOR-5KG,8900001773120,6 month
+Salem Sanna Rice,5Kg,RSA-5KG,8900001773137,6 month
+Thooyamalli Rice,5Kg,RTHB-5KG,8900001773144,6 month
+Thooyamalli Raw Rice,5Kg,RTHR-5KG,8900001773151,6 month
+Poongar Red Rice,5Kg,RPOO-5KG,8900001773168,6 month
+Red Puttu Rice,5Kg,RREP-5KG,8900001773175,6 month
+,,,,
+,,,,
+Finger MilletNoodles| Ragi Noodles,175Gm,MNFI-175G,8900001772628,9 month
+Kodo Millet Noodles|Varagu Noodles,175 Gm,MNKO-175G,8900001772635,9 month
+Little Millet Noodles| Samai Noodles,175 Gm,MNLI-175G,8900001772642,9 month
+Moringa Noodles| Murungakeerai Noodles,175 Gm,MNMO-175G,8900001772659,9 month
+Barnyard Millet Noodles| Kuthiraivalli Noodles,175 Gm,MNBA-175G,8900001772666,9 month
+Pearl Millet Noodles| Kambu Noodles,175 Gm,MNPE-175G,8900001772673,9 month
+Proso Millet Noodles| Panivaragu Noodles,175 Gm,MNPR-175G,8900001772680,9 month
+Samba Wheat Noodles| Samba Noodles,175 Gm,MNSA-175G,8900001772697,9 month
+Multi Millet Noodles| Mixed Millet Noodles,175 Gm,MNMU-175G,8900001772703,9 month
+Sorghum/Jowar Noodles|Cholam Noodles,175 Gm,MNSO-175G,8900001772710,9 month
+Red Rice Noodles| Sivapu Arisi Noodles,175 Gm,MNRE-175G,8900001772727,9 month
+Foxtail Millet Noodles| Thinai Noodles,175 Gm,MNFO-175G,8900001772734,9 month
+,,,,
+Millet Vermicelli   ,,,,
+MultiMillet Vermicelli,180 Gm,VMU-180G,8900001776848,9 month
+Little Millet Vermicelli,180 Gm,VLI-180G,8900001776855,9 month
+Kodo Millet Vermicelli,180 Gm,VKO-180G,8900001776862,9 month
+Foxtail Millet Vermicelli,180 Gm,VFO-180G,8900001776879,9 month
+Finger Millet Vermicelli,180 Gm,VFI-180G,8900001776886,9 month
+Barnyard Millet Vermicelli,180 Gm,VBA-180G,8900001776893,9 month
+Pearl Millet Vermicelli,180 Gm,VPE-180G,8900001773205,9 month
+,,,,
+,,,,
+Kodo Millet Biscuit|Varagu Biscuit,100 Gm,BKO-100G,8900001776909,6 month
+Foxtail Millet Biscuit| Thinai Biscuit,100 Gm,BFO-100G,8900001776916,6 month
+Barnyard Millet Biscuits| Kuthiraivalli Biscuits,100 Gm,BBAR-100G,8900001776923,6 month
+Little Millet Biscuit| Samai Biscuit,100 Gm,BLI-100G,8900001776930,6 month
+Finger Millet Biscuit| Ragi Biscuit,100 Gm,BFI-100G,8900001776947,6 month
+Pearl Millet Biscuit| Kambu Biscuit,100 Gm,BPE-100G,8900001776954,6 month
+Mixed Millet Biscuit|Sirudhaniyam Biscuit,100 Gm,BMI-100G,8900001776961,6 month
+,,,,
+Avaram poo Biscuit,75 Gms,BAV-75G,8900001773212,3 month
+Hibiscus Biscuit,75 Gms,BHI-75G,8900001773229,3 month
+Banana Stem Biscuit,75 Gms,BBAN-75G,,3 month
+Baloon Vine Biscuit,75 Gms,BBAL-75G,,3 month
+Moringa Leaf Biscuit,75 Gms,BMO-75G,,3 month
+Amla Biscuit,75 Gms,BAM-75G,,3 month
+5 Greens Biscuit,75 Gms,BGR-75G,,3 month
+White Lotus Biscuit,75 Gms,BWH-75G,,3 month
+Vallarai Biscuit,75 Gms,BVA-75G,,3 month
+Thuthuvalai Biscuit,75 Gms,BTH-75G,,3 month
+Pirandai Biscuit,75 Gms,BPI-75G,,3 month
+Thulasi Biscuit,75 Gms,BTL-75G,,3 month
+Black Rice Biscuit,75 Gms,BBL-75G,,3 month
+,,,,
+ Degree Coffee,,,,
+Kumbakonam Degree Coffee,250 Gm,KUM-250G,8900001777050,
+,,,,
+Soaps,,,,
+Aloevera Soap,100Gm,SAL-100G,8900001777067,12 month
+Charcoal Soap,100Gm,SCH-100G,8900001777074,12 month
+Wild Turmeric Soap,100Gm,SWI-100G,8900001777081,12 month
+Multani mitti Soap,100Gm,SMU-100G,8900001777098,12 month
+Neem Soap,100Gm,SNE-100G,8900001777104,12 month
+Green Gram Soap,100Gm,SGR-100G,8900001777111,12 month
+HERBAL BATH SOAP,100Gm,SHER-100G,8900001777128,12 month
+Vettiver Soap,100Gm,SVE-100G,8900001777135,12 month
+Red wine Soap,100Gm,SRW-100G,8900001777142,12 month
+Goat Milk Soap,100Gm,SGO-100G,8900001777159,12 month
+Papaya Soap,100Gm,SPA-100G,8900001777166,12 month
+Avarampoo Soap,100Gm,SAV-100G,8900001777173,12 month
+Cucumber Soap,100Gm,SCU-100G,8900001777180,12 month
+Kupaimeni Soap,100Gm,SKUP-100G,8900001777241,12 month
+Tulasi  Soap,100Gm,STU-100G,8900001777807,12 month
+Nalangu Maavu  Soap,100Gm,SNA-100G,8900001777814,12 month
+Jathikai  Soap,100Gm,SJA-100G,8900001777821,12 month
+,,,,
+,,,,
+Millet Health Mix,200Gm,MIX-200G,8900001777296,9 month
+,,,,
+,,,,
+Homewood Strong Tea ,500 Gm,TST-500G,8900001777326,9 month
+Homewood Masala Tea ,500 Gm,TMA-500G,8900001777340,9 month
+Homewood CardamomTea ,500 Gm,TCA-500G,,9 month
+,,,,
+,,,,
+Millet Flakes | Samai Avul,250 Gm,FSA-250G,8900001777487,6 month
+Millet Flakes | Thinai Avul,250 Gm,FTH-250G,8900001777494,6 month
+Millet Flakes | Varagu Avul,250 Gm,FVA-250G,8900001777500,6 month
+Millet Flakes | Kuthiraivalli Avul,250 Gm,FKU-250G,8900001777517,6 month
+,,,,
+,,,,
+sambar-powder,250 Gm,SPSA-100G,8900001777890,6 month
+rasam-powder,250 Gm,SPRA-100G,8900001777906,6 month
+vatha-kulambu-powder,250 Gm,SPVA-100G,8900001777913,6 month
+kulambu-masala-powder,250 Gm,SPKU-100G,8900001777920,6 month
+chettinad-masala-powder,250 Gm,SPCH-100G,8900001777937,6 month
+65-masala-powder,250 Gm,SP65-100G,8900001777944,6 month
+turmeric-powder,100 Gm,SPTU-100G,8900001777951,6 month
+coriander-powder,100 Gm,SPCO-100G,8900001777968,6 month
+long-chilli-powder,100 Gm,SPLO-100G,8900001777975,6 month
+kashmiri-red-chilli-powder,100 Gm,SPKA-100G,8900001777982,6 month
+curry-powder,250 Gm,SPCU-100G,8900001777999,6 month
+pepper-powder,100 Gm,SPPE-100G,8900001778002,6 month
+,,,,
+Shikakai Powder,200 Gm,SHI-200G,8900001777555,12 month
+,,,,
+,,,,
+Drumstick leaf - Murunkai Illai,100 Gm,PODL-100G,8900001772857,2 month
+Milagai Idly Podi,100 Gm,POMI-100G,8900001777562,2 month
+Drumstick flower - Murunkai Poo,100 Gm,PODF-100G,8900001772864,2 month
+Centella/Asiatic pennywort - Vallarai,100 Gm,POCE-100G,8900001772871,2 month
+Senna auriculata - Avarampoo,100 Gm,POSE-100G,8900001772888,2 month
+BALLOON VINE - Mudakathan,100 Gm,POBA-100G,8900001772895,2 month
+Veld grape - Pirandai,100 Gm,POVE-100G,8900001772901,2 month
+Lentils - Paruppu,100 Gm,POLE-100G,8900001772918,2 month
+Gooseberry - Nellaikkay,100 Gm,POGO-100G,8900001772925,2 month
+Coriander - Kothamalli,100 Gm,POCO-100G,8900001772932,2 month
+Sesame Seeds - Ellu,100 Gm,POSS-100G,8900001772949,2 month
+Garlic - Puntu,100 Gm,POGA-100G,8900001772956,2 month
+Horse gram - Kollu,100 Gm,POHO-100G,8900001772963,2 month
+Mint - Puthina,100 Gm,POPU-100G,8900001772970,2 month
+Curry leaves - Karuvepillai,100 Gm,POCU-100G,8900001772987,2 month
+Coconut Rice Podi,100 Gm,POCOR-100G,8900001772994,2 month
+Angaya Podi,100 Gm,POAN-100G,8900001773007,2 month
+Dosa Podi,100 Gm,PODO-100G,8900001773014,2 month
+Solanum Trilobatum - Thuthuvalai,100 Gm,POTHU-100G,8900001773021,2 month
+,,,,
+,,,,
+Black Channa,500 Gms,PUBL-500G,8900001777579,6 month
+Channa Dhall,500 Gms,PUCH-500G,8900001777586,6 month
+Fried Gram Split,400 Gms,PUFR-400G,8900001777593,6 month
+Moong Dhall,500 Gms,PUMO-500G,8900001777609,6 month
+Orid Dhall,500 Gms,PUOR-500G,8900001777616,6 month
+Toor Dhall,500 Gms,PUTO-500G,8900001777623,6 month
+Tamarind - 250 Gms,250 Gms,PUTA-250G,8900001777630,6 month
+Tamarind - 500 Gms,500 Gms,PUTA-500G,8900001777647,6 month
+Black Channa,5Kg,PUBL-5KG,8900001777838,6 month
+Channa Dhall,5Kg,PUCH-5KG,8900001777845,6 month
+Fried Gram Split,5Kg,PUFR-5KG,8900001777852,6 month
+Moong Dhall,5Kg,PUMO-5KG,8900001777869,6 month
+Orid Dhall,5Kg,PUOR-5KG,8900001777876,6 month
+Toor Dhall,5Kg,PUTO-5KG,8900001777883,6 month
+,,,,
+,,,,
+Barnyard Millet Pasta,175 Gm,PABA-175G,8900001777654,9 month
+Finger Millet Pasta,175 Gm,PAFI-175G,8900001777661,9 month
+Foxtail Millet Pasta,175 Gm,PAFO-175G,8900001777678,9 month
+Kodo Millet Pasta,175 Gm,PAKO-175G,8900001777685,9 month
+Little Millet Pasta,175 Gm,PALI-175G,8900001777692,9 month
+Moringa Millet Pasta,175 Gm,PAMO-175G,8900001777708,9 month
+Multi Millet Pasta,175 Gm,PAMU-175G,8900001777715,9 month
+Pearl Millet Pasta,175 Gm,PAPE-175G,8900001777722,9 month
+Redrice Millet Pasta,175 Gm,PARE-175G,8900001777739,9 month
+Sorghum Millet Pasta,175 Gm,PASO-175G,8900001777746,9 month
+Proso Millet Pasta,175 Gm,PMP-175G,8900001778088,9 month
+Samba Wheat Pasta,175 Gm,SWP-175G,8900001777748,9 month
+,,,,
+,,,,
+Amirtham Powder,100 Gm,AMR-100G,8900001777753,9 month
+Beetroot Malt,210 Gm,BTM-210G,8900001777760,10 month
+FacePack Powder,100 Gm,FAC-100G,8900001777777,9 month
+Tooth Powder,100 Gm,TOP-100G,8900001777784,9 month
+ABC MALT,,ABC-200G,8900001777760,
+Almond oil,,EAL-60ML,8900001777425,6 month
+Eucalyptus Oil,,EEU-100ML,8900001777449,5 year
+Lemon Grass Oil,,ELE-100ML,8900001777456,5 year
+,,,,
+Palm Candy,,PAC-200G,8900001772598,
+Black sesame chikki,,SES-200G,8900001772383,2 month
+Groundnut chikki,,KAD-200G,8900001772343,2 month
+peanut nice chikki,,NPC-200G,8900001771614,2 month
+palm jaggery peanut chikki,,PJPC-100G,8900001773595,2 month
+Peanut ball,,PCB-80G,8900001773496,2 month
+Sesame ball ,,BSB-80G,8900001773502,2 month
+Kamarkut,,KAM-80G,8900001773519,2 month
+Ginger candy,,GIC-50G,8900001773526,2 month
+palm jaggery Ginger candy,,PJGC-50G,8900001773533,2 month
+wheat badam cookies,,WBA-90G,,3 month
+ wheat  butter cookies,,WBU-90G,,3 month
+ wheat  natural cookies,,WNA-90G,,3 month
+Pearl Millet Chikki,,PMC-70G,,3 month
+foxtailMillet Chikki,,FMC-70G,,3 month
+,,,,
+Finger Millet Sweet Pops,,FIP-55G,,3 month
+FoxtailMillet Sweet Pops,,FOP-55G,,3 month
+Little Millet Sweet Pops,,LIP-55G,,3 month
+Barnyard Sweet Pops,,BFS-55G,,3 month
+Barnyard crispy Pops ,,,,3 month
+,,,,
+SUGAR CANE JAGGERY,500G,SCJBALL-500G,8900001778095,
+SUGAR CANE JAGGERY ,1KG,SCJBALL-1KG,8900001771881,
+,,,,
+BLACK URAD DHALL,,URAD-BL-500G,8900001778101,
+,,,,
+,,,,
+RAGI BISCUITS,,BRA-100G,,
+BEETROOT SOAP,,SBE-100G,8900001777227,
+REDSANDAL SOAP,,SRS-100G,8900001777197,
+ROSE SOAP,,SRO-100G,8900001777210,
+SANDAL SOAP,,SSD-100G,8900001777203,
+,,,,
+SUNFLOWER HONEY,,HSUN-500G,8900001773441,

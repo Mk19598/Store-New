@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             SiteSettingSeeder::class,
             CredentialsSeeder::class,
             ContentTemplateSeeder::class,
+            ProductSeeder::class
         ]);
     }
 }

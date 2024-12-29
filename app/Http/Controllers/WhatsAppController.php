@@ -16,7 +16,6 @@ use App\Models\EnvSetting;
 
 class WhatsAppController extends Controller
 {
-
     public function __construct()
     {
         $this->client = new Client();
@@ -30,16 +29,12 @@ class WhatsAppController extends Controller
             return view('WhatsApp.Index', $data);
 
         } catch (\Throwable $th) {
-
-            return view('layouts.404-Page');
-
+            return view('layouts.error-pages.404-Page');
         }
-       
     }
 
     public function sendMessageText(Request $request)
     {
-
         try {
 
             $request->validate([
@@ -257,10 +252,8 @@ class WhatsAppController extends Controller
         }
     } 
 
-
     public function OrderShipped(Request $request)
     {
-
         try {
 
             $order = Order::wherein('id', [1,2,3])->get();
@@ -320,8 +313,6 @@ class WhatsAppController extends Controller
             return back()->with('success', 'Request failed');
         }
     } 
-
-
 
     public function CartAbandonment(Request $request)
     {
@@ -384,10 +375,8 @@ class WhatsAppController extends Controller
         }
     } 
 
-
     public function NewOrderReceived(Request $request)
     {
-
         try {
 
             $order = Order::wherein('id', [1,2,3])->get();
@@ -437,6 +426,4 @@ class WhatsAppController extends Controller
             return back()->with('success', 'Request failed');
         }
     } 
-
-
 }

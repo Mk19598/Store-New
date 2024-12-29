@@ -22,9 +22,8 @@ class InventoryManagementController extends Controller
 {
     public function Index()
     {
-        try
-        {
-                    
+        try{
+
             $data = array(
                 'title' => "Inventory Management | " . CustomHelper::Get_website_name() ,
                 'inventory_count' => InventoryManagement::count() ,
@@ -36,23 +35,18 @@ class InventoryManagementController extends Controller
         }
         catch(\Throwable $th)
         {
-
-            return $th;
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 
     public function create()
     {
-        try
-        {
+        try{
             return view('inventory.create');
-
         }
         catch(\Throwable $th)
         {
-            return view('layouts.404-Page');
-
+            return view('layouts.error-pages.404-Page');
         }
     }
 
@@ -341,27 +335,25 @@ class InventoryManagementController extends Controller
 
             InventoryManagement::create($validated);
 
-            return redirect()->route('inventory.index')
-                ->with('success', $message);
-        } catch (\Throwable $th) {
-            return $th;
-            return view('layouts.404-Page');
+            return redirect()->route('inventory.index')->with('success', 'Inventory created successfully!'.$message);
+
+        }
+        catch(\Throwable $th)
+        {
+            return view('layouts.error-pages.404-Page');
         }
     }
 
     public function edit($id)
     {
-        try
-        {
+        try{
 
             $inventory = InventoryManagement::findOrFail($id);
             return view('inventory.edit', compact('inventory'));
-
         }
         catch(\Throwable $th)
         {
-
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 
@@ -660,11 +652,12 @@ class InventoryManagementController extends Controller
             $inventory->update($validated);
 
             return redirect()->route('inventory.index')
-                ->with('success', $message);
+                ->with('success', 'Inventory updated successfully.'.$message);
 
-        } catch (\Throwable $th) {
-            return $th;
-            return view('layouts.404-Page');
+        }
+        catch(\Throwable $th)
+        {
+            return view('layouts.error-pages.404-Page');
         }
     }
 
@@ -674,23 +667,17 @@ class InventoryManagementController extends Controller
         {
             $inventory = InventoryManagement::findOrFail($id)->delete();
 
-            return redirect()
-                ->route('inventory.index')
-                ->with('success', 'Inventory item deleted successfully.');
-
+            return redirect()->route('inventory.index')->with('success', 'Inventory item deleted successfully.');
         }
         catch(\Throwable $th)
         {
-
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 
     public function updateStatus(Request $request)
     {
         $inventory = InventoryManagement::find($request->id);
-
-
         
         $woocommerce_Credentials = Credentials::first();
 
@@ -739,9 +726,6 @@ class InventoryManagementController extends Controller
 
             return response()->json(['success' => true]);
         }
-
         return response()->json(['success' => false]);
     }
-
 }
-

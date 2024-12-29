@@ -214,7 +214,7 @@
                     </li> --}}
 
                     {{-- Messenger --}}
-                    <li class="nav-item has-submenu">
+                    {{-- <li class="nav-item has-submenu">
                         <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse"
                             data-bs-target="#submenu-4" aria-expanded="false" aria-controls="submenu-4">
                             <span class="nav-icon">
@@ -239,10 +239,10 @@
                                 <li class="submenu-item"><a class="submenu-link" href="{{ route('message.index') }}">{{ ucwords(__('Send WhatsApp')) }}</a></li>
                             </ul>
                         </div>
-                    </li>
+                    </li> --}}
 
                     {{--  Template management --}}
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('template.index') }}">
                             <span class="nav-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-layout-text-window" viewBox="0 0 16 16">
@@ -252,7 +252,7 @@
                             </span>
                             <span class="nav-link-text">{{ ucwords(__('Content Template')) }}</span>
                         </a>
-                    </li>
+                    </li> --}}
 
                 </ul>
             </nav>

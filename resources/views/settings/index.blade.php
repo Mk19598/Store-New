@@ -15,6 +15,7 @@
         </div>
     @endif
 
+        {{-- General  --}}
     <div class="row g-4 settings-section">
         <div class="col-12 col-md-4">
             <h3 class="section-title">{{ __('General') }}</h3>
@@ -48,8 +49,8 @@
     @if ( auth()->user()->role == 1)
         <hr class="my-4">
 
+        {{-- App Credentials --}}
         <div class="row g-4 settings-section">
-
             <div class="col-12 col-md-4">
                 <h3 class="section-title"> App Credentials</h3>
                 <div class="section-intro"> Settings section goes here, Admin can set / change the dynamic Credentials  </div>
@@ -98,13 +99,12 @@
                 </div>
             </div>
         </div>
-
         <br>
+
         <hr class="my-4">
 
+        {{-- Email Credentials --}}
         <div class="row g-4 settings-section">
-        
-
             <div class="col-12 col-md-4">
                 <h3 class="section-title"> Email Credentials</h3>
                 <div class="section-intro"> Setting configuration section goes here, Admin can set / change the email Credentials dynamic</div>
@@ -169,10 +169,10 @@
                 </div>
             </div>
         </div>
-
         <br>
-        <hr class="my-4">
 
+        {{-- What'sApp Credentials --}}
+        {{-- <hr class="my-4">
         <div class="row g-4 settings-section">
 
             <div class="col-12 col-md-4">
@@ -209,12 +209,11 @@
                 </div>
             </div>
         </div>
+        <br> --}}
 
-        <br>
+        {{-- Shipping Credentials --}}
         <hr class="my-4">
-
         <div class="row g-4 settings-section">
-
             <div class="col-12 col-md-4">
                 <h3 class="section-title"> Shipping Credentials</h3>
                 <div class="section-intro"> Settings section goes here, Admin can set / change the Shipping Credentials dynamic Credentials  </div>
@@ -248,13 +247,10 @@
                 </div>
             </div>
         </div>
-
     @endif
-
 @endsection
 
 @section('scripts')
-
     <script>
         setTimeout(function() {
             let alert = document.querySelector('.alert');
@@ -264,5 +260,4 @@
             }
         }, 5000); 
     </script>
-
 @endsection

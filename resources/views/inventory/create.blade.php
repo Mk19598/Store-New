@@ -11,7 +11,7 @@
                 <form action="{{ route('inventory.store') }}" method="POST">
                     @csrf
                     
-                    <div class="row de-flex col-md-12">
+                    <div class="row d-flex col-md-12">
                         <div class="mb-3">
                             <label for="product_name" class="form-label">{{ __('Product Name') }}</label>
                             <input type="text" class="form-control" id="product_name" name="product_name" value="{{ old('product_name') }}" required>
@@ -21,7 +21,10 @@
                             <label for="weight" class="form-label">{{ __('Weight') }}</label>
                             <input type="text" class="form-control" id="weight" name="weight" value="{{ old('weight') }}" required>
                         </div>
+                    </div>
 
+                    <div class="row d-flex col-md-12">
+    
                         <div class="mb-3">
                             <label for="dukaan_sku" class="form-label">{{ __('Dukaan SKU') }}</label>
                             <input type="text" class="form-control" id="dukaan_sku" name="dukaan_sku" value="{{ old('dukaan_sku') }}" required>
@@ -31,13 +34,13 @@
                             <label for="sku" class="form-label">{{ __('Woocommerce SKU') }}</label>
                             <input type="text" class="form-control" id="sku" name="sku" value="{{ old('sku') }}" required>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="barcode" class="form-label">{{ __('BarCode') }}</label>
+                            <input type="text" class="form-control" id="barcode" name="barcode" value="{{ old('barcode') }}" required>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="barcode" class="form-label">{{ __('BarCode') }}</label>
-                        <input type="text" class="form-control" id="barcode" name="barcode" value="{{ old('barcode') }}" required>
-                    </div>
-                    
                     <div class="row de-flex col-md-12">
 
                         <div class="mb-3">
@@ -45,19 +48,19 @@
                                 <label for="Inventory" class="form-label">Inventory Status</label>
 
                                 <div class="d-flex justify-content-around align-items-center" style="width:50%;">
-                                    <div style="color:red;">outofstock</div>
+                                    <div style="color:red;">{{ ucwords("out of stock")}}</div>
                                         <div class="mt-1">
                                             <label class="switch">
                                                 <input name="inventory"  id="inventory" type="checkbox" >
                                                 <span class="slider round"></span>
                                             </label>
                                         </div>
-                                    <div style="color:green;margin-left: 11%;">instock</div>
+                                    <div style="color:green;margin-left: 11%;">{{ ucwords("in-Stock")}}</div>
                                 </div>
                             </div>
                         </div>
         
-                        <div class=" justify-content-end">
+                        <div class="col-md-12 text-left p-2">
                             <button type="submit" class="btn app-btn-primary">{{ __('Create Inventory') }}</button>
                         </div>
                     </div>

@@ -58,7 +58,8 @@ class OrderController extends Controller
 
         } catch (\Throwable $th) {
 
-            return view('layouts.404-page');
+            $data = array('err_msg' => $th->getMessage(),);
+            return view('layouts.error-pages.500-Page',$data);
         }
     }
 
@@ -676,9 +677,8 @@ class OrderController extends Controller
             return view('orders.index', $data);
             
         } catch (\Throwable $th) {
-
             // return $th->getMessage();
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 
@@ -746,7 +746,7 @@ class OrderController extends Controller
 
         } catch (\Throwable $th) {
             // return $th->getMessage();
-            return view('layouts.404-Page');
+            return view('layouts.error-pages.404-Page');
         }
     }
 

@@ -50,4 +50,9 @@ class CustomHelper
     {
         return "Required";
     }
+
+    public static function Get_ADMIN_MAIL()
+    {
+        return env('ADMIN_MAIL');
+    }
 }

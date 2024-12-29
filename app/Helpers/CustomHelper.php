@@ -41,4 +41,10 @@ class CustomHelper
         return $Shipping_Password;
     }
 
+    public static function StoreId()
+    {
+        $storeId = EnvSetting::query()->pluck('storeId')->first();
+        return $storeId;
+    }
+
 }

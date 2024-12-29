@@ -21,9 +21,14 @@
                             <label for="weight" class="form-label">{{ __('Weight') }}</label>
                             <input type="text" class="form-control" id="weight" name="weight" value="{{ old('weight') }}" required>
                         </div>
-    
+
                         <div class="mb-3">
-                            <label for="sku" class="form-label">{{ __('SKU') }}</label>
+                            <label for="dukaan_sku" class="form-label">{{ __('Dukaan SKU') }}</label>
+                            <input type="text" class="form-control" id="dukaan_sku" name="dukaan_sku" value="{{ old('dukaan_sku') }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sku" class="form-label">{{ __('Woocommerce SKU') }}</label>
                             <input type="text" class="form-control" id="sku" name="sku" value="{{ old('sku') }}" required>
                         </div>
                     </div>

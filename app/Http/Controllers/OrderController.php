@@ -765,57 +765,72 @@ class OrderController extends Controller
 
         $newLinks = array_diff($trackingLinks, $existingLinks);
 
-        $template = ContentTemplate::where('id','=',4)->first(); 
-        $template_description = $template->template_content ;
-        $EnvSetting = EnvSetting::first(); 
-        $accessToken = $EnvSetting->POETS_API_ACCESS_TOKEN;
-        $INSTANCE_ID = $EnvSetting->POETS_API_INSTANCE_ID;
-
         foreach ($newLinks as $newLink) {
             ShippingLink::create([
                 'order_id' => $data['order_id'],
                 'tracking_link' => $newLink,
                 'courier_id' => $courierId
             ]);
+        
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post('https://shipway.in/api/PushOrderData', [
+                    'username' => CustomHelper::Shipping_Username(),
+                    'password' => CustomHelper::Shipping_Password(),
+                    'carrier_id' => $courierId,
+                    'awb' => $newLink,
+                    'order_id' => $orders->order_id,
+                    'first_name' => $orders->buyer_first_name,
+                    'last_name' => $orders->buyer_last_name,
+                    'email' => $orders->buyer_email,
+                    'phone' => $orders->buyer_mobile_number,
+                    'products' => 'N/A',
+                    'company' => CustomHelper::Get_website_name(),
+                    'shipment_type' => '1',
+            ]);
+            print($response->successful());exit;
+            print($response->status());exit;
+            print($response->body());exit;
+            if ($response->successful()) {
+                $data = $response->json();
+                return $data;
+            } else {
+                $data['status'] = $response->status();
+                $data['body'] = $response->body();
+                return $data;
+            }
 
-            $response = Http::post('https://shipway.in/api/PushOrderData', [
-                'username' => CustomHelper::Shipping_Username(),
-                'password' => CustomHelper::Shipping_Password(),
-                'carrier_id' => $courierId,
-                'awb' => $newLink,
-                'order_id' => $orders->order_id,
-                'first_name' => $orders->buyer_first_name,
-                'last_name' => $orders->buyer_last_name,
-                'email' => $orders->buyer_email,
-                'phone' => $orders->buyer_mobile_number,
-                'products' => 'N/A',
-                'company' => CustomHelper::Get_website_name(),
-                'shipment_type' => '1',
-            ]);
+            // Removed Because of Web in use 
+
+            // $template = ContentTemplate::where('id','=',4)->first(); 
+            // $template_description = $template->template_content ;
+            // $EnvSetting = EnvSetting::first(); 
+            // $accessToken = $EnvSetting->POETS_API_ACCESS_TOKEN;
+            // $INSTANCE_ID = $EnvSetting->POETS_API_INSTANCE_ID;
+            
+            // $template_change = [
+            //     "{Name}",
+            //     "{orderno}",
+            // ];
         
-            $template_change = [
-                "{Name}",
-                "{orderno}",
-            ];
+            // $template_content = [
+            //     $orders->buyer_first_name.' '.$orders->buyer_last_name,      
+            //     $orders->order_id, 
+            // ];
         
-            $template_content = [
-                $orders->buyer_first_name.' '.$orders->buyer_last_name,      
-                $orders->order_id, 
-            ];
-        
-            $personalized_message = str_replace($template_change, $template_content, $template_description);
+            // $personalized_message = str_replace($template_change, $template_content, $template_description);
                              
-            $response = Http::asForm()->post('https://app.poetsmediagroup.com/api/send', [
-                'number' => '91' . $orders->buyer_mobile_number,
-                'type' => 'text',
-                'message' => html_entity_decode($personalized_message),
-                'instance_id' => $INSTANCE_ID,
-                'access_token' => $accessToken,
-            ]);
+            // $response = Http::asForm()->post('https://app.poetsmediagroup.com/api/send', [
+            //     'number' => '91' . $orders->buyer_mobile_number,
+            //     'type' => 'text',
+            //     'message' => html_entity_decode($personalized_message),
+            //     'instance_id' => $INSTANCE_ID,
+            //     'access_token' => $accessToken,
+            // ]);
 
         }
 
-        return $response;
+        // return $response;
         
     }
 

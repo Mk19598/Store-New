@@ -18,6 +18,7 @@ use App\Models\WoocommerceOrder;
 use App\Models\WoocommerceBuyer;
 use App\Models\WoocommerceShipping;
 use App\Models\WoocommerceOrderProduct;
+use App\Models\InventoryManagement;
 use App\Models\DukaanOrder;
 use App\Models\DukaanBuyer;
 use App\Models\DukaanOrderProduct;
@@ -219,6 +220,8 @@ class OrderController extends Controller
                         // 'taxes'         => !empty($order_product->taxes),
                         'sku'           => $order_product->sku,
                         'price'         => $order_product->price,
+                        'barcode'       => InventoryManagement::where('sku',$order_product->sku)->pluck('barcode')->first(),
+                        'barcode_image' => InventoryManagement::where('sku',$order_product->sku)->pluck('barcode_image')->first(),
                         'image'         => !empty($order_product->image) ? $order_product->image->src : null,
                         'parent_name'   => $order_product->parent_name,
                         'order_created_at'  => $order->date_created, 
@@ -471,7 +474,9 @@ class OrderController extends Controller
                             "unit"  => $orders_products['unit'],
                             "base_qty" => $orders_products['base_qty'],
                             "product_uuid" => $orders_products['product_uuid'],
-                            
+
+                            // "barcode"      => InventoryManagement::where('sku',$orders_products['sku'])->pluck('barcode')->first(),
+                            // 'barcode_image' => InventoryManagement::where('sku',$orders_products['sku'])->pluck('barcode_image')->first(),
                             "sku"          =>  $orders_products['sku'] ?? null, 
                             "sku_weight_unit" =>  $orders_products['sku_weight_unit'] ?? null,
                             "variant_size"    => $orders_products['variant_size'] ?? null,

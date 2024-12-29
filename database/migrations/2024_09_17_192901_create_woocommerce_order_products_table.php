@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('total_tax', 100)->nullable();
             $table->string('taxes', 100)->nullable();
             $table->string('sku', 100)->nullable();
+            $table->string('barcode', 200)->nullable();
+            $table->string('barcode_image', 200)->nullable();
             $table->string('price', 100)->nullable();
             $table->longText('image')->nullable();
             $table->string('parent_name', 100)->nullable();

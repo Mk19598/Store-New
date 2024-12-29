@@ -41,7 +41,7 @@ class InventoryProductSeeder extends Seeder
             InventoryManagement::insert($products);
             InventoryManagement::query()->update(['inventory' => 1, 'status' => 1]);
 
-            $this->command->info('Product seeding completed successfully!');
+            $this->command->info('Inventory Management Products seeding completed successfully!');
         } else {
             $this->command->info('No valid data found to seed.');
         }

@@ -48,6 +48,8 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('unit')->nullable();
             $table->float('base_qty', 8, 2)->nullable();
+            $table->string('barcode', 200)->nullable();
+            $table->string('barcode_image', 200)->nullable();
             $table->string('product_uuid')->nullable();
             $table->json('sku')->nullable();
             $table->json('sku_weight_unit')->nullable();

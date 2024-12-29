@@ -10,6 +10,7 @@ use App\Helpers\CustomHelper;
 use App\Models\WoocommerceOrder;
 use App\Models\DukaanOrder;
 use App\Models\WoocommerceOrderProduct;
+use App\Models\InventoryManagement;
 use App\Models\DukaanOrderProduct;
 use App\Models\Order;
 
@@ -45,6 +46,7 @@ class PackingOrderProductController extends Controller
                             $item['price']    = $item->selling_price;
                             $item['discount'] = $item->line_item_discount;
                             $item['sum_total_cost'] = $totalCostSum;
+                            $item['InventoryManagement'] = InventoryManagement::where('sku',$item->product_sku_id)->first();
                             return $item;
                         });
                     }
@@ -67,14 +69,14 @@ class PackingOrderProductController extends Controller
                             $item['price'] = $item->price;
                             $item['discount'] = null;
                             $item['sum_total_cost'] = $totalCostSum;
-        
+                            $item['InventoryManagement'] = InventoryManagement::where('sku',$item->sku_id)->first();
                             return $item;
                         });
                     }
         
                     return $item;
                 })->first();
-        
+
                 if (!$orders_collection) {
                     return response()->json(['status' => 'error', 'message' => 'Invalid Order ID, Please check the Order ID!'], 404);
                 }
@@ -103,7 +105,7 @@ class PackingOrderProductController extends Controller
             if ( $request->order_vai == "Dukkan" ) {
 
                 $order = DukaanOrderProduct::query()->where('order_id',$request->order_id)->where('order_vai',$request->order_vai)
-                                                    ->where('product_sku_id',$request->product_sku_id)->first();
+                                                    ->where('barcode',$request->barcode)->first();
 
                 if (!$order) {
                     return response()->json(['status' => 'error', 'message' => 'Invalid SKU ID, please check the SKU ID'], 404);
@@ -129,7 +131,7 @@ class PackingOrderProductController extends Controller
             if ( $request->order_vai == "woocommerce"  ) {
 
                 $order = WoocommerceOrderProduct::query()->where('order_id',$request->order_id)->where('order_vai',$request->order_vai)
-                                                        ->where('sku',$request->product_sku_id)->first();
+                                                        ->where('barcode',$request->barcode)->first();
 
                 if (!$order) {
                     return response()->json(['status' => 'error', 'message' => 'Invalid SKU ID, Please check the SKU ID'], 404);
@@ -175,6 +177,8 @@ class PackingOrderProductController extends Controller
                         $item['price'] = $item->selling_price;
                         $item['discount'] = $item->line_item_discount;
                         $item['sum_total_cost'] = $totalCostSum;
+                        $item['InventoryManagement'] = InventoryManagement::where('sku',$item->sku_id)->first();
+
                         return $item;
                     });
                 }
@@ -197,6 +201,7 @@ class PackingOrderProductController extends Controller
                         $item['price'] = $item->price;
                         $item['discount'] = null;
                         $item['sum_total_cost'] = $totalCostSum;
+                        $item['InventoryManagement'] = InventoryManagement::where('sku',$item->sku_id)->first();
 
                         return $item;
                     });
@@ -268,6 +273,8 @@ class PackingOrderProductController extends Controller
                         $item['price'] = $item->selling_price;
                         $item['discount'] = $item->line_item_discount;
                         $item['sum_total_cost'] = $totalCostSum;
+                        $item['InventoryManagement'] = InventoryManagement::where('sku',$item->sku_id)->first();
+
                         return $item;
                     });
                 }
@@ -290,6 +297,7 @@ class PackingOrderProductController extends Controller
                         $item['price'] = $item->price;
                         $item['discount'] = null;
                         $item['sum_total_cost'] = $totalCostSum;
+                        $item['InventoryManagement'] = InventoryManagement::where('sku',$item->sku_id)->first();
 
                         return $item;
                     });

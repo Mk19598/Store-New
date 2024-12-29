@@ -21,7 +21,7 @@
                     <div class="col-md-3"></div>
 
                     <div class="col-md-5">
-                        <input type="text" class="form-control" placeholder="Enter the Product SKU" name="product_sku_id" required>
+                        <input type="text" class="form-control" placeholder="Enter the Barcode" name="barcode" required>
                     </div>
         
                     <input  class="form-control" type="hidden" name="order_id" value="{{ @$orders_collection->order_id }}">
@@ -80,6 +80,12 @@
                                 <span> 
                                     {{ $item->product_name }}  <br> 
                                     {{ "SKU - {$item->sku_id}" }} <br>
+                                    {{ $item->InventoryManagement && isset($item->InventoryManagement['barcode']) ? "Barcode - {$item->InventoryManagement['barcode']}" : "Barcode - No data found" }} <br>
+
+                                    @if ( $item->InventoryManagement && isset($item->InventoryManagement['barcode_image']))
+                                        <img src="{{ URL::to('storage/app/private/public/barcodes/'.$item['barcode_image']) }}" alt="Barcode Image" width="150" class="mt-2" />
+                                    @endif
+
                                 </span>  
                             </div>
                         </div>

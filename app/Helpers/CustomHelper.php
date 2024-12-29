@@ -55,4 +55,10 @@ class CustomHelper
     {
         return env('ADMIN_MAIL');
     }
+    
+    public static function StoreId()
+    {
+        $storeId = EnvSetting::query()->pluck('storeId')->first();
+        return $storeId;
+    }
 }

@@ -43,6 +43,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('tracking-links', [App\Http\Controllers\OrderController::class, 'tracking_links'])->name('orders.tracking_links');
         Route::get('tracking-links/{orderId}', [App\Http\Controllers\OrderController::class, 'getTrackingLinks']);
         Route::post('shipping-label', [App\Http\Controllers\OrderController::class, 'shipping_label'])->name('orders.shipping_label');
+        Route::post('/notes', [App\Http\Controllers\OrderController::class, 'addOrderNotes'])->name('orders.add_notes');
+        Route::get('/notes/{orderId}', [App\Http\Controllers\OrderController::class, 'getOrderNotes'])->name('orders.get_notes');
+
     });
 
         // E-mail
@@ -86,6 +89,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'env-settings' ], function () {
         Route::post('update', [App\Http\Controllers\EnvSettingController::class, 'update'])->name('env_settings.Emailupdate');
         Route::post('shipping-update', [App\Http\Controllers\EnvSettingController::class, 'ShippingUpdate'])->name('env_settings.ShippingUpdate');
+        Route::post('store-id-update', [App\Http\Controllers\EnvSettingController::class, 'StoreIDUpdate'])->name('env_settings.StoreIDUpdate');
+
         // Route::post('whatsapp-update', [App\Http\Controllers\EnvSettingController::class, 'WhatsAppUpdate'])->name('env_settings.WhatsAppUpdate');
     });
 });

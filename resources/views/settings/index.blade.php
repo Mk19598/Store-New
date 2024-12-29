@@ -251,6 +251,39 @@
                 </div>
             </div>
         </div>
+
+        {{-- Store Credentials --}}
+        <hr class="my-4">
+        <div class="row g-4 settings-section">
+            <div class="col-12 col-md-4">
+                <h3 class="section-title"> Store Credentials</h3>
+                <div class="section-intro"> Settings section goes here, Admin can set / change the store Credentials dynamic Credentials  </div>
+            </div>
+            <div class="col-12 col-md-8">
+                <div class="app-card app-card-settings shadow-sm p-4">
+                    <div class="app-card-body">
+                        <form class="settings-form" action="{{ route('env_settings.StoreIDUpdate') }}" method="post">
+                            @csrf
+                            
+                            <div class="row d-flex">
+
+                                <label for="setting-input-1" class="form-label">{{ __("Store Credentials") }}</label>
+
+                                <div class="col-md-12 mb-3">
+                                    <small>{{ __('Store ID')}}</small>
+                                    <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->storeId }}" name="storeId" required>
+                                </div>
+                            
+                            </div>
+
+                            <div class="mt-3">
+                                <button type="submit" class="btn app-btn-primary">Save Changes</button>
+                            </div> 
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     @endif
 @endsection
 

@@ -17,6 +17,18 @@
         .order-summary td {border: 1px solid #ddd;padding: 8px;text-align: left;}
 
         .order-summary th {background-color: #f4f4f4;}
+
+        .badge.bg-completed {background-color: #28a745 !important;}
+
+        .badge.bg-processing {background-color: #0275d8;}
+
+        .badge.bg-shipped {background-color: #8051d7;}
+
+        .badge.bg-cancelled {background-color: #dc3545;}
+
+        .badge.bg-pending {background-color: #abab32;}
+
+        .badge.bg-refunded {background-color: #A52A2A;}
     </style>
 </head>
 
@@ -48,6 +60,7 @@
             @foreach ($orders_today as $key => $item)
                 <tr>
                     @php
+
                         $statusMap = [
                             'pending'    => ['pending', '0'],
                             'completed'  => ['completed', 5],
@@ -67,7 +80,7 @@
                     <td style="text-align: center;"> {{ $key+1 }} </td>
                     <td style="text-align: center;"> {{ $item->order_vai }} </td>
                     <td style="text-align: center;"> {{ $item->order_id }} </td>
-                    <td style="text-align: center;"> {{ ucwords($current_status)  }} </td>
+                    <td style="text-align: center;"> <span class="badge bg-{{ $current_status}}">{{ ucwords(@$current_status) }}</span></td>
                 </tr>
             @endforeach
         </tbody>

@@ -121,33 +121,33 @@
                                 <div class="row d-flex">
                                     <div class="col-md-6 mb-3">
                                         <small>{{ __('MAIL HOST')}}</small>
-                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_HOST }}" name="MAIL_HOST" >
+                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_HOST }}" name="MAIL_HOST" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <small>{{ __('MAIL PORT')}}</small>
-                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_PORT }}" name="MAIL_PORT" >
+                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_PORT }}" name="MAIL_PORT" required>
                                     </div>
                                 </div>
                                 
                                 <div class="row d-flex">
                                     <div class="col-md-6 mb-3">
                                         <small>{{ __('MAIL USERNAME')}}</small>
-                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_USERNAME }}" name="MAIL_USERNAME" >
+                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_USERNAME }}" name="MAIL_USERNAME" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <small>{{ __('MAIL PASSWORD')}}</small>
-                                        <input type="password" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_PASSWORD }}" name="MAIL_PASSWORD" >
+                                        <input type="password" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_PASSWORD }}" name="MAIL_PASSWORD" required>
                                     </div>
                                 </div>
 
                                 <div class="row d-flex">
                                     <div class="col-md-6 mb-3">
                                         <small>{{ __('MAIL ENCRYPTION')}}</small>
-                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_ENCRYPTION }}" name="MAIL_ENCRYPTION" >
+                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_ENCRYPTION }}" name="MAIL_ENCRYPTION" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <small>{{ __('MAIL FROM ADDRESS')}}</small>
-                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_FROM_ADDRESS }}" name="MAIL_FROM_ADDRESS" >
+                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_FROM_ADDRESS }}" name="MAIL_FROM_ADDRESS" required>
                                     </div>
                                 </div>
 
@@ -155,10 +155,14 @@
                                 <div class="row d-flex">
                                     <div class="col-md-6 mb-3">
                                         <small>{{ __('MAIL FROM NAME')}}</small>
-                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_FROM_NAME }}" name="MAIL_FROM_NAME" >
+                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->MAIL_FROM_NAME }}" name="MAIL_FROM_NAME" required>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <small>{{ __('ADMIN MAIL')}}</small>
+                                        <input type="text" class="form-control" id="setting-input-1" value="{{ @$EnvSettings->ADMIN_MAIL }}" name="ADMIN_MAIL" required>
                                     </div>
                                 </div>
-                                
                             </div>
 
                             <div class="mt-3">

@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use Automattic\WooCommerce\Client;
+use Carbon\Carbon;
 use App\Helpers\CustomHelper;
 use App\Models\EnvSetting;
 
@@ -20,7 +21,7 @@ class EnvSettingController extends Controller
     {
         try
         {
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'MAIL_HOST' => 'required|string',
                 'MAIL_PORT' => 'required|integer',
                 'MAIL_USERNAME' => 'required|string',
@@ -29,7 +30,11 @@ class EnvSettingController extends Controller
                 'MAIL_FROM_ADDRESS' => 'nullable|email',
                 'MAIL_FROM_NAME' => 'nullable|string',
             ]);
-
+            
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+            
             $mailSetting = EnvSetting::first(); 
 
             if (!$mailSetting) {
@@ -43,6 +48,7 @@ class EnvSettingController extends Controller
             $mailSetting->MAIL_ENCRYPTION = $request->MAIL_ENCRYPTION;
             $mailSetting->MAIL_FROM_ADDRESS = $request->MAIL_FROM_ADDRESS;
             $mailSetting->MAIL_FROM_NAME = $request->MAIL_FROM_NAME;
+            $mailSetting->ADMIN_MAIL = $request->ADMIN_MAIL;
         
             $mailSetting->save();
             
@@ -55,10 +61,10 @@ class EnvSettingController extends Controller
                 'MAIL_ENCRYPTION' => $request->MAIL_ENCRYPTION,
                 'MAIL_FROM_ADDRESS' => $request->MAIL_FROM_ADDRESS,
                 'MAIL_FROM_NAME' => $request->MAIL_FROM_NAME,
+                'ADMIN_MAIL' => $request->ADMIN_MAIL,
             ]);
 
             return redirect()->back()->with('success', 'Mail configuration updated successfully.');
-
         }
         catch(\Throwable $th)
         {
@@ -132,10 +138,14 @@ class EnvSettingController extends Controller
     {
         try{
 
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'Shipping_Username' => 'required|string',
                 'Shipping_Password' => 'required|string',
             ]);
+            
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
 
             $ShippingSetting = EnvSetting::first(); 
 

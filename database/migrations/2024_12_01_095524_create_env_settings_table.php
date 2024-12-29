@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('MAIL_ENCRYPTION')->nullable();
             $table->longText('MAIL_FROM_ADDRESS')->nullable();
             $table->longText('MAIL_FROM_NAME')->nullable();
+            $table->longText('ADMIN_MAIL')->nullable();
             $table->longText('POETS_API_ACCESS_TOKEN')->nullable();
             $table->longText('POETS_API_INSTANCE_ID')->nullable();
             $table->longText('Shipping_Username')->nullable();

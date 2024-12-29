@@ -29,6 +29,7 @@ class ENVSettingsSeeder extends Seeder
                'POETS_API_INSTANCE_ID'  => '66F1315A60C97',
                'Shipping_Username'  => 'vinayagamrajha',
                'Shipping_Password'  => '2b1581466e8b80cb45c0e6334f781595',
+               'storeId'  => '987ba0ae-5a55-4732-8142-d8d9603bb74a',
                'created_at' => Carbon::now(),
                'updated_at' => null,
             ],

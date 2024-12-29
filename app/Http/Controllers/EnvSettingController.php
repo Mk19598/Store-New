@@ -155,4 +155,30 @@ class EnvSettingController extends Controller
             return view('layouts.error-pages.404-Page');
         }
     }
+
+    public function StoreIDUpdate(Request $request)
+    {
+        try{
+
+            $request->validate([
+                'storeId' => 'required|string',
+            ]);
+
+            $ShippingSetting = EnvSetting::first(); 
+
+            if (!$ShippingSetting) {
+                $ShippingSetting = new EnvSetting();
+            }
+
+            $ShippingSetting->storeId = $request->storeId;
+            $ShippingSetting->save();
+            
+            return redirect()->back()->with('success', 'storeId configuration updated successfully.');
+
+        }
+        catch(\Throwable $th)
+        {
+            return view('layouts.error-pages.404-Page');
+        }
+    }
 }

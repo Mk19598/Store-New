@@ -169,7 +169,7 @@ class InventoryManagementController extends Controller
             $product = $collection->firstWhere('sku', $skuToFind);
 
             $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
-            $storeId = '987ba0ae-5a55-4732-8142-d8d9603bb74a';
+            $storeId =  CustomHelper::StoreId();
             $dukaanSkuCode = $validated['dukaan_sku'];
 
             $dukaanResponse = Http::withHeaders([
@@ -470,7 +470,7 @@ class InventoryManagementController extends Controller
             $product = $collection->firstWhere('sku', $skuToFind);
 
             $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
-            $storeId = '987ba0ae-5a55-4732-8142-d8d9603bb74a';
+            $storeId =  CustomHelper::StoreId();
             $dukaanSkuCode = $validated['dukaan_sku'];
 
             $dukaanResponse = Http::withHeaders([

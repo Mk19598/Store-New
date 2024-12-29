@@ -26,6 +26,7 @@ use App\Models\ShippingLink;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Models\ContentTemplate;
 use App\Models\EnvSetting;
+use App\Models\OrderNotes;
 
 class OrderController extends Controller
 {
@@ -788,17 +789,17 @@ class OrderController extends Controller
                     'company' => CustomHelper::Get_website_name(),
                     'shipment_type' => '1',
             ]);
-            print($response->successful());exit;
-            print($response->status());exit;
-            print($response->body());exit;
-            if ($response->successful()) {
-                $data = $response->json();
-                return $data;
-            } else {
-                $data['status'] = $response->status();
-                $data['body'] = $response->body();
-                return $data;
-            }
+            // print($response->successful());exit;
+            // print($response->status());exit;
+            // print($response->body());exit;
+            // if ($response->successful()) {
+            //     $data = $response->json();
+            //     return $data;
+            // } else {
+            //     $data['status'] = $response->status();
+            //     $data['body'] = $response->body();
+            //     return $data;
+            // }
 
             // Removed Because of Web in use 
 
@@ -901,10 +902,50 @@ class OrderController extends Controller
         $data = array(
             'orders' => $orders
         );
-        $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait');
-
+        // $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait')->setOption('margin-top', 0)
+        ->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);    
+        
         return $pdf->download('shipping_labels.pdf');
         
         // return $orders ;
     }
+
+
+    public function addOrderNotes(Request $request)
+    {
+        $data = $request->all();
+
+
+        
+        $data = $request->all();
+        
+        $orders = Order::query()->where('order_uuid', $data['order_id'])->first();
+        $order = Order::where('order_uuid', $data['order_id'])->first();
+
+        $notesLinks = $data['notes'] ?? [];
+        
+        $existingnotes = OrderNotes::where('order_id', $data['order_id'])->pluck('notes')->toArray();
+
+        $newLinks = array_diff($notesLinks, $existingnotes);
+
+        foreach ($newLinks as $newLink) {
+            OrderNotes::create([
+                'order_id' => $data['order_id'],
+                'notes' => $newLink,
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Notes added successfully.']);
+    }
+
+    public function getOrderNotes($orderId)
+    {
+        $notes = OrderNotes::where('order_id', $orderId)->get(); 
+        if ($notes) {
+            return response()->json(['notes' => $notes], 200);
+        }
+        return response()->json(['notes' => []], 200);
+    }   
+
 }

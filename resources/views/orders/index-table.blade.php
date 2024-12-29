@@ -37,6 +37,10 @@
                         <a href="javascript:void(0);" class="add-tracking-link-btn" data-order-id="{{ $order->order_uuid }}">
                             <i class="bi bi-geo-alt"></i>
                         </a>
+                        <a href="javascript:void(0);" class="add-order-note-btn" data-order-id="{{ $order->order_uuid }}">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+
                     </td>
                 </tr>
             @endforeach
@@ -75,6 +79,30 @@
                     <button type="submit" class="btn btn-primary" id="save-tracking-links">Save</button>
                 </div>
             </form> 
+        </div>
+    </div>
+</div>
+
+
+<!-- Notes Modal -->
+<div class="modal fade" id="orderNotesModal" tabindex="-1" aria-labelledby="orderNotesModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderNotesModalLabel">Add Order Notes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="orderNotesForm">
+                @csrf
+                <div class="modal-body">
+                    <div id="order-notes-container"></div>
+                    <button type="button" class="btn btn-outline-primary" id="add-order-note">Add Note</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Notes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -190,5 +218,96 @@
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const notesContainer = document.getElementById("order-notes-container");
+    const addNoteBtn = document.getElementById("add-order-note");
+    const notesForm = document.getElementById("orderNotesForm");
+    let baseURL = "{{ URL::to('/') }}"; 
+
+    document.querySelectorAll(".add-order-note-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            const orderId = this.getAttribute("data-order-id");
+            const url = `${baseURL}/orders/notes/${orderId}`;
+            console.log('url ID:', url);
+            console.log('Order ID:', orderId);
+
+            $.ajax({
+                url: `${baseURL}/orders/notes/${orderId}`,
+                method: 'GET',
+                success: function (response) {
+                    notesContainer.innerHTML = '';
+                    if (response.notes && response.notes.length > 0) {
+                        response.notes.forEach((note, index) => {
+                            const noteInput = document.createElement("div");
+                            noteInput.classList.add("mb-3");
+                            noteInput.innerHTML = `
+                                <label for="note-${index + 1}" class="form-label">Note ${index + 1}</label>
+                                <input type="text" class="form-control" id="note-${index + 1}" name="notes[]" value="${note.notes}" placeholder="Enter note">
+                            `;
+                            notesContainer.appendChild(noteInput);
+                        });
+                    } else {
+                        const noteInput = document.createElement("div");
+                        noteInput.classList.add("mb-3");
+                        noteInput.innerHTML = `
+                            <label for="note-1" class="form-label">Note</label>
+                            <input type="text" class="form-control" id="note-1" name="notes[]" placeholder="Enter note">
+                        `;
+                        notesContainer.appendChild(noteInput);
+                    }
+
+                    const hiddenOrderIdInput = document.createElement("input");
+                    hiddenOrderIdInput.type = "hidden";
+                    hiddenOrderIdInput.name = "order_id";
+                    hiddenOrderIdInput.value = orderId;
+                    notesForm.appendChild(hiddenOrderIdInput);
+
+                    const modal = new bootstrap.Modal(document.getElementById("orderNotesModal"));
+                    modal.show();
+                },
+                error: function (error) {
+                    console.error('Error fetching notes:', error);
+                    alert('An error occurred while fetching notes.');
+                }
+            });
+        });
+    });
+
+    addNoteBtn.addEventListener("click", function () {
+        const noteInput = document.createElement("div");
+        noteInput.classList.add("mb-3");
+        noteInput.innerHTML = `
+            <label for="note" class="form-label">Note</label>
+            <input type="text" class="form-control" name="notes[]" placeholder="Enter note">
+        `;
+        notesContainer.appendChild(noteInput);
+    });
+
+    notesForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(notesForm);
+
+        $.ajax({
+            url: '{{ route('orders.add_notes') }}',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log("Server response:", response);
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            },
+            error: function (error) {
+                console.log(error);
+                alert('An error occurred while saving notes.');
+            }
+        });
+    });
+});
+
 
 </script>

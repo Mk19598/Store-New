@@ -38,7 +38,8 @@
                                 <th>#</th>
                                 <th>{{ ucwords(__('Product')) }}</th>
                                 <th>{{ ucwords(__('Weight')) }}</th>
-                                <th>{{ ucwords(__('SKU')) }}</th>
+                                <th>{{ ucwords(__('Dukaan SKU')) }}</th>
+                                <th>{{ ucwords(__('Woocommerce SKU')) }}</th>
                                 <th>{{ ucwords(__('Inventory')) }}</th>
                                 <th>{{ ucwords(__('BarCode')) }}</th>
                                 <th>{{ ucwords(__('Barcode Image')) }}</th>
@@ -52,6 +53,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ @$inventory->product_name }}</td>
                                     <td>{{ @$inventory->weight }}</td>
+                                    <td>{{ @$inventory->dukaan_sku }}</td>
                                     <td>{{ @$inventory->sku }}</td>
                                     <td>{{ @$inventory->inventory == 1 ? 'InStock' : 'OutofStock' }}</td>
                                     <td>{{ @$inventory->barcode }}</td>

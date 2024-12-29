@@ -24,23 +24,6 @@ class InventoryManagementController extends Controller
     {
         try{
 
-            // if(InventoryManagement::where('status',1)->count() > 0){
-            //     $Dukaan_API_TOKEN = env('DUKAAN_API_TOKEN');
-            
-
-            //     $response = Http::withHeaders([
-            //         'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
-            //         'Accept' => 'application/json',
-            //     ])->patch('https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/111a25c7-1eef-45dd-9379-bda76ebf2821/', [
-            //         'inventory_list' => [
-            //             [
-            //                 'warehouse' => 42097,
-            //                 'quantity_available' => InventoryManagement::where('status',1)->count()
-            //             ]
-            //         ]
-            //     ]);
-            // }                      
-           
             $data = array(
                 'title' => "Inventory Management | " . CustomHelper::Get_website_name() ,
                 'inventory_count' => InventoryManagement::count() ,
@@ -67,10 +50,106 @@ class InventoryManagementController extends Controller
         }
     }
 
+    // public function store(Request $request)
+    // {
+    //     try
+    //     {
+    //         $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'barcode' => 'required', ]);
+
+    //         $woocommerce_Credentials = Credentials::first();
+
+    //         $woocommerce = new Client(
+    //             $woocommerce_Credentials->woocommerce_url,
+    //             $woocommerce_Credentials->woocommerce_customer_key,
+    //             $woocommerce_Credentials->woocommerce_secret_key,
+    //             [
+    //                 'wp_api' => true,
+    //                 'version' => 'wc/v3',
+    //             ]
+    //         );
+
+    //         $products = $woocommerce->get('products');
+            
+    //         $skuToFind = $validated['sku'];
+            
+    //         $collection = collect($products);
+            
+    //         $product = $collection->firstWhere('sku', $skuToFind);
+            
+    //         if ($product) {
+
+    //             $productId = $product->id; 
+
+                
+    //             if(!empty($request->inventory) && $request->inventory == 'on' ){
+    //                 $data = [
+    //                     'stock_status' => 'instock' 
+    //                 ];
+    //                 $validated['inventory'] = 1;
+    //             }else {
+    //                 $data = [
+    //                     'stock_status' => 'outofstock' 
+    //                 ];
+    //                 $validated['inventory'] = 0;
+    //             }
+
+    //             // if($validated['inventory'] > 0 ){
+    //             //     $data = [
+    //             //         'stock_status' => 'instock' 
+    //             //     ];
+    //             // }elseif ($validated['inventory'] == 0 || $validated['inventory'] == null){
+    //             //     $data = [
+    //             //         'stock_status' => 'outofstock' 
+    //             //     ];
+    //             // }else {
+    //             //     $data = [
+    //             //         'stock_status' => 'outofstock' 
+    //             //     ];
+    //             // }
+            
+    //             $updatedProduct = $woocommerce->put("products/{$productId}", $data);
+            
+    //         } else {
+    //             return redirect()->route('inventory.index')
+    //             ->with('success', 'Product not found! Invalid SKU ID');
+    //         }
+            
+
+
+    //         $generator = new BarcodeGeneratorPNG();
+    //         $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128);
+
+    //         $barcodeFileName = 'barcode-' . $validated['barcode'] . '.png';
+    //         Storage::put('public/barcodes/' . $barcodeFileName, $barcodeData);
+
+    //         $validated['barcode_image'] = $barcodeFileName;
+
+    //         $validated['status'] = 1;
+
+    //         InventoryManagement::create($validated);
+
+    //         return redirect()->route('inventory.index')
+    //             ->with('success', 'Inventory created successfully!');
+
+    //     }
+    //     catch(\Throwable $th)
+    //     {
+
+    //         return view('layouts.404-Page');
+    //     }
+
+    // }
+
     public function store(Request $request)
     {
-        try{
-            $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required', 'barcode' => 'required', ]);
+        try {
+            $validated = $request->validate([
+                'product_name' => 'required',
+                'weight' => 'required',
+                'sku' => 'required',
+                'barcode' => 'required',
+                'dukaan_sku' => 'required',
+            ]);
 
             $woocommerce_Credentials = Credentials::first();
 
@@ -85,50 +164,178 @@ class InventoryManagementController extends Controller
             );
 
             $products = $woocommerce->get('products');
-            
             $skuToFind = $validated['sku'];
-            
             $collection = collect($products);
-            
             $product = $collection->firstWhere('sku', $skuToFind);
-            
-            if ($product) {
 
-                $productId = $product->id; 
+            $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
+            $storeId = '987ba0ae-5a55-4732-8142-d8d9603bb74a';
+            $dukaanSkuCode = $validated['dukaan_sku'];
 
-                
-                if(!empty($request->inventory) && $request->inventory == 'on' ){
+            $dukaanResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                'Accept' => 'application/json',
+            ])->get("https://api.mydukaan.io/api/product/seller/{$storeId}/product/v2/?page=1&page_size=10&pop_fields=variants_data");
+
+            $dukaanProducts = $dukaanResponse->json();
+
+            if (!is_array($dukaanProducts)) {
+                return redirect()->route('inventory.index')
+                    ->with('error', 'Unexpected response format from Dukaan.');
+            }
+
+            $dukaanProductsData = $dukaanProducts['data'] ?? $dukaanProducts['results'] ?? $dukaanProducts;
+
+            if (!is_array($dukaanProductsData)) {
+                return redirect()->route('inventory.index')
+                    ->with('error', 'Dukaan product data is not an array.');
+            }
+
+            $filteredProduct = array_filter($dukaanProductsData, function ($dukaanproduct) use ($dukaanSkuCode) {
+                foreach ($dukaanproduct['skus'] as $sku) {
+                    if ($sku['sku_code'] === $dukaanSkuCode) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+
+            $filteredProduct = array_values($filteredProduct);
+            $dukaanProduct = $filteredProduct[0] ?? null;
+
+            // Check for SKU mismatch
+            if (!$product && !$dukaanProduct) {
+                return redirect()->route('inventory.index')
+                    ->with('success', 'SKU mismatch between Dukaan and WooCommerce.');
+            }
+
+            if ($product && !$dukaanProduct) {
+
+                if (!empty($request->inventory) && $request->inventory == 'on') {
                     $data = [
-                        'stock_status' => 'instock' 
+                        'stock_status' => 'instock'
                     ];
                     $validated['inventory'] = 1;
-                }else {
+                } else {
                     $data = [
-                        'stock_status' => 'outofstock' 
+                        'stock_status' => 'outofstock'
                     ];
                     $validated['inventory'] = 0;
                 }
+        
+                $productId = $product->id;
+                $woocommerce->put("products/{$productId}", $data);
+                $message = 'SKU mismatch Failed to update Dukaan inventory.';
+                $validated['dukaan_sku'] = null;
+                
+            }
+
+            if (!$product && $dukaanProduct) {
+
+                $sku = null;
+                foreach ($dukaanProduct['skus'] as $item) {
+                    if ($item['sku_code'] === $dukaanSkuCode) {
+                        $sku = $item;
+                        break;
+                    }
+                }
+
+                if (!$sku || !isset($sku['warehouse_inventory_items'])) {
+                    return redirect()->route('inventory.index')
+                        ->with('error', 'No warehouse inventory items found for Dukaan SKU.');
+                }
+
+                $warehouseInventoryItems = $sku['warehouse_inventory_items'];
+
+                $quantity_available = (!empty($request->inventory) && $request->inventory == 'on') ? 100 : 0 ;
+
+                $validated['inventory'] = (!empty($request->inventory) && $request->inventory == 'on') ? 1 : 0 ;
+
+                $inventoryList = array_map(function ($item) use ($quantity_available) {
+                    return [
+                        'warehouse' => $item['warehouse_id'],
+                        'quantity_available' => $quantity_available ,
+                    ];
+                }, $warehouseInventoryItems);
+
+                $warehouseInventoryId = $sku['uuid'];
+
+               
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                    'Accept' => 'application/json',
+                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", [
+                    'inventory_list' => $inventoryList,
+                ]);
+
+                $message = 'SKU mismatch Failed to update WooCommerce inventory.';
+                $validated['sku'] = null;
+                
+            }
             
-                $updatedProduct = $woocommerce->put("products/{$productId}", $data);
-            
-            } else {
-                return redirect()->route('inventory.index')
-                ->with('success', 'Product not found! Invalid SKU ID');
+
+            if ($product && $dukaanProduct) {
+
+                if (!empty($request->inventory) && $request->inventory == 'on') {
+                    $data = [
+                        'stock_status' => 'instock'
+                    ];
+                    $validated['inventory'] = 1;
+                } else {
+                    $data = [
+                        'stock_status' => 'outofstock'
+                    ];
+                    $validated['inventory'] = 0;
+                }
+        
+                $productId = $product->id;
+                $woocommerce->put("products/{$productId}", $data);
+
+                $sku = null;
+                foreach ($dukaanProduct['skus'] as $item) {
+                    if ($item['sku_code'] === $dukaanSkuCode) {
+                        $sku = $item;
+                        break;
+                    }
+                }
+
+                if (!$sku || !isset($sku['warehouse_inventory_items'])) {
+                    return redirect()->route('inventory.index')
+                        ->with('error', 'No warehouse inventory items found for Dukaan SKU.');
+                }
+
+                $warehouseInventoryItems = $sku['warehouse_inventory_items'];
+                $inventoryList = array_map(function ($item) {
+                    return [
+                        'warehouse' => $item['warehouse_id'],
+                        'quantity_available' => (!empty($request->inventory) && $request->inventory == 'on') ? 100 : 0 , 
+                    ];
+                }, $warehouseInventoryItems);
+
+                $warehouseInventoryId = $sku['uuid'];
+
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                    'Accept' => 'application/json',
+                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", [
+                    'inventory_list' => $inventoryList,
+                ]);
+
+                $message = 'updated Dukaan and Woocommerce inventory.';
+                
             }
 
             $generator = new BarcodeGeneratorPNG();
             $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128);
-
             $barcodeFileName = 'barcode-' . $validated['barcode'] . '.png';
             Storage::put('public/barcodes/' . $barcodeFileName, $barcodeData);
 
             $validated['barcode_image'] = $barcodeFileName;
-
             $validated['status'] = 1;
 
             InventoryManagement::create($validated);
 
-            return redirect()->route('inventory.index')->with('success', 'Inventory created successfully!');
+            return redirect()->route('inventory.index')->with('success', 'Inventory created successfully!'.$message);
 
         }
         catch(\Throwable $th)
@@ -150,11 +357,100 @@ class InventoryManagementController extends Controller
         }
     }
 
+    // public function update(Request $request, $id)
+    // {
+    //     try
+    //     {
+    //         $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required',  'barcode' => 'required', ]);
+
+    //         $woocommerce_Credentials = Credentials::first();
+
+    //         $woocommerce = new Client(
+    //             $woocommerce_Credentials->woocommerce_url,
+    //             $woocommerce_Credentials->woocommerce_customer_key,
+    //             $woocommerce_Credentials->woocommerce_secret_key,
+    //             [
+    //                 'wp_api' => true,
+    //                 'version' => 'wc/v3',
+    //             ]
+    //         );
+
+    //         $products = $woocommerce->get('products');
+            
+    //         $skuToFind = $validated['sku'];
+            
+    //         $collection = collect($products);
+            
+    //         $product = $collection->firstWhere('sku', $skuToFind);
+    //         if ($product) {
+
+    //             $productId = $product->id; 
+
+    //             if(!empty($request->inventory) && $request->inventory == 'on' ){
+    //                 $data = [
+    //                     'stock_status' => 'instock' 
+    //                 ];
+    //                 $validated['inventory'] = 1;
+    //             }else {
+    //                 $data = [
+    //                     'stock_status' => 'outofstock' 
+    //                 ];
+    //                 $validated['inventory'] = 0;
+    //             }
+            
+    //             $updatedProduct = $woocommerce->put("products/{$productId}", $data);
+            
+    //         } else {
+    //             return redirect()->route('inventory.index')
+    //             ->with('success', 'Product not found! Invalid SKU ID');
+    //         }
+            
+
+    //         $inventory = InventoryManagement::findOrFail($id);
+
+    //         if ($inventory->barcode !== $validated['barcode'])
+    //         {
+
+    //             $generator = new BarcodeGeneratorPNG();
+    //             $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128);
+
+    //             $barcodeFileName = 'barcode-' . $validated['barcode'] . '.png';
+
+    //             Storage::put('public/barcodes/' . $barcodeFileName, $barcodeData);
+
+    //             $validated['barcode_image'] = $barcodeFileName;
+
+    //         }
+    //         else
+    //         {
+    //             $validated['barcode_image'] = $inventory->barcode_image;
+    //         }
+
+    //         $inventory->update($validated);
+
+    //         return redirect()->route('inventory.index')
+    //             ->with('success', 'Inventory updated successfully.');
+
+    //     }
+    //     catch(\Throwable $th)
+    //     {
+
+    //         return $th;
+    //         return view('layouts.404-Page');
+    //     }
+
+    // }
+
     public function update(Request $request, $id)
     {
-        try{
-
-            $validated = $request->validate(['product_name' => 'required', 'weight' => 'required', 'sku' => 'required',  'barcode' => 'required', ]);
+        try {
+            $validated = $request->validate([
+                'product_name' => 'required',
+                'weight' => 'required',
+                'sku' => 'required',
+                'barcode' => 'required',
+                'dukaan_sku' => 'required',
+            ]);
 
             $woocommerce_Credentials = Credentials::first();
 
@@ -169,38 +465,170 @@ class InventoryManagementController extends Controller
             );
 
             $products = $woocommerce->get('products');
-            
             $skuToFind = $validated['sku'];
-            
             $collection = collect($products);
-            
             $product = $collection->firstWhere('sku', $skuToFind);
-            if ($product) {
 
-                $productId = $product->id; 
+            $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
+            $storeId = '987ba0ae-5a55-4732-8142-d8d9603bb74a';
+            $dukaanSkuCode = $validated['dukaan_sku'];
 
-                if(!empty($request->inventory) && $request->inventory == 'on' ){
+            $dukaanResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                'Accept' => 'application/json',
+            ])->get("https://api.mydukaan.io/api/product/seller/{$storeId}/product/v2/?page=1&page_size=10&pop_fields=variants_data");
+
+            $dukaanProducts = $dukaanResponse->json();
+
+            if (!is_array($dukaanProducts)) {
+                return redirect()->route('inventory.index')
+                    ->with('error', 'Unexpected response format from Dukaan.');
+            }
+
+            $dukaanProductsData = $dukaanProducts['data'] ?? $dukaanProducts['results'] ?? $dukaanProducts;
+
+            if (!is_array($dukaanProductsData)) {
+                return redirect()->route('inventory.index')
+                    ->with('error', 'Dukaan product data is not an array.');
+            }
+
+            $filteredProduct = array_filter($dukaanProductsData, function ($dukaanproduct) use ($dukaanSkuCode) {
+                foreach ($dukaanproduct['skus'] as $sku) {
+                    if ($sku['sku_code'] === $dukaanSkuCode) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+
+            $filteredProduct = array_values($filteredProduct);
+            $dukaanProduct = $filteredProduct[0] ?? null;
+
+            // Check for SKU mismatch
+            if (!$product && !$dukaanProduct) {
+                return redirect()->route('inventory.index')
+                    ->with('success', 'SKU mismatch between Dukaan and WooCommerce.');
+            }
+
+            if ($product && !$dukaanProduct) {
+
+                if (!empty($request->inventory) && $request->inventory == 'on') {
                     $data = [
-                        'stock_status' => 'instock' 
+                        'stock_status' => 'instock'
                     ];
                     $validated['inventory'] = 1;
-                }else {
+                } else {
                     $data = [
-                        'stock_status' => 'outofstock' 
+                        'stock_status' => 'outofstock'
                     ];
                     $validated['inventory'] = 0;
                 }
-            
-                $updatedProduct = $woocommerce->put("products/{$productId}", $data);
-            
-            } else {
-                return redirect()->route('inventory.index')
-                ->with('success', 'Product not found! Invalid SKU ID');
+        
+                $productId = $product->id;
+                $woocommerce->put("products/{$productId}", $data);
+                $message = 'SKU mismatch Failed to update Dukaan inventory.';
+                $validated['dukaan_sku'] = null;
+                
+            }
+
+            if (!$product && $dukaanProduct) {
+
+                $sku = null;
+                foreach ($dukaanProduct['skus'] as $item) {
+                    if ($item['sku_code'] === $dukaanSkuCode) {
+                        $sku = $item;
+                        break;
+                    }
+                }
+
+                if (!$sku || !isset($sku['warehouse_inventory_items'])) {
+                    return redirect()->route('inventory.index')
+                        ->with('error', 'No warehouse inventory items found for Dukaan SKU.');
+                }
+
+                $warehouseInventoryItems = $sku['warehouse_inventory_items'];
+
+                $quantity_available = (!empty($request->inventory) && $request->inventory == 'on') ? 100 : 0 ;
+
+                $validated['inventory'] = (!empty($request->inventory) && $request->inventory == 'on') ? 1 : 0 ;
+
+                $inventoryList = array_map(function ($item) use ($quantity_available) {
+                    return [
+                        'warehouse' => $item['warehouse_id'],
+                        'quantity_available' => $quantity_available ,
+                    ];
+                }, $warehouseInventoryItems);
+
+                $warehouseInventoryId = $sku['uuid'];
+
+               
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                    'Accept' => 'application/json',
+                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", [
+                    'inventory_list' => $inventoryList,
+                ]);
+
+                $message = 'SKU mismatch Failed to update WooCommerce inventory.';
+                $validated['sku'] = null;
+                
             }
             
 
+            if ($product && $dukaanProduct) {
+
+                if (!empty($request->inventory) && $request->inventory == 'on') {
+                    $data = [
+                        'stock_status' => 'instock'
+                    ];
+                    $validated['inventory'] = 1;
+                } else {
+                    $data = [
+                        'stock_status' => 'outofstock'
+                    ];
+                    $validated['inventory'] = 0;
+                }
+        
+                $productId = $product->id;
+                $woocommerce->put("products/{$productId}", $data);
+
+                $sku = null;
+                foreach ($dukaanProduct['skus'] as $item) {
+                    if ($item['sku_code'] === $dukaanSkuCode) {
+                        $sku = $item;
+                        break;
+                    }
+                }
+
+                if (!$sku || !isset($sku['warehouse_inventory_items'])) {
+                    return redirect()->route('inventory.index')
+                        ->with('error', 'No warehouse inventory items found for Dukaan SKU.');
+                }
+
+                $warehouseInventoryItems = $sku['warehouse_inventory_items'];
+                $inventoryList = array_map(function ($item) {
+                    return [
+                        'warehouse' => $item['warehouse_id'],
+                        'quantity_available' => (!empty($request->inventory) && $request->inventory == 'on') ? 100 : 0 , 
+                    ];
+                }, $warehouseInventoryItems);
+
+                $warehouseInventoryId = $sku['uuid'];
+
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                    'Accept' => 'application/json',
+                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", [
+                    'inventory_list' => $inventoryList,
+                ]);
+
+                $message = 'updated Dukaan and Woocommerce inventory.';
+                
+            }
+
             $inventory = InventoryManagement::findOrFail($id);
 
+           
             if ($inventory->barcode !== $validated['barcode'])
             {
 
@@ -219,17 +647,18 @@ class InventoryManagementController extends Controller
                 $validated['barcode_image'] = $inventory->barcode_image;
             }
 
+            $validated['status'] = 1;
+
             $inventory->update($validated);
 
             return redirect()->route('inventory.index')
-                ->with('success', 'Inventory updated successfully.');
+                ->with('success', 'Inventory updated successfully.'.$message);
 
         }
         catch(\Throwable $th)
         {
             return view('layouts.error-pages.404-Page');
         }
-
     }
 
     public function destroy($id)

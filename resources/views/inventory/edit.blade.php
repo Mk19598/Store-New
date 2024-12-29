@@ -46,7 +46,16 @@
 
                             {{-- SKU --}}
                             <div class="mb-3">
-                                <label for="sku" class="form-label">SKU</label>
+                                <label for="dukaan_sku" class="form-label">Dukaan SKU</label>
+                                <input type="text" class="form-control" id="dukaan_sku" name="dukaan_sku" value="{{ old('dukaan_sku', $inventory->dukaan_sku) }}" required>
+                                @error('dukaan_sku')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            {{-- SKU --}}
+                            <div class="mb-3">
+                                <label for="sku" class="form-label">Woocommerce SKU</label>
                                 <input type="text" class="form-control" id="sku" name="sku" value="{{ old('sku', $inventory->sku) }}" required>
                                 @error('sku')
                                     <span class="text-danger">{{ $message }}</span>

@@ -41,4 +41,13 @@ class CustomHelper
         return $Shipping_Password;
     }
 
+    public static function Get_GSTNo()
+    {
+        return "Required";
+    }
+
+    public static function Get_FSSAINo()
+    {
+        return "Required";
+    }
 }

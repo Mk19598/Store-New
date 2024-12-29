@@ -57,7 +57,9 @@
                     #91, First Floor, Kamarajar Salai,<br>
                     Near Gandhi Stage, Madurai,<br>
                     TamilNadu – 625009<br>
-                    Mobile: +91 96770 63560
+                    Mobile: +91 96770 63560<br><br>
+                    <strong> GST No - {{ App\Helpers\CustomHelper::Get_GSTNo()}}</strong><br>
+                    <strong> FSSAI License No -  {{ App\Helpers\CustomHelper::Get_FSSAINo()}}</strong><br>
                 </p>
                 <h2>INVOICE</h2>
             </header>
@@ -100,7 +102,7 @@
                             <p>
                                 <strong>Invoice Date:</strong> {{ @$orders->order_created_at_format }}<br>
                                 <strong>Order Number:</strong> {{ @$orders->order_id }} <br>
-                                <small> {{ "(". @$orders->order_uuid .")" }}</small><br>
+                                {{-- <small> {{ "(". @$orders->order_uuid .")" }}</small><br> --}}
                                 <strong>Order Date:</strong> {{ @$orders->order_created_at_format }}<br>
                                 <strong>Payment Method:</strong> {{ @$orders->payment_mode ? $orders->payment_mode : "-" }}<br>
                             </p>

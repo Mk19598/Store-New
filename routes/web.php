@@ -43,6 +43,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('tracking-links', [App\Http\Controllers\OrderController::class, 'tracking_links'])->name('orders.tracking_links');
         Route::get('tracking-links/{orderId}', [App\Http\Controllers\OrderController::class, 'getTrackingLinks']);
         Route::post('shipping-label', [App\Http\Controllers\OrderController::class, 'shipping_label'])->name('orders.shipping_label');
+        Route::post('/notes', [App\Http\Controllers\OrderController::class, 'addOrderNotes'])->name('orders.add_notes');
+        Route::get('/notes/{orderId}', [App\Http\Controllers\OrderController::class, 'getOrderNotes'])->name('orders.get_notes');
+
     });
 
         // E-mail

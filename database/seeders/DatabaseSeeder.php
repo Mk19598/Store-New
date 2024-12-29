@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             SiteSettingSeeder::class,
             CredentialsSeeder::class,
             ContentTemplateSeeder::class,
-            InventoryProductSeeder::class
+            InventoryProductSeeder::class,
+            ENVSettingsSeeder::class
         ]);
     }
 }

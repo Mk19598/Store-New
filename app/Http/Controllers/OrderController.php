@@ -318,13 +318,33 @@ class OrderController extends Controller
                             'utm_data' => 'True',
                         ]);
 
-        if ($response->successful()) {
+        $orders = []; 
+        $hasNextPage = true;
+        
+        for ($page = 1; $hasNextPage ; $page++) {
 
-            $orders =  $response->json() ;
+            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,'Accept' => 'application/json',])
+                                        ->get('https://api.mydukaan.io/api/seller-front/order-list/', [
+                                            'ordering' => '-created_at',
+                                            'utm_data' => 'True',
+                                            'created_at_after' => Carbon::now()->subDays(30)->toDateString(),
+                                            'page' => $page,
+                                        ]);
+        
+            $data = $response->json();
+        
+            if (isset($data['results'])) {
+                $orders = array_merge($orders, $data['results']);
+            }
+        
+            $hasNextPage = isset($data['results']) && $data['results'] !== null;
+        }
+
+        // if ($response->successful()) {
 
             $unique_id =  substr(uniqid(mt_rand(), true), 0, 11);
 
-            foreach ($orders['results'] as $key => $order) {
+            foreach ($orders as $key => $order) {
 
                 $order_respond = Http::withHeaders(['Authorization' => 'Bearer ' . $Dukaan_API_TOKEN, 'Accept' => 'application/json',])
                                             ->get("https://api.mydukaan.io/api/order/seller/{$order['uuid']}/order/");
@@ -576,15 +596,15 @@ class OrderController extends Controller
                     );
                 }
             }
-        }else{
+        // }else{
             
-            $result = array(
-                'status'      => false,
-                'status_code' => $response->status(),
-                'message'     => $response->reason(),
-                'body'        => $response->body(),
-            );
-        }
+        //     $result = array(
+        //         'status'      => false,
+        //         'status_code' => $response->status(),
+        //         'message'     => $response->reason(),
+        //         'body'        => $response->body(),
+        //     );
+        // }
 
         return  $result;
     }

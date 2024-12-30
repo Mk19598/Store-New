@@ -96,11 +96,11 @@
                 @csrf
                 <div class="modal-body">
                     <div id="order-notes-container"></div>
-                    <button type="button" class="btn btn-outline-primary" id="add-order-note">Add Note</button>
+                    <button type="button" class="btn app-btn-primary" id="add-order-note">Add Note</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Notes</button>
+                    <button type="submit" class="btn app-btn-primary">Save Notes</button>
                 </div>
             </form>
         </div>

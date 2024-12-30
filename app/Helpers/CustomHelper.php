@@ -44,12 +44,12 @@ class CustomHelper
 
     public static function Get_GSTNo()
     {
-        return "Required";
+        return "33ECLPR0820N1ZB";
     }
 
     public static function Get_FSSAINo()
     {
-        return "Required";
+        return "12424012000311";
     }
 
     public static function Get_ADMIN_MAIL()

@@ -38,8 +38,8 @@ class OrderController extends Controller
     {
         try {
             
-            $WooCommerce = $this->WooCommerce();
             $Dukaan =  $this->Dukaan();
+            $WooCommerce = $this->WooCommerce();
 
             if( $WooCommerce['status'] == false ){
                 return response()->json( $WooCommerce, $WooCommerce['status_code']);
@@ -617,6 +617,7 @@ class OrderController extends Controller
                         'refunded'   => ['refunded', 10],
                         'processing' => ['processing' ],
                         'shipped'    => [ 'order-shipped', 3],
+                        'Packed'     => [ 'Packed'],
                     ];
                 
                     if (isset($statusMap[$request->status])) {
@@ -648,6 +649,7 @@ class OrderController extends Controller
                                                 'refunded'   => 'refunded',
                                                 'failed'     => 'cancelled',
                                                 'order-shipped' => 'shipped',
+                                                'Packed'     => 'Packed',
                                                 'default'    => 'cancelled'
                                             ],
 
@@ -662,6 +664,7 @@ class OrderController extends Controller
                                                 '6'  => ['label' => 'FAILED', 'color' => 'cancelled'],
                                                 '7'  => ['label' => 'CANCELLED BY CUSTOMER', 'color' => 'cancelled'],
                                                 '10' => ['label' => 'RETURNED', 'color' => 'refunded'],
+                                                'Packed' => ['label' => 'Packed', 'color' => 'Packed'],
                                                 'default' => ['label' => 'UNKNOWN', 'color' => 'default-color']
                                             ]
                                         ];

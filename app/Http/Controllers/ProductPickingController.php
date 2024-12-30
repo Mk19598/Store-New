@@ -100,7 +100,8 @@ class ProductPickingController extends Controller
                 'cancelled'  => ['cancelled', 4, 7 ,7,-1],
                 'failed'     => ['failed', 6],
                 'refunded'   => ['refunded', 10],
-                'shipped'    => [ 'order-shipped'],  
+                'shipped'    => [ 'order-shipped'], 
+                'Packed'     => [ 'Packed'],
             ];
         
             if (isset($statusMap[$request->status])) {

@@ -43,6 +43,7 @@ class HomeController extends Controller
                 'refunded'   => ['refunded', '10'], 
                 'processing' => ['processing'],  
                 'shipped'    => [ 'order-shipped','3'],  
+                'Packed'     => [ 'Packed'],
                 'default'    => ['default']
             ];
 

@@ -73,14 +73,22 @@ class OrderController extends Controller
             $woocommerce_Credentials->woocommerce_url, 
             $woocommerce_Credentials->woocommerce_customer_key,       
             $woocommerce_Credentials->woocommerce_secret_key,    
-            [
-                'wp_api' => true,   
-                'version' => 'wc/v3' 
-            ]
+            ['wp_api' => true,'version' => 'wc/v3' ]
         );
-
-        $orders = $woocommerce->get('orders');
-
+        
+        $orders = [];
+        for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(30)->toIso8601String(); ; $page++) {
+            $response = $woocommerce->get('orders', [
+                'after' => $thirtyDaysAgo,
+                'orderby' => 'date',
+                'order' => 'desc',
+                'per_page' => 50,
+                'page' => $page
+            ]);
+            $orders = array_merge($orders, $response);
+            if (count($response) < 50) break;
+        }
+        
         $unique_id =  substr(uniqid(mt_rand(), true), 0, 11);
         
         foreach ($orders as $key => $order) {

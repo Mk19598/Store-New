@@ -310,6 +310,7 @@ class OrderController extends Controller
     private function Dukaan(){
 
         $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
+        $Dukaan_store_Id =  CustomHelper::StoreId();
 
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $Dukaan_API_TOKEN, 'Accept' => 'application/json',])
                         ->get('https://api.mydukaan.io/api/seller-front/order-list/', [
@@ -446,6 +447,13 @@ class OrderController extends Controller
 
                     foreach ($order_response['data']['products'] as $key => $orders_products) {
 
+                        $skuCode = collect(Http::withHeaders([
+                            'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                            'Accept' => 'application/json',
+                        ])
+                        ->get("https://api.mydukaan.io/api/product/seller/{$Dukaan_store_Id}/product/{$orders_products['product_uuid']}/v2/")
+                        ->json()['data']['sku_data'] ?? [])->firstWhere('id', $orders_products['product_sku_id'])['sku_code'] ?? 'SKU not found';
+
                         DukaanOrderProduct::create([ 
                             'order_id'    => $order_response['data']['display_order_id'],
                             'order_uuid'  => $order_response['data']['uuid'],
@@ -483,9 +491,9 @@ class OrderController extends Controller
                             "base_qty" => $orders_products['base_qty'],
                             "product_uuid" => $orders_products['product_uuid'],
 
-                            // "barcode"      => InventoryManagement::where('sku',$orders_products['sku'])->pluck('barcode')->first(),
-                            // 'barcode_image' => InventoryManagement::where('sku',$orders_products['sku'])->pluck('barcode_image')->first(),
-                            "sku"          =>  $orders_products['sku'] ?? null, 
+                            "sku"          =>  $skuCode , 
+                            "barcode"      => InventoryManagement::where('sku',$skuCode)->pluck('barcode')->first(),
+                            'barcode_image' => InventoryManagement::where('sku',$skuCode)->pluck('barcode_image')->first(),
                             "sku_weight_unit" =>  $orders_products['sku_weight_unit'] ?? null,
                             "variant_size"    => $orders_products['variant_size'] ?? null,
 

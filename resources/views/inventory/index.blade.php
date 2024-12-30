@@ -25,7 +25,7 @@
                     </div>
 
                     <div class="col-md-2 align">
-                        <a href="{{ route('inventory.create') }}" class="btn btn-outline-primary btn-sm">
+                        <a href="{{ route('inventory.create') }}" class="btn app-btn-primary">
                             <i class="bi bi-plus"></i> Create Inventory
                         </a>
                     </div><hr>

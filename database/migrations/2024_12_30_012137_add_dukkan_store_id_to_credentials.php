@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('env_settings', function (Blueprint $table) {
-            $table->string('storeId')->nullable()->after('Shipping_Password');
+        Schema::table('credentials', function (Blueprint $table) {
+            $table->string('dukkan_store_id')->nullable()->after('dukkan_api_token');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('env_settings', function (Blueprint $table) {
-            $table->dropColumn('storeId');
+        Schema::table('credentials', function (Blueprint $table) {
+            $table->dropColumn('dukkan_store_id');
         });
     }
 };

@@ -4,6 +4,7 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\URL; 
 use App\Models\SiteSetting;
 use App\Models\EnvSetting;
+use App\Models\Credentials;
 use Carbon\Carbon;
 
 class CustomHelper
@@ -58,7 +59,7 @@ class CustomHelper
     
     public static function StoreId()
     {
-        $storeId = EnvSetting::query()->pluck('storeId')->first();
+        $storeId = Credentials::query()->pluck('dukkan_store_id')->first();
         return $storeId;
     }
 }

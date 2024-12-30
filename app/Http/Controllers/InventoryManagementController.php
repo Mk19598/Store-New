@@ -142,7 +142,7 @@ class InventoryManagementController extends Controller
 
     public function store(Request $request)
     {
-        try {
+        // try {
             $validated = $request->validate([
                 'product_name' => 'required',
                 'weight' => 'required',
@@ -172,17 +172,41 @@ class InventoryManagementController extends Controller
             $storeId =  CustomHelper::StoreId();
             $dukaanSkuCode = $validated['dukaan_sku'];
 
-            $dukaanResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
-                'Accept' => 'application/json',
-            ])->get("https://api.mydukaan.io/api/product/seller/{$storeId}/product/v2/?page=1&page_size=10&pop_fields=variants_data");
+            $dukaanProducts = [];
+            $currentPage = 1;
 
-            $dukaanProducts = $dukaanResponse->json();
+            do {
+                $dukaanResponse = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                    'Accept' => 'application/json',
+                ])->get("https://api.mydukaan.io/api/product/seller/{$storeId}/product/v2/?page={$currentPage}&pop_fields=variants_data");
 
-            if (!is_array($dukaanProducts)) {
-                return redirect()->route('inventory.index')
-                    ->with('error', 'Unexpected response format from Dukaan.');
-            }
+                $currentProducts = $dukaanResponse->json();
+
+                if (!isset($currentProducts['results'])) {
+                    dd('Unexpected response structure:', $currentProducts);
+                }
+
+                $dukaanProducts = array_merge($dukaanProducts, $currentProducts['results']);
+
+                $hasMorePages = !empty($currentProducts['next']);
+
+                $currentPage++;
+
+            } while ($hasMorePages);
+
+
+            // $dukaanResponse = Http::withHeaders([
+            //     'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+            //     'Accept' => 'application/json',
+            // ])->get("https://api.mydukaan.io/api/product/seller/{$storeId}/product/v2/?page=1&pop_fields=variants_data");
+
+            // $dukaanProducts = $dukaanResponse->json();
+            //     dd($dukaanProducts);
+            // if (!is_array($dukaanProducts)) {
+            //     return redirect()->route('inventory.index')
+            //         ->with('error', 'Unexpected response format from Dukaan.');
+            // }
 
             $dukaanProductsData = $dukaanProducts['data'] ?? $dukaanProducts['results'] ?? $dukaanProducts;
 
@@ -246,6 +270,7 @@ class InventoryManagementController extends Controller
                 }
 
                 $warehouseInventoryItems = $sku['warehouse_inventory_items'];
+                $warehouseInventoryId = $sku['uuid'];
 
                 $quantity_available = (!empty($request->inventory) && $request->inventory == 'on') ? 100 : 0 ;
 
@@ -253,20 +278,21 @@ class InventoryManagementController extends Controller
 
                 $inventoryList = array_map(function ($item) use ($quantity_available) {
                     return [
-                        'warehouse' => $item['warehouse_id'],
-                        'quantity_available' => $quantity_available ,
+                        'warehouse' => $item['warehouse_id'], 
+                        'quantity_available' => (string) $quantity_available, 
                     ];
                 }, $warehouseInventoryItems);
 
-                $warehouseInventoryId = $sku['uuid'];
+                $payload = [
+                    'inventory_list' => $inventoryList,
+                ];
 
-               
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                    'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", [
-                    'inventory_list' => $inventoryList,
-                ]);
+                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", $payload);
+
 
                 $message = 'SKU mismatch Failed to update WooCommerce inventory.';
                 $validated['sku'] = null;
@@ -305,21 +331,27 @@ class InventoryManagementController extends Controller
                 }
 
                 $warehouseInventoryItems = $sku['warehouse_inventory_items'];
-                $inventoryList = array_map(function ($item) {
+                $warehouseInventoryId = $sku['uuid'];
+
+                $quantity_available = (!empty($request->inventory) && $request->inventory == 'on') ? 100 : 0 ;
+
+                $inventoryList = array_map(function ($item) use ($quantity_available) {
                     return [
-                        'warehouse' => $item['warehouse_id'],
-                        'quantity_available' => (!empty($request->inventory) && $request->inventory == 'on') ? 100 : 0 , 
+                        'warehouse' => $item['warehouse_id'], 
+                        'quantity_available' => (string) $quantity_available, 
                     ];
                 }, $warehouseInventoryItems);
 
-                $warehouseInventoryId = $sku['uuid'];
+                $payload = [
+                    'inventory_list' => $inventoryList,
+                ];
 
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                    'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", [
-                    'inventory_list' => $inventoryList,
-                ]);
+                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", $payload);
+
 
                 $message = 'updated Dukaan and Woocommerce inventory.';
                 
@@ -337,11 +369,11 @@ class InventoryManagementController extends Controller
 
             return redirect()->route('inventory.index')->with('success', 'Inventory created successfully!'.$message);
 
-        }
-        catch(\Throwable $th)
-        {
-            return view('layouts.error-pages.404-Page');
-        }
+        // }
+        // catch(\Throwable $th)
+        // {
+        //     return view('layouts.error-pages.404-Page');
+        // }
     }
 
     public function edit($id)
@@ -473,12 +505,30 @@ class InventoryManagementController extends Controller
             $storeId =  CustomHelper::StoreId();
             $dukaanSkuCode = $validated['dukaan_sku'];
 
-            $dukaanResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
-                'Accept' => 'application/json',
-            ])->get("https://api.mydukaan.io/api/product/seller/{$storeId}/product/v2/?page=1&page_size=10&pop_fields=variants_data");
+            
+            $dukaanProducts = [];
+            $currentPage = 1;
 
-            $dukaanProducts = $dukaanResponse->json();
+            do {
+                $dukaanResponse = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                    'Accept' => 'application/json',
+                ])->get("https://api.mydukaan.io/api/product/seller/{$storeId}/product/v2/?page={$currentPage}&pop_fields=variants_data");
+
+                $currentProducts = $dukaanResponse->json();
+
+                if (!isset($currentProducts['results'])) {
+                    dd('Unexpected response structure:', $currentProducts);
+                }
+
+                $dukaanProducts = array_merge($dukaanProducts, $currentProducts['results']);
+
+                $hasMorePages = !empty($currentProducts['next']);
+
+                $currentPage++;
+
+            } while ($hasMorePages);
+
 
             if (!is_array($dukaanProducts)) {
                 return redirect()->route('inventory.index')
@@ -552,22 +602,24 @@ class InventoryManagementController extends Controller
 
                 $validated['inventory'] = (!empty($request->inventory) && $request->inventory == 'on') ? 1 : 0 ;
 
+                $warehouseInventoryId = $sku['uuid'];
+
                 $inventoryList = array_map(function ($item) use ($quantity_available) {
                     return [
-                        'warehouse' => $item['warehouse_id'],
-                        'quantity_available' => $quantity_available ,
+                        'warehouse' => $item['warehouse_id'], 
+                        'quantity_available' => (string) $quantity_available, 
                     ];
                 }, $warehouseInventoryItems);
 
-                $warehouseInventoryId = $sku['uuid'];
+                $payload = [
+                    'inventory_list' => $inventoryList,
+                ];
 
-               
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                    'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", [
-                    'inventory_list' => $inventoryList,
-                ]);
+                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", $payload);
 
                 $message = 'SKU mismatch Failed to update WooCommerce inventory.';
                 $validated['sku'] = null;
@@ -606,21 +658,27 @@ class InventoryManagementController extends Controller
                 }
 
                 $warehouseInventoryItems = $sku['warehouse_inventory_items'];
-                $inventoryList = array_map(function ($item) {
+                $warehouseInventoryId = $sku['uuid'];
+
+                $quantity_available = (!empty($request->inventory) && $request->inventory == 'on') ? 100 : 0 ;
+
+                $inventoryList = array_map(function ($item) use ($quantity_available) {
                     return [
-                        'warehouse' => $item['warehouse_id'],
-                        'quantity_available' => (!empty($request->inventory) && $request->inventory == 'on') ? 100 : 0 , 
+                        'warehouse' => $item['warehouse_id'], 
+                        'quantity_available' => (string) $quantity_available, 
                     ];
                 }, $warehouseInventoryItems);
 
-                $warehouseInventoryId = $sku['uuid'];
+                $payload = [
+                    'inventory_list' => $inventoryList,
+                ];
 
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                    'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", [
-                    'inventory_list' => $inventoryList,
-                ]);
+                ])->patch("https://api.mydukaan.io/api/store/seller/seller-warehouse-inventory/{$warehouseInventoryId}/", $payload);
+
 
                 $message = 'updated Dukaan and Woocommerce inventory.';
                 

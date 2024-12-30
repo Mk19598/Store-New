@@ -261,8 +261,8 @@ class OrderController extends Controller
                         'orders_collection'  => $orders_collection,
                     ];
                     
-                    // Mail::to('manikandan19598@gmail.com')->send(new OrdserSendEmail($data));
-        
+                    // Mail::to(CustomHelper::Get_ADMIN_MAIL())->send(new OrderSendEmail($data));
+
                 } catch (\Illuminate\Mail\TransportException $e) {
                    
                     Log::error('Mail Transport Error: ' . $e->getMessage());
@@ -527,7 +527,7 @@ class OrderController extends Controller
                             'orders_collection'  => $orders_collection,
                         ];
                 
-                        // Mail::to('manikandan19598@gmail.com')->send(new OrderSendEmail($data));
+                        // Mail::to(CustomHelper::Get_ADMIN_MAIL())->send(new OrderSendEmail($data));
 
                     } catch (\Illuminate\Mail\TransportException $e) {
                    

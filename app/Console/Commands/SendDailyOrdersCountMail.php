@@ -8,6 +8,7 @@ use App\Mail\DailyOrdersCountMail;
 use App\Helpers\CustomHelper;
 use App\Models\Order;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SendDailyOrdersCountMail extends Command
 {
@@ -45,6 +46,8 @@ class SendDailyOrdersCountMail extends Command
         // ];
         
         // Mail::to(CustomHelper::Get_ADMIN_MAIL())->send(new DailyOrdersCountMail($data));
+
+       DB::table('user_roles')->insert(['role_name' => 1]);
 
         $this->info('Daily email sent successfully!');
     }

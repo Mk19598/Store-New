@@ -184,7 +184,8 @@ class InventoryManagementController extends Controller
                 $currentProducts = $dukaanResponse->json();
 
                 if (!isset($currentProducts['results'])) {
-                    dd('Unexpected response structure:', $currentProducts);
+                    $data = array('err_msg' => 'Unexpected response structure Invaild StoreID',);
+                    return view('layouts.error-pages.500-Page',$data);
                 }
 
                 $dukaanProducts = array_merge($dukaanProducts, $currentProducts['results']);
@@ -518,7 +519,8 @@ class InventoryManagementController extends Controller
                 $currentProducts = $dukaanResponse->json();
 
                 if (!isset($currentProducts['results'])) {
-                    dd('Unexpected response structure:', $currentProducts);
+                    $data = array('err_msg' => 'Unexpected response structure Invaild StoreID',);
+                    return view('layouts.error-pages.500-Page',$data);
                 }
 
                 $dukaanProducts = array_merge($dukaanProducts, $currentProducts['results']);

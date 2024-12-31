@@ -39,7 +39,7 @@ class PackingOrderProductController extends Controller
         
                         $item['product_details'] = $DukaanOrderProducts->map(function ($item) use ($totalCostSum) {
 
-                            $item['product_name'] = $item->product_slug;
+                            $item['product_name'] = $item->name;
                             $item['sku_id']  = $item->product_sku_id;
                             $item['product_total_cost'] = $item->line_item_total_cost;
                             $item['price']    = $item->selling_price;

@@ -13,7 +13,7 @@
         }
         .label-container {
             width: 15cm;
-            height: 10cm;
+            height: 12cm;
             border: 1px solid #000;
             padding: 15px;
             box-sizing: border-box;

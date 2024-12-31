@@ -12,6 +12,7 @@
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
 
     <link rel="icon" href="{{ App\Helpers\CustomHelper::Get_website_logo_url() }}">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
                         {{-- Another Source CSS Links --}}
     <!-- bootstrap -->

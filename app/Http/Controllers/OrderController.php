@@ -78,233 +78,234 @@ class OrderController extends Controller
             $woocommerce_Credentials->woocommerce_secret_key,    
             ['wp_api' => true,'version' => 'wc/v3' ]
         );
-        
+
+        $unique_id =  substr(uniqid(mt_rand(), true), 0, 11);
         $orders = [];
+
         for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(30)->toIso8601String(); ; $page++) {
-            $response = $woocommerce->get('orders', [
+
+            $orders = $woocommerce->get('orders', [
                 'after' => $thirtyDaysAgo,
                 'orderby' => 'date',
                 'order' => 'desc',
                 'per_page' => 50,
                 'page' => $page
             ]);
-            $orders = array_merge($orders, $response);
-            if (count($response) < 50) break;
-        }
-        
-        $unique_id =  substr(uniqid(mt_rand(), true), 0, 11);
-        
-        foreach ($orders as $key => $order) {
 
-            $existingOrder = Order::where('order_id', $order->id)->first();
+            foreach ($orders as $key => $order) {
 
-            if (!$existingOrder) {
-
-                Order::create([
-                    'order_vai' => 'woocommerce',
-                    'order_id'  => $order->id,
-                    'order_uuid' => $order->order_key, 
-                    'order_created_at' => $order->date_created, 
-                    'modified_at'      => $order->date_modified, 
-                    'uuid'         => $order->order_key, 
-                    'status'       => $order->status, 
-                    'payment_mode' => $order->payment_method, 
-
-                    'total_cost'   => $order->total, 
-                    'delivery_cost'   => $order->shipping_total, 
-        
-                    'currency_code'     => $order->currency, 
-                    'currency_symbol'   => $order->currency_symbol, 
-                    'currency_name'     => null , 
-
-                    'buyer_first_name' => $order->billing->first_name, 
-                    'buyer_last_name'  => $order->billing->last_name, 
-                    'buyer_email'      => $order->billing->email, 
-                    'buyer_mobile_number' => $order->billing->phone, 
-
-                    'buyer_line' => $order->billing->address_1, 
-                    'buyer_area' => $order->billing->address_2, 
-                    'buyer_city' => $order->billing->city, 
-                    'buyer_state' => $order->billing->state, 
-                    'buyer_county' => $order->billing->country, 
-                    'buyer_pin'    => $order->billing->postcode, 
-                    
-                    'buyer_shipping_first_name' => $order->shipping->first_name,
-                    'buyer_shipping_last_name'  => $order->shipping->last_name,
-                    'buyer_shipping_address_1' => $order->shipping->address_1, 
-                    'buyer_shipping_address_2' => $order->shipping->address_2, 
-                    'buyer_shipping_city' => $order->shipping->city, 
-                    'buyer_shipping_state' => $order->shipping->state, 
-                    'buyer_shipping_county' => $order->shipping->country, 
-                    'buyer_shipping_pin' => $order->shipping->postcode, 
-                    'buyer_shipping_mobile_number' => $order->shipping->phone, 
-                    'unique_id' => $unique_id,
-                ]);
-
-                WoocommerceOrder::create([
-                    'order_id' => $order->id ,
-                    'order_uuid' => $order->order_key, 
-                    'status'   => $order->status,
-                    'currency' => $order->currency,
-                    'version'  => $order->version ,
-                    'prices_include_tax'=> $order->prices_include_tax ,
-                    'date_created'      => $order->date_created ,
-                    'date_modified'     => $order->date_modified ,
-                    'discount_total'    => $order->discount_total ,
-                    'discount_tax'      => $order->discount_tax ,
-                    'shipping_total'    => $order->shipping_total ,
-                    'shipping_tax'      => $order->shipping_tax ,
-                    'cart_tax'          => $order->cart_tax ,
-                    'total'             => $order->total,
-                    'total_tax'         => $order->total_tax ,
-                    'customer_id'       => $order->customer_id ,
-                    'payment_method'    => $order->payment_method ,
-                    'payment_method_title'  => $order->payment_method_title ,
-                    'transaction_id'        => $order->transaction_id ,
-                    'customer_ip_address'   => $order->customer_ip_address ,
-                    'customer_user_agent'   => $order->customer_user_agent ,
-                    'created_via'           => $order->created_via ,
-                    'customer_note'         => $order->customer_note ,
-                    'date_completed'        => $order->date_completed ,
-                    'date_paid'             => $order->date_paid ,
-                    'cart_hash'             => $order->cart_hash ,
-                    'number'                => $order->number ,
-                    'payment_url'           => $order->payment_url ,
-                    'is_editable'           => $order->is_editable ,
-                    'needs_payment'         => $order->needs_payment ,
-                    'needs_processing'      => $order->needs_processing ,
-                    'date_created_gmt'      => $order->date_created_gmt ,
-                    'date_modified_gmt'     => $order->date_modified_gmt ,
-                    'date_completed_gmt'    => $order->date_completed_gmt ,
-                    'date_paid_gmt'         => $order->date_paid_gmt ,
-                    'currency_symbol'       => $order->currency_symbol,
-                    'unique_id'             => $unique_id,
-                ]);
-
-                WoocommerceBuyer::create([
-                    'order_id' => $order->id ,
-                    'order_uuid' => $order->order_key, 
-                    'first_name' => $order->billing->first_name,
-                    'last_name'  => $order->billing->last_name,
-                    'company'    => $order->billing->company,
-                    'address_1'  => $order->billing->address_1,
-                    'address_2'  => $order->billing->address_2,
-                    'city'       => $order->billing->city,
-                    'state'      => $order->billing->state,
-                    'postcode'   => $order->billing->postcode,
-                    'country'    => $order->billing->country,
-                    'email'      => $order->billing->email,
-                    'phone'      => $order->billing->phone,
-                    'unique_id' => $unique_id,
-                ]);
-
-                WoocommerceShipping::create([
-                    'order_id'   => $order->id ,
-                    'order_uuid' => $order->order_key, 
-                    'first_name' => $order->shipping->first_name,
-                    'last_name'  => $order->shipping->last_name,
-                    'company'    => $order->shipping->company,
-                    'address_1' => $order->shipping->address_1,
-                    'address_2' => $order->shipping->address_2,
-                    'city'      => $order->shipping->city,
-                    'state'     => $order->shipping->state,
-                    'postcode'  => $order->shipping->postcode,
-                    'country'   => $order->shipping->country,
-                    'unique_id' => $unique_id,
-                ]);
-
-                foreach($order->line_items as $key => $order_product){
-
-                    WoocommerceOrderProduct::create([
-                        'order_id' => $order->id ,
+                $existingOrder = Order::where('order_id', $order->id)->first();
+    
+                if (!$existingOrder) {
+    
+                    Order::create([
                         'order_vai' => 'woocommerce',
+                        'order_id'  => $order->id,
                         'order_uuid' => $order->order_key, 
-                        'name'       => $order_product->name,
-                        'product_id' => $order_product->product_id,
-                        'variation_id' => $order_product->variation_id,
-                        'quantity'     => $order_product->quantity,
-                        'tax_class'    => $order_product->tax_class,
-                        'subtotal'     => $order_product->subtotal,
-                        'subtotal_tax' => $order_product->subtotal_tax,
-                        'total'         => $order_product->total,
-                        'total_tax'     => $order_product->total_tax,
-                        // 'taxes'         => !empty($order_product->taxes),
-                        'sku'           => $order_product->sku,
-                        'price'         => $order_product->price,
-                        'barcode'       => InventoryManagement::where('sku',$order_product->sku)->pluck('barcode')->first(),
-                        'barcode_image' => InventoryManagement::where('sku',$order_product->sku)->pluck('barcode_image')->first(),
-                        'image'         => !empty($order_product->image) ? $order_product->image->src : null,
-                        'parent_name'   => $order_product->parent_name,
-                        'order_created_at'  => $order->date_created, 
+                        'order_created_at' => $order->date_created, 
+                        'modified_at'      => $order->date_modified, 
+                        'uuid'         => $order->order_key, 
+                        'status'       => $order->status, 
+                        'payment_mode' => $order->payment_method, 
+    
+                        'total_cost'   => $order->total, 
+                        'delivery_cost'   => $order->shipping_total, 
+            
+                        'currency_code'     => $order->currency, 
+                        'currency_symbol'   => $order->currency_symbol, 
+                        'currency_name'     => null , 
+    
+                        'buyer_first_name' => $order->billing->first_name, 
+                        'buyer_last_name'  => $order->billing->last_name, 
+                        'buyer_email'      => $order->billing->email, 
+                        'buyer_mobile_number' => $order->billing->phone, 
+    
+                        'buyer_line' => $order->billing->address_1, 
+                        'buyer_area' => $order->billing->address_2, 
+                        'buyer_city' => $order->billing->city, 
+                        'buyer_state' => $order->billing->state, 
+                        'buyer_county' => $order->billing->country, 
+                        'buyer_pin'    => $order->billing->postcode, 
+                        
+                        'buyer_shipping_first_name' => $order->shipping->first_name,
+                        'buyer_shipping_last_name'  => $order->shipping->last_name,
+                        'buyer_shipping_address_1' => $order->shipping->address_1, 
+                        'buyer_shipping_address_2' => $order->shipping->address_2, 
+                        'buyer_shipping_city' => $order->shipping->city, 
+                        'buyer_shipping_state' => $order->shipping->state, 
+                        'buyer_shipping_county' => $order->shipping->country, 
+                        'buyer_shipping_pin' => $order->shipping->postcode, 
+                        'buyer_shipping_mobile_number' => $order->shipping->phone, 
                         'unique_id' => $unique_id,
                     ]);
-                }
-
-                // Mail Sending 
-                try {
-
-                    $orders_collection = Order::query()->where('order_id',$order->id)->get()->map(function($item){
-        
-                        $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
+    
+                    WoocommerceOrder::create([
+                        'order_id' => $order->id ,
+                        'order_uuid' => $order->order_key, 
+                        'status'   => $order->status,
+                        'currency' => $order->currency,
+                        'version'  => $order->version ,
+                        'prices_include_tax'=> $order->prices_include_tax ,
+                        'date_created'      => $order->date_created ,
+                        'date_modified'     => $order->date_modified ,
+                        'discount_total'    => $order->discount_total ,
+                        'discount_tax'      => $order->discount_tax ,
+                        'shipping_total'    => $order->shipping_total ,
+                        'shipping_tax'      => $order->shipping_tax ,
+                        'cart_tax'          => $order->cart_tax ,
+                        'total'             => $order->total,
+                        'total_tax'         => $order->total_tax ,
+                        'customer_id'       => $order->customer_id ,
+                        'payment_method'    => $order->payment_method ,
+                        'payment_method_title'  => $order->payment_method_title ,
+                        'transaction_id'        => $order->transaction_id ,
+                        'customer_ip_address'   => $order->customer_ip_address ,
+                        'customer_user_agent'   => $order->customer_user_agent ,
+                        'created_via'           => $order->created_via ,
+                        'customer_note'         => $order->customer_note ,
+                        'date_completed'        => $order->date_completed ,
+                        'date_paid'             => $order->date_paid ,
+                        'cart_hash'             => $order->cart_hash ,
+                        'number'                => $order->number ,
+                        'payment_url'           => $order->payment_url ,
+                        'is_editable'           => $order->is_editable ,
+                        'needs_payment'         => $order->needs_payment ,
+                        'needs_processing'      => $order->needs_processing ,
+                        'date_created_gmt'      => $order->date_created_gmt ,
+                        'date_modified_gmt'     => $order->date_modified_gmt ,
+                        'date_completed_gmt'    => $order->date_completed_gmt ,
+                        'date_paid_gmt'         => $order->date_paid_gmt ,
+                        'currency_symbol'       => $order->currency_symbol,
+                        'unique_id'             => $unique_id,
+                    ]);
+    
+                    WoocommerceBuyer::create([
+                        'order_id' => $order->id ,
+                        'order_uuid' => $order->order_key, 
+                        'first_name' => $order->billing->first_name,
+                        'last_name'  => $order->billing->last_name,
+                        'company'    => $order->billing->company,
+                        'address_1'  => $order->billing->address_1,
+                        'address_2'  => $order->billing->address_2,
+                        'city'       => $order->billing->city,
+                        'state'      => $order->billing->state,
+                        'postcode'   => $order->billing->postcode,
+                        'country'    => $order->billing->country,
+                        'email'      => $order->billing->email,
+                        'phone'      => $order->billing->phone,
+                        'unique_id' => $unique_id,
+                    ]);
+    
+                    WoocommerceShipping::create([
+                        'order_id'   => $order->id ,
+                        'order_uuid' => $order->order_key, 
+                        'first_name' => $order->shipping->first_name,
+                        'last_name'  => $order->shipping->last_name,
+                        'company'    => $order->shipping->company,
+                        'address_1' => $order->shipping->address_1,
+                        'address_2' => $order->shipping->address_2,
+                        'city'      => $order->shipping->city,
+                        'state'     => $order->shipping->state,
+                        'postcode'  => $order->shipping->postcode,
+                        'country'   => $order->shipping->country,
+                        'unique_id' => $unique_id,
+                    ]);
+    
+                    foreach($order->line_items as $key => $order_product){
+    
+                        WoocommerceOrderProduct::create([
+                            'order_id' => $order->id ,
+                            'order_vai' => 'woocommerce',
+                            'order_uuid' => $order->order_key, 
+                            'name'       => $order_product->name,
+                            'product_id' => $order_product->product_id,
+                            'variation_id' => $order_product->variation_id,
+                            'quantity'     => $order_product->quantity,
+                            'tax_class'    => $order_product->tax_class,
+                            'subtotal'     => $order_product->subtotal,
+                            'subtotal_tax' => $order_product->subtotal_tax,
+                            'total'         => $order_product->total,
+                            'total_tax'     => $order_product->total_tax,
+                            // 'taxes'         => !empty($order_product->taxes),
+                            'sku'           => $order_product->sku,
+                            'price'         => $order_product->price,
+                            'barcode'       => InventoryManagement::where('sku',$order_product->sku)->pluck('barcode')->first(),
+                            'barcode_image' => InventoryManagement::where('sku',$order_product->sku)->pluck('barcode_image')->first(),
+                            'image'         => !empty($order_product->image) ? $order_product->image->src : null,
+                            'parent_name'   => $order_product->parent_name,
+                            'order_created_at'  => $order->date_created, 
+                            'unique_id' => $unique_id,
+                        ]);
+                    }
+    
+                    // Mail Sending 
+                    try {
+    
+                        $orders_collection = Order::query()->where('order_id',$order->id)->get()->map(function($item){
             
-                        $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_id', $item->order_id )->get();
-                        $item['order_vai'] = 'woocommerce';
-            
-                        $totalCostSum = $WoocommerceOrderProduct->sum('total');
-            
-                        $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
-                            $item['product_name'] = $item->name;
-                            $item['product_total_cost'] = $item->total;
-                            $item['price']     = $item->price;
-                            $item['discount']  = null ;
-                            $item['product_delivery_cost']  = null ;
-                            $item['sum_total_cost'] = $totalCostSum; 
-            
+                            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
+                
+                            $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_id', $item->order_id )->get();
+                            $item['order_vai'] = 'woocommerce';
+                
+                            $totalCostSum = $WoocommerceOrderProduct->sum('total');
+                
+                            $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
+                                $item['product_name'] = $item->name;
+                                $item['product_total_cost'] = $item->total;
+                                $item['price']     = $item->price;
+                                $item['discount']  = null ;
+                                $item['product_delivery_cost']  = null ;
+                                $item['sum_total_cost'] = $totalCostSum; 
+                
+                                return $item;
+                            });
+                
                             return $item;
-                        });
-            
-                        return $item;
-                    })->first();
-
-                    $data = [
-                        'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
-                        'Get_website_name' => CustomHelper::Get_website_name(),
-                        'orders_collection'  => $orders_collection,
-                    ];
+                        })->first();
+    
+                        $data = [
+                            'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
+                            'Get_website_name' => CustomHelper::Get_website_name(),
+                            'orders_collection'  => $orders_collection,
+                        ];
+                        
+                        // Mail::to(CustomHelper::Get_ADMIN_MAIL())->send(new OrderSendEmail($data));
+    
+                    } catch (\Illuminate\Mail\TransportException $e) {
+                       
+                        Log::error('Mail Transport Error: ' . $e->getMessage());
                     
-                    // Mail::to(CustomHelper::Get_ADMIN_MAIL())->send(new OrderSendEmail($data));
-
-                } catch (\Illuminate\Mail\TransportException $e) {
-                   
-                    Log::error('Mail Transport Error: ' . $e->getMessage());
-                
-                } catch (\Exception $e) {
-                   
-                    Log::error('Failed to send email: ' . $e->getMessage());
-                
-                } catch (\Throwable $th) {
+                    } catch (\Exception $e) {
+                       
+                        Log::error('Failed to send email: ' . $e->getMessage());
                     
-                    Log::critical('Critical Error while sending mail: ' . $th->getMessage());
-                }
-
-                $result = array(
-                    'status'      => true,
-                    'status_code' => 200,
-                    'message'     => Str::title("The woocommerce orders saved successfully"),
-                    'body'        => Str::title("The woocommerce orders saved successfully"),
-                );
-
-            }else{
-
+                    } catch (\Throwable $th) {
+                        
+                        Log::critical('Critical Error while sending mail: ' . $th->getMessage());
+                    }
+    
+                    $result = array(
+                        'status'      => true,
+                        'status_code' => 200,
+                        'message'     => Str::title("The woocommerce orders saved successfully"),
+                        'body'        => Str::title("The woocommerce orders saved successfully"),
+                    );
+    
+                }else{
+    
                     // Log::info("Skipping duplicate order with ID: " . $order['display_order_id']);
 
-                    $result = array(
-                    'status'      => true,
-                    'status_code' => 200,
-                    'message'     => Str::title("Skipping woocommerce duplicate order with ID"),
-                    'body'        => Str::title("Skipping woocommerce duplicate order with ID"),
-                );
+                    return array(
+                        'status'      => true,
+                        'status_code' => 200,
+                        'message'     => Str::title("Skipping woocommerce duplicate order with ID"),
+                        'body'        => Str::title("Skipping woocommerce duplicate order with ID"),
+                    );
+                }
             }
+
+            if (count($response) < 50) break;
         }
 
         return $result;

@@ -98,9 +98,9 @@
                             <i class="bi bi-receipt"> Invoices </i> 
                         </button>
 
-                        <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('shipping')">
+                        <!-- <button class="btn btn-outline-primary btn-sm me-2" onclick="bulkPrint('shipping')">
                             <i class="bi bi-tag"> Shipping Labels </i> 
-                        </button>
+                        </button> -->
                     </div>
                 </div>
                 

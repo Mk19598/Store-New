@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('shipping-label', [App\Http\Controllers\OrderController::class, 'shipping_label'])->name('orders.shipping_label');
         Route::post('/notes', [App\Http\Controllers\OrderController::class, 'addOrderNotes'])->name('orders.add_notes');
         Route::get('/notes/{orderId}', [App\Http\Controllers\OrderController::class, 'getOrderNotes'])->name('orders.get_notes');
+        Route::get('shipping-label/{order_uuid}', [App\Http\Controllers\OrderController::class, 'shipping_label_pdf'])->name('orders.shipping_label_pdf');
 
     });
 

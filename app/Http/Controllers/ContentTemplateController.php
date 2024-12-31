@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Automattic\WooCommerce\Client;
 use App\Helpers\CustomHelper;

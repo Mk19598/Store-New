@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http; 
 use Illuminate\Support\Str;
 use App\Mail\ContactMail;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use App\Helpers\CustomHelper;
 use GuzzleHttp\Client;

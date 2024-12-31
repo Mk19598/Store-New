@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('email:send-daily-orders-count')->dailyAt('23:59');
+        $schedule->command('email:send-daily-orders-count')->everyMinute()->appendOutputTo(storage_path('logs/schedule.log'));
+;
     }
 
     /**

@@ -24,27 +24,27 @@ class SendDailyOrdersCountMail extends Command
      * @var string
      */
 
-    protected $description = 'Send a daily orders received email at 11:59 PM';
+    protected $description = 'Send a daily orders received email at 11:00 PM';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $ordersQuery = Order::query(); 
+        // $ordersQuery = Order::query(); 
 
-        $orders_today = $ordersQuery->whereDate('order_created_at', Carbon::now()->toDateString())->get();
+        // $orders_today = $ordersQuery->whereDate('order_created_at', Carbon::now()->toDateString())->get();
 
-        $data = [
-            'orders_today' => $orders_today,
-            'orders_count' => $orders_today->count(), 
-            'dukkan_orders_count' => $orders_today->where('order_vai', 'Dukkan')->count(), 
-            'woocommerce_orders_count' => $orders_today->where('order_vai', 'woocommerce')->count(),
-            'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
-            'Get_website_name' => CustomHelper::Get_website_name(),
-        ];
+        // $data = [
+        //     'orders_today' => $orders_today,
+        //     'orders_count' => $orders_today->count(), 
+        //     'dukkan_orders_count' => $orders_today->where('order_vai', 'Dukkan')->count(), 
+        //     'woocommerce_orders_count' => $orders_today->where('order_vai', 'woocommerce')->count(),
+        //     'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
+        //     'Get_website_name' => CustomHelper::Get_website_name(),
+        // ];
         
-        Mail::to(CustomHelper::Get_ADMIN_MAIL())->send(new DailyOrdersCountMail($data));
+        // Mail::to(CustomHelper::Get_ADMIN_MAIL())->send(new DailyOrdersCountMail($data));
 
         $this->info('Daily email sent successfully!');
     }

@@ -1,4 +1,11 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<style>
+    .disabled-link {
+        color: gray !important; 
+        pointer-events: none; 
+        cursor: not-allowed; 
+    }
+</style>
 <div class="table-responsive" >
     <table class="table table-striped" id="orders-list-table">
 
@@ -33,14 +40,24 @@
                     <td align="center"> <span class="badge bg-{{ $order->status_color }}">{{ ucwords(@$order->status) }}</span></td>
                     <td align="center"> {{ @$order->currency_symbol.number_format(@$order->total_cost, 2) }}</td>
                     <td align="center">
-                        <a href="{{ route('orders.invoice_pdf',$order->order_uuid)}}"> <i class="bi bi-receipt"></i> </a>
-                        <a href="javascript:void(0);" class="add-tracking-link-btn" data-order-id="{{ $order->order_uuid }}">
-                            <i class="bi bi-geo-alt"></i>
-                        </a>
-                        <a href="javascript:void(0);" class="add-order-note-btn" data-order-id="{{ $order->order_uuid }}">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-
+                        <div class="action-icons" style="display: flex; justify-content: center; gap: 10px; align-items: center;">
+                            <a href="{{ route('orders.invoice_pdf',$order->order_uuid) }}">
+                                <i class="bi bi-receipt"></i>
+                            </a>
+                            <!-- <a href="{{ route('orders.shipping_label_pdf',$order->order_uuid) }}">
+                                <i class="bi bi-tag"></i>
+                            </a> -->
+                            <a href="{{ $order->status == 'Accepted' || $order->status == 'Processing' ? route('orders.shipping_label_pdf', $order->order_uuid) : 'javascript:void(0);' }}"
+                                class="{{ $order->status == 'Accepted' || $order->status == 'Processing' ? '' : 'disabled-link' }}">
+                                    <i class="bi bi-tag"></i>
+                            </a>
+                            <a href="javascript:void(0);" class="add-tracking-link-btn" data-order-id="{{ $order->order_uuid }}">
+                                <i class="bi bi-geo-alt"></i>
+                            </a>
+                            <a href="javascript:void(0);" class="add-order-note-btn" data-order-id="{{ $order->order_uuid }}">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </div>
                     </td>
                 </tr>
             @endforeach

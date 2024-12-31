@@ -991,4 +991,60 @@ class OrderController extends Controller
         return response()->json(['notes' => []], 200);
     }   
 
+    
+    public function shipping_label_pdf(Request $request, $order_uuid)
+    {
+
+        $orders = Order::where('order_uuid', $order_uuid)->get();
+
+        $orders = Order::where('order_uuid', $order_uuid)->get()->map(function($item){
+
+            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
+
+            $generator = new BarcodeGeneratorPNG();
+            $item['barcode'] = base64_encode($generator->getBarcode($item->order_id, $generator::TYPE_CODE_128));
+
+            if ($item->order_vai == "Dukkan" ) {
+
+                $DukaanOrderProducts = DukaanOrderProduct::where('order_uuid', $item->order_uuid)->get();
+
+                $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
+                
+                $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
+                    $item['product_name'] = $item->product_slug;
+                    $item['total_cost']  = $item->line_item_total_cost;
+                    $item['price']      = $item->selling_price;
+                    $item['sum_total_cost'] = $totalCostSum; 
+                    return $item;
+                });
+            }
+
+            if ($item->order_vai == "woocommerce") {
+
+                $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_uuid', $item->order_uuid)->get();
+
+                $totalCostSum = $WoocommerceOrderProduct->sum('total');
+
+                $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
+                    $item['product_name'] = $item->name;
+                    $item['total_cost'] = $item->total;
+                    $item['price']     = $item->price;
+                    $item['sum_total_cost'] = $totalCostSum; 
+
+                    return $item;
+                });
+            }
+
+            return $item;
+        });
+
+        $data = array(
+            'orders' => $orders
+        );
+        $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait')->setOption('margin-top', 0)
+        ->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);    
+        
+        return $pdf->stream('shipping_labels.pdf');
+        
+    }
 }

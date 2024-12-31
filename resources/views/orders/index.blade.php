@@ -117,29 +117,20 @@
 
 @push('styles')
     <style>
-        .badge.bg-completed {
-            background-color: #28a745 !important;
-        }
+        
+         .badge.bg-completed {background-color: #28a745 !important;}
 
-        .badge.bg-processing {
-            background-color: #0275d8;
-        }
+        .badge.bg-processing {background-color: #0275d8;}
 
-        .badge.bg-shipped {
-            background-color: #8051d7;
-        }
+        .badge.bg-shipped {background-color: #8051d7;}
 
-        .badge.bg-cancelled {
-            background-color: #dc3545;
-        }
+        .badge.bg-cancelled {background-color: #dc3545;}
 
-        .badge.bg-pending {
-            background-color: #abab32;
-        }
+        .badge.bg-pending {background-color: #abab32;}
 
-        .badge.bg-refunded {
-            background-color: #A52A2A;
-        }
+        .badge.bg-refunded {background-color: #A52A2A;}
+
+        .badge.bg-Packed {background-color: #2471a3;}
 
         .stats {
             display: flex;

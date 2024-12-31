@@ -29,6 +29,8 @@
         .badge.bg-pending {background-color: #abab32;}
 
         .badge.bg-refunded {background-color: #A52A2A;}
+
+        .badge.bg-Packed {background-color: #2471a3;}
     </style>
 </head>
 
@@ -68,6 +70,7 @@
                             'refunded'   => ['refunded', 10],
                             'processing' => ['processing'],
                             'shipped'    => ['order-shipped', 3],
+                            'Packed'     => [ 'Packed'],
                         ];
                     
                         if (isset($statusMap[$item->status])) {

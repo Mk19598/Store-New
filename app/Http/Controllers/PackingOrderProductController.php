@@ -10,7 +10,6 @@ use App\Helpers\CustomHelper;
 use App\Models\WoocommerceOrder;
 use App\Models\DukaanOrder;
 use App\Models\WoocommerceOrderProduct;
-use App\Models\InventoryManagement;
 use App\Models\DukaanOrderProduct;
 use App\Models\Order;
 
@@ -46,7 +45,6 @@ class PackingOrderProductController extends Controller
                             $item['price']    = $item->selling_price;
                             $item['discount'] = $item->line_item_discount;
                             $item['sum_total_cost'] = $totalCostSum;
-                            $item['InventoryManagement'] = InventoryManagement::where('sku',$item->product_sku_id)->first();
                             return $item;
                         });
                     }
@@ -69,7 +67,6 @@ class PackingOrderProductController extends Controller
                             $item['price'] = $item->price;
                             $item['discount'] = null;
                             $item['sum_total_cost'] = $totalCostSum;
-                            $item['InventoryManagement'] = InventoryManagement::where('sku',$item->sku_id)->first();
                             return $item;
                         });
                     }
@@ -177,7 +174,84 @@ class PackingOrderProductController extends Controller
                         $item['price'] = $item->selling_price;
                         $item['discount'] = $item->line_item_discount;
                         $item['sum_total_cost'] = $totalCostSum;
-                        $item['InventoryManagement'] = InventoryManagement::where('sku',$item->sku_id)->first();
+                        return $item;
+                    });
+                }
+
+                if ($item->order_vai == "woocommerce") {
+
+                    $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_uuid', $item->order_uuid)->get();
+
+                    $item['product_details_count'] = $WoocommerceOrderProduct->count(); 
+                    $item['packed_count']          = $WoocommerceOrderProduct->where('packed_status', 1)->count();
+                    $item['progress_percentage']   = $item['product_details_count'] > 0 ? ($item['packed_count'] / $item['product_details_count']) * 100 : 0;
+
+                    $totalCostSum = $WoocommerceOrderProduct->sum('total');
+
+                    $item['product_details'] = $WoocommerceOrderProduct->map(function ($item) use ($totalCostSum) {
+
+                        $item['product_name'] = $item->name;
+                        $item['sku_id'] = $item->sku;
+                        $item['product_total_cost'] = $item->total;
+                        $item['price'] = $item->price;
+                        $item['discount'] = null;
+                        $item['sum_total_cost'] = $totalCostSum;
+                        return $item;
+                    });
+                }
+
+                return $item;
+            })->first();
+
+            return view('products-package.products-list', [ 'orders_collection' => $orders_collection ])->render();
+           
+        } catch (\Throwable $th) {
+
+            return response()->json(['status' => 'error', 'message' => 'Invalid SKU ID, please check the SKU ID'], 404);
+        }
+    }
+
+    public function AllProductPackaged( Request $request )
+    {
+        try {
+         
+            if ($request->order_vai == "Dukkan") {
+
+                Order::where('order_id', $request->order_id)->update([ 'status' => "Packed" ] );
+
+                DukaanOrder::where( 'order_id', $request->order_id )->first()->update([ 'status' => "Packed",] );
+            }
+
+            if ($request->order_vai == "woocommerce") {
+
+                Order::where('order_id', $request->order_id)->first()->update(['status' => "order-shipped" , 'shipped_created_at' => Carbon::now(), ]);
+
+                WoocommerceOrder::where( 'order_id', $request->order_id )->first()->update(['status' => "Packed" ]);
+            }
+
+            // Render  
+            $orders_collection = Order::query()->where('order_id', $request->order_id)->get()->map(function ($item) {
+
+                $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
+
+                if ($item->order_vai == "Dukkan") {
+                    
+                    $DukaanOrderProducts = DukaanOrderProduct::where('order_uuid', $item->order_uuid)->get();
+
+                    $item['product_details_count'] = $DukaanOrderProducts->count(); 
+                    $item['packed_count']          = $DukaanOrderProducts->where('packed_status', 1)->count();
+                    $item['progress_percentage']   = $item['product_details_count'] > 0 ? ($item['packed_count'] / $item['product_details_count']) * 100 : 0;
+
+                    $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
+
+                    $item['product_details'] = $DukaanOrderProducts->map(function ($item) use ($totalCostSum) {
+
+                        $item['product_name'] = $item->product_slug;
+                        $item['sku_id'] = $item->product_sku_id;
+                        $item['product_total_cost'] = $item->line_item_total_cost;
+                        $item['price'] = $item->selling_price;
+                        $item['discount'] = $item->line_item_discount;
+                        $item['sum_total_cost'] = $totalCostSum;
 
                         return $item;
                     });
@@ -201,7 +275,6 @@ class PackingOrderProductController extends Controller
                         $item['price'] = $item->price;
                         $item['discount'] = null;
                         $item['sum_total_cost'] = $totalCostSum;
-                        $item['InventoryManagement'] = InventoryManagement::where('sku',$item->sku_id)->first();
 
                         return $item;
                     });
@@ -214,10 +287,11 @@ class PackingOrderProductController extends Controller
            
         } catch (\Throwable $th) {
 
-            return response()->json(['status' => 'error', 'message' => 'Invalid SKU ID, please check the SKU ID'], 404);
+            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 404);
         }
     }
 
+    // Note : This function not in use , but don't remove  
     public function MoveToShip( Request $request )
     {
         try {
@@ -273,8 +347,6 @@ class PackingOrderProductController extends Controller
                         $item['price'] = $item->selling_price;
                         $item['discount'] = $item->line_item_discount;
                         $item['sum_total_cost'] = $totalCostSum;
-                        $item['InventoryManagement'] = InventoryManagement::where('sku',$item->sku_id)->first();
-
                         return $item;
                     });
                 }
@@ -297,8 +369,6 @@ class PackingOrderProductController extends Controller
                         $item['price'] = $item->price;
                         $item['discount'] = null;
                         $item['sum_total_cost'] = $totalCostSum;
-                        $item['InventoryManagement'] = InventoryManagement::where('sku',$item->sku_id)->first();
-
                         return $item;
                     });
                 }

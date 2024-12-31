@@ -14,7 +14,18 @@
             </label>
         </div>
 
-        @if ( @$orders_collection['packed_count'] < @$orders_collection['product_details_count']  )
+        @if( @$orders_collection['status'] == 3 || @$orders_collection['status'] == "order-shipped" )
+        
+            <div class="col-md-12" style="text-align: -webkit-center;">
+                <span class="product-qty" style="background-color: #ebdef0; color: #8e44ad;"> &#10004; Shipped</span>
+            </div>
+
+        @elseif( @$orders_collection['status'] == "Packed"  )
+
+            <div class="col-md-12" style="text-align: -webkit-center;">
+                <span class="product-qty" style="background-color: #abebc6; color: #1d8348;"> &#10004; Products Packed Fully</span>
+            </div>
+        @elseif ( @$orders_collection['packed_count'] < @$orders_collection['product_details_count']  )
 
             <form method="get" id="MarkProductForm" action="{{ route('products-packing.mark-Pdt-packed') }}" >
                 <div class="row col-md-12 g-3 mx-auto">
@@ -39,23 +50,18 @@
 
         @elseif( (@$orders_collection['packed_count'] == @$orders_collection['product_details_count']) &&  ( @$orders_collection['status'] != 3 && @$orders_collection['status'] != "order-shipped") )
 
-            <form method="get" id="MoveToShip" action="{{ route('products-packing.move-to-ship') }}" >
+            <form method="get" id="All-Pdt-Packed" action="{{ route('products-packing.all-Pdt-packed') }}" >
 
                 <input  class="form-control" type="hidden" name="order_id" value="{{ @$orders_collection->order_id }}">
                 <input  class="form-control" type="hidden" name="order_vai" value="{{ @$orders_collection->order_vai }}">
 
                 <div class="row col-md-12 g-3 mx-auto justify-content-center">
-                    <div class="row col-md-2 justify-content-center">
-                        <button type="submit" class="btn app-btn-primary"> {{ __( "Move to Shipping") }} </button> <br>
+                    <div class="row col-md-3 justify-content-center">
+                        {{-- <button type="submit" class="btn app-btn-primary"> {{ __( "Move to Shipping") }} </button> <br> --}}
+                        <button type="submit" class="btn app-btn-primary"> {{ __( "Mark All Product as Packed") }} </button> <br>
                     </div>
                 </div>
             </form>
-
-        @elseif( @$orders_collection['status'] == 3 || @$orders_collection['status'] == "order-shipped" )
-        
-            <div class="col-md-12" style="text-align: -webkit-center;">
-                <span class="product-qty" style="background-color: #ebdef0; color: #8e44ad;"> &#10004; Shipped</span>
-            </div>
         @endif
     </div>
 </div>
@@ -80,10 +86,10 @@
                                 <span> 
                                     {{ $item->product_name }}  <br> 
                                     {{ "SKU - {$item->sku_id}" }} <br>
-                                    {{ $item->InventoryManagement && isset($item->InventoryManagement['barcode']) ? "Barcode - {$item->InventoryManagement['barcode']}" : "Barcode - No data found" }} <br>
+                                    {{  $item->barcode ? "Barcode - {$item->barcode}" : "Barcode - No data found" }} <br>
 
-                                    @if ( $item->InventoryManagement && isset($item->InventoryManagement['barcode_image']))
-                                        <img src="{{ URL::to('storage/app/private/public/barcodes/'.$item['barcode_image']) }}" alt="Barcode Image" width="150" class="mt-2" />
+                                    @if ( ($item->barcode_image ))
+                                        <img src="{{ URL::to('storage/app/private/public/barcodes/'.$item->barcode_image ) }}" alt="Barcode Image" width="150" class="mt-2" />
                                     @endif
 
                                 </span>  
@@ -137,7 +143,7 @@
             });
         });
 
-        $('#MoveToShip').on('submit', function(event) {
+        $('#All-Pdt-Packed').on('submit', function(event) {
             event.preventDefault(); 
             
             var formData = $(this).serialize();

@@ -74,7 +74,7 @@ class InventoryManagementController extends Controller
             );
 
             $products = [];
-            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(3000)->toIso8601String(); ; $page++) {
+            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(90)->toIso8601String(); ; $page++) {
                 $response = $woocommerce->get('products', [
                     'after' => $thirtyDaysAgo,
                     'orderby' => 'date',
@@ -346,7 +346,7 @@ class InventoryManagementController extends Controller
             );
             
             $products = [];
-            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(3000)->toIso8601String(); ; $page++) {
+            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(90)->toIso8601String(); ; $page++) {
                 $response = $woocommerce->get('products', [
                     'after' => $thirtyDaysAgo,
                     'orderby' => 'date',
@@ -612,7 +612,7 @@ class InventoryManagementController extends Controller
         );
 
         $products = [];
-            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(3000)->toIso8601String(); ; $page++) {
+            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(90)->toIso8601String(); ; $page++) {
                 $response = $woocommerce->get('products', [
                     'after' => $thirtyDaysAgo,
                     'orderby' => 'date',

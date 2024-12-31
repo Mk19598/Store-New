@@ -58,9 +58,9 @@
             @foreach ($orderGroup as $order)
                 <div class="label-container">
                     <div class="header">
-                        Ship Via: Free shipping (ST Courier)
+                        Ship Via: Ground Shipping
                         <br>
-                        <b>Vaseegrah Veda</b> &nbsp;&nbsp; Order ID: <b>{{ $order->order_id }}</b>
+                        <b>Standard Store</b> &nbsp;&nbsp; Order ID: <b>{{ $order->order_id }}</b>
                     </div>
 
                     <div class="barcode">
@@ -77,11 +77,11 @@
 
                     <div class="seller-details">
                         <span><b>Seller:</b></span>
-                        <span>VASEEGRAH VEDA</span>
-                        <span>No:7 VIJAYA NAGAR,</span>
-                        <span>SRINIVASAPURAM (Post)</span>
-                        <span>THANJAVUR</span>
-                        <span>MOBILE: 8248817165</span>
+                        <span>Standard Cold Pressed Oil</span>
+                        <span>No: 91, First Floor Near Gandhi Stage,</span>
+                        <span>Kamarajar Salai Madurai,</span>
+                        <span>Tamil Nadu</span>
+                        <span>India - 625009</span>
                     </div>
 
                     <div class="order-details">

@@ -34,6 +34,9 @@
     <link rel="stylesheet" href="{{ url('resources\css\sidebar.css') }}">
     <link rel="stylesheet" href="{{ url('resources\css\custom.css') }}">
     <link rel="stylesheet" href="{{ url('resources\css\admin-template.css') }}">
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
 
                         {{-- Another Source Script Links --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -62,6 +65,9 @@
 
     {{-- ckeditor --}}
     <script src="https://cdn.ckeditor.com/ckeditor5/38.1.1/classic/ckeditor.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     @stack('styles')
 

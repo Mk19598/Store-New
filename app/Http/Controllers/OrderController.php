@@ -873,6 +873,8 @@ class OrderController extends Controller
 
         // return $response;
         
+        return response()->json(['success' => true, 'message' => 'Notes added successfully.']);
+        
     }
 
     public function getTrackingLinks($orderId)

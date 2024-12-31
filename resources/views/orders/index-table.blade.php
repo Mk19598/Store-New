@@ -207,18 +207,26 @@
             contentType: false, 
             success: function (response) {
                 console.log("Server response:", response);
+                toastr.success('Tracking Links added successfully!', 'Success', {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: "toast-top-right",
+                });
                 setTimeout(function () {
-                    location.reload(); 
+                    location.reload();
                 }, 2000);
             },
             error: function (error) {
                 console.log(error);
-                alert('An error occurred while saving tracking links.');
+                toastr.error('An error occurred while tracking links.', 'Error', {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: "toast-top-right",
+                });
             }
         });
     });
 });
-
 document.addEventListener("DOMContentLoaded", function () {
     const notesContainer = document.getElementById("order-notes-container");
     const addNoteBtn = document.getElementById("add-order-note");
@@ -228,9 +236,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".add-order-note-btn").forEach(function (btn) {
         btn.addEventListener("click", function () {
             const orderId = this.getAttribute("data-order-id");
-            const url = `${baseURL}/orders/notes/${orderId}`;
-            console.log('url ID:', url);
-            console.log('Order ID:', orderId);
 
             $.ajax({
                 url: `${baseURL}/orders/notes/${orderId}`,
@@ -243,7 +248,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             noteInput.classList.add("mb-3");
                             noteInput.innerHTML = `
                                 <label for="note-${index + 1}" class="form-label">Note ${index + 1}</label>
-                                <input type="text" class="form-control" id="note-${index + 1}" name="notes[]" value="${note.notes}" placeholder="Enter note">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="note-${index + 1}" name="notes[]" value="${note.notes}" placeholder="Enter note">
+                                    <span class="input-group-text">${note.created_at ? formatDate(note.created_at) : ''}</span>
+                                </div>
                             `;
                             notesContainer.appendChild(noteInput);
                         });
@@ -297,17 +305,50 @@ document.addEventListener("DOMContentLoaded", function () {
             contentType: false,
             success: function (response) {
                 console.log("Server response:", response);
+                toastr.success('Notes added successfully!', 'Success', {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: "toast-top-right",
+                });
                 setTimeout(function () {
                     location.reload();
                 }, 2000);
             },
             error: function (error) {
                 console.log(error);
-                alert('An error occurred while saving notes.');
+                toastr.error('An error occurred while saving notes.', 'Error', {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: "toast-top-right",
+                });
             }
         });
     });
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { year: 'numeric', month: 'short', day: '2-digit' };
+        return date.toLocaleDateString('en-US', options).replace(/ /g, '-');
+    }
 });
+
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": true,
+    "progressBar": true,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": true,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+};
 
 
 </script>

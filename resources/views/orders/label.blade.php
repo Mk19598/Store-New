@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shipping Management Invoice</title>
     <style>
         body {
-            font-family: 'Noto Sans', Arial, sans-serif;
+            font-family: 'DejaVuSans', Arial, sans-serif;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -49,55 +49,50 @@
 </head>
 
 <body>
-    @php
-        $ordersPerPage = 2;
-    @endphp
+    @foreach ($orders as $order)
+        <div class="label-container">
+            <div class="header">
+                Ship Via: Ground Shipping
+                <br>
+                <b>Standard Store</b> &nbsp;&nbsp; Order ID: <b>{{ $order->order_id }}</b>
+            </div>
 
-    @foreach ($orders->chunk($ordersPerPage) as $orderGroup)
-        <div class="page" style="@if (!$loop->last) page-break-after: always; @endif">
-            @foreach ($orderGroup as $order)
-                <div class="label-container">
-                    <div class="header">
-                        Ship Via: Ground Shipping
-                        <br>
-                        <b>Standard Store</b> &nbsp;&nbsp; Order ID: <b>{{ $order->order_id }}</b>
-                    </div>
+            <div class="barcode">
+                <img src="data:image/png;base64,{{ $order->barcode }}" alt="Barcode">
+            </div>
 
-                    <div class="barcode">
-                        <img src="data:image/png;base64,{{ $order->barcode }}" alt="Barcode">
-                    </div>
+            <div class="section">
+                <span><b>To:</b></span>
+                <span>{{ $order->buyer_first_name }}</span>
+                <span>{{ $order->buyer_area }}</span>
+                <span>{{ $order->buyer_city }}, {{ $order->buyer_pin }}</span>
+                <span>{{ $order->buyer_mobile_number }}</span>
+            </div>
 
-                    <div class="section">
-                        <span><b>To:</b></span>
-                        <span>{{ $order->buyer_first_name }}</span>
-                        <span>{{ $order->buyer_area }}</span>
-                        <span>{{ $order->buyer_city }}, {{ $order->buyer_pin }}</span>
-                        <span>{{ $order->buyer_mobile_number }}</span>
-                    </div>
+            <div class="seller-details">
+                <span><b>Seller:</b></span>
+                <span>Standard Cold Pressed Oil</span>
+                <span>No: 91, First Floor Near Gandhi Stage,</span>
+                <span>Kamarajar Salai Madurai,</span>
+                <span>Tamil Nadu</span>
+                <span>India - 625009</span>
+            </div>
 
-                    <div class="seller-details">
-                        <span><b>Seller:</b></span>
-                        <span>Standard Cold Pressed Oil</span>
-                        <span>No: 91, First Floor Near Gandhi Stage,</span>
-                        <span>Kamarajar Salai Madurai,</span>
-                        <span>Tamil Nadu</span>
-                        <span>India - 625009</span>
-                    </div>
+            <div class="order-details">
+                <span><b>Prepaid Order:</b> Date: {{ $order->order_created_at_format }}</span>
+                <span>No. of items: {{ $order->product_details->count() }}</span>
+            </div>
 
-                    <div class="order-details">
-                        <span><b>Prepaid Order:</b> Date: {{ $order->order_created_at_format }}</span>
-                        <span>No. of items: {{ $order->product_details->count() }}</span>
-                    </div>
+            <div class="order-items">
+                <span><b>Products:</b></span>
+                @foreach ($order->product_details as $item)
+                <span style="font-family: 'DejaVuSans', 'Noto Sans Tamil', 'Noto Sans Devanagari', sans-serif;">
+    {{ $item['name'] }} - {{ $item['quantity'] }} {{ $item['unit'] }}
+</span>
 
-                    <div class="order-items">
-                        <span><b>Products:</b></span>
-                        @foreach ($order->product_details as $item)
-                        <!-- Homewood Cardamom Tea 500g ஹோம்வுட் ஏலக்காய் டீ 500 கிராம் होमवुड इलायची चाय 500 ग्राम -->
-                            <span style= 'font-family: "Noto Sans Tamil", sans-serif;'>{{ $item['name'] }} - {{ $item['quantity'] }} {{ $item['unit'] }}</span>
-                        @endforeach
-                    </div>
-                </div>
-            @endforeach
+
+                @endforeach
+            </div>
         </div>
     @endforeach
 </body>

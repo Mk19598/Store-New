@@ -28,6 +28,7 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Models\ContentTemplate;
 use App\Models\EnvSetting;
 use App\Models\OrderNotes;
+use Mpdf\Mpdf;
 
 class OrderController extends Controller
 {
@@ -995,6 +996,8 @@ class OrderController extends Controller
     public function shipping_label_pdf(Request $request, $order_uuid)
     {
 
+        
+        
         $orders = Order::where('order_uuid', $order_uuid)->get();
 
         $orders = Order::where('order_uuid', $order_uuid)->get()->map(function($item){
@@ -1038,13 +1041,80 @@ class OrderController extends Controller
             return $item;
         });
 
-        $data = array(
-            'orders' => $orders
-        );
-        $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait')->setOption('margin-top', 0)
-        ->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);    
+        // MPDF
+        $mpdf = new \Mpdf\Mpdf([ 
+            'unicode' => true, 
+            'fontDir' => [storage_path('fonts')], 
+            'fontdata' => [
+                'notosanstamil' => [
+                    'R' => 'NotoSansTamil-Regular.ttf', 
+                ],
+                'notosansdevanagari' => [
+                    'R' => 'NotoSansDevanagari-Regular.ttf',
+                ],
+                'dejavusans' => [
+                    'R' => 'DejaVuSans.ttf', 
+                ],
+            ],
+            'default_font' => 'dejavusans', 
+        ]);
         
-        return $pdf->stream('shipping_labels.pdf');
+        $mpdf->fontdata['notosanstamil']['embed'] = true;
+        $mpdf->fontdata['notosansdevanagari']['embed'] = true;
+        $mpdf->fontdata['dejavusans']['embed'] = true;
+        
+        // Not Working 
+        $html = '
+            <span style="font-family: \'DejaVuSans\', \'Noto Sans Tamil\', \'Noto Sans Devanagari\', sans-serif;">
+                Homewood Cardamom Tea 500g - ஹோம்வுட் ஏலக்காய் டீ 500 கிராம் - होमवुड इलायची चाय 500 ग्राम
+            </span>
+        ';
+        $mpdf = new \Mpdf\Mpdf([ 
+            'unicode' => true, 
+            'fontDir' => [storage_path('fonts')],
+            'fontdata' => [
+                'notosanstamil' => [
+                    'R' => 'NotoSansTamil-Regular.ttf', 
+                ],
+                'notosansdevanagari' => [
+                    'R' => 'NotoSansDevanagari-Regular.ttf', 
+                ],
+                'dejavusans' => [
+                    'R' => 'DejaVuSans.ttf', 
+                ],
+            ],
+            'default_font' => 'dejavusans',
+        ]);
+
+        // Working 
+        
+        $html = '
+            <h1 style="font-family: \'Noto Sans Tamil\'">ஹோம்வுட் ஏலக்காய் டீ 500 கிராம்</h1>
+            <h1 style="font-family: \'Noto Sans Devanagari\'">होमवुड इलायची चाय 500 ग्राम</h1>
+            <h1 style="font-family: \'DejaVuSans\'">Homewood Cardamom Tea 500g</h1>
+        ';
+        
+        $mpdf->WriteHTML($html);
+        $mpdf->Output();
+        
+        $mpdf->WriteHTML($html);
+        $mpdf->Output();
+        
+        $data = array(
+            'orders' => $orders,
+        );
+        $html = view('orders.label', $data)->render();
+
+        $mpdf->WriteHTML($html);
+        // return $mpdf->stream('shipping_labels.pdf');
+        return response($mpdf->Output('', 's'))
+        ->header('Content-Type', 'application/pdf');
+        // return $mpdf->stream('shipping_labels.pdf');
+
+        // $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait')->setOption('margin-top', 0)
+        // ->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);    
+        
+        // return $pdf->stream('shipping_labels.pdf');
         
     }
 }

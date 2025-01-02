@@ -1063,11 +1063,39 @@ class OrderController extends Controller
         $mpdf->fontdata['notosansdevanagari']['embed'] = true;
         $mpdf->fontdata['dejavusans']['embed'] = true;
         
+        // Not Working 
         $html = '
             <span style="font-family: \'DejaVuSans\', \'Noto Sans Tamil\', \'Noto Sans Devanagari\', sans-serif;">
                 Homewood Cardamom Tea 500g - ஹோம்வுட் ஏலக்காய் டீ 500 கிராம் - होमवुड इलायची चाय 500 ग्राम
             </span>
         ';
+        $mpdf = new \Mpdf\Mpdf([ 
+            'unicode' => true, 
+            'fontDir' => [storage_path('fonts')],
+            'fontdata' => [
+                'notosanstamil' => [
+                    'R' => 'NotoSansTamil-Regular.ttf', 
+                ],
+                'notosansdevanagari' => [
+                    'R' => 'NotoSansDevanagari-Regular.ttf', 
+                ],
+                'dejavusans' => [
+                    'R' => 'DejaVuSans.ttf', 
+                ],
+            ],
+            'default_font' => 'dejavusans',
+        ]);
+
+        // Working 
+        
+        $html = '
+            <h1 style="font-family: \'Noto Sans Tamil\'">ஹோம்வுட் ஏலக்காய் டீ 500 கிராம்</h1>
+            <h1 style="font-family: \'Noto Sans Devanagari\'">होमवुड इलायची चाय 500 ग्राम</h1>
+            <h1 style="font-family: \'DejaVuSans\'">Homewood Cardamom Tea 500g</h1>
+        ';
+        
+        $mpdf->WriteHTML($html);
+        $mpdf->Output();
         
         $mpdf->WriteHTML($html);
         $mpdf->Output();

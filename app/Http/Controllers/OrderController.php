@@ -1074,31 +1074,41 @@ class OrderController extends Controller
             'fontDir' => [storage_path('fonts')],
             'fontdata' => [
                 'notosanstamil' => [
-                    'R' => 'NotoSansTamil-Regular.ttf', 
+                    'R' => 'NotoSansTamil-Regular.ttf',
                 ],
                 'notosansdevanagari' => [
                     'R' => 'NotoSansDevanagari-Regular.ttf', 
                 ],
+                'notosanstelugu' => [
+                    'R' => 'NotoSansTelugu-Regular.ttf', 
+                ],
+                'notosansmalayalam' => [
+                    'R' => 'NotoSansMalayalam-Regular.ttf', 
+                ],
+                'notosanskannada' => [
+                    'R' => 'NotoSansKannada-Regular.ttf', 
+                ],
                 'dejavusans' => [
-                    'R' => 'DejaVuSans.ttf', 
+                    'R' => 'DejaVuSans.ttf',
                 ],
             ],
-            'default_font' => 'dejavusans',
+            'default_font' => 'dejavusans', 
         ]);
+        
 
         // Working 
         
-        $html = '
-            <h1 style="font-family: \'Noto Sans Tamil\'">ஹோம்வுட் ஏலக்காய் டீ 500 கிராம்</h1>
-            <h1 style="font-family: \'Noto Sans Devanagari\'">होमवुड इलायची चाय 500 ग्राम</h1>
-            <h1 style="font-family: \'DejaVuSans\'">Homewood Cardamom Tea 500g</h1>
-        ';
+        // $html = '
+        //     <h1 style="font-family: \'Noto Sans Tamil\'">ஹோம்வுட் ஏலக்காய் டீ 500 கிராம்</h1>
+        //     <h1 style="font-family: \'Noto Sans Devanagari\'">होमवुड इलायची चाय 500 ग्राम</h1>
+        //     <h1 style="font-family: \'DejaVuSans\'">Homewood Cardamom Tea 500g</h1>
+        // ';
         
-        $mpdf->WriteHTML($html);
-        $mpdf->Output();
+        // $mpdf->WriteHTML($html);
+        // $mpdf->Output();
         
-        $mpdf->WriteHTML($html);
-        $mpdf->Output();
+        // $mpdf->WriteHTML($html);
+        // $mpdf->Output();
         
         $data = array(
             'orders' => $orders,

@@ -47,8 +47,8 @@
                             <!-- <a href="{{ route('orders.shipping_label_pdf',$order->order_uuid) }}">
                                 <i class="bi bi-tag"></i>
                             </a> -->
-                            <a href="{{ $order->status == 'Accepted' || $order->status == 'Processing' ? route('orders.shipping_label_pdf', $order->order_uuid) : 'javascript:void(0);' }}"
-                                class="{{ $order->status == 'Accepted' || $order->status == 'Processing' ? '' : 'disabled-link' }}">
+                            <a href="{{ $order->status == 'Accepted' || $order->status == 'Processing' || $order->status == 'Packed' || $order->status == 'Completed' ? route('orders.shipping_label_pdf', $order->order_uuid) : 'javascript:void(0);' }}"
+                                class="{{ $order->status == 'Accepted' || $order->status == 'Processing' || $order->status == 'Packed' || $order->status == 'Completed' ? '' : 'disabled-link' }}">
                                     <i class="bi bi-tag"></i>
                             </a>
                             <a href="javascript:void(0);" class="add-tracking-link-btn" data-order-id="{{ $order->order_uuid }}">

@@ -147,6 +147,7 @@
                 <h1>500</h1>
             </div>
             <h2>Internal Server Error </h2>
+            <h3>{{ @$message }} </h3>
             <h3> {{ $err_msg }} </h3>
             <p>A generic error message, given when an unexpected condition was encountered. <br>
                 <a href="{{ route('dashboard') }}">Return to homepage</a></p>

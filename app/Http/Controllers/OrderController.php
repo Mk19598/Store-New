@@ -752,8 +752,11 @@ class OrderController extends Controller
             $html = view('orders.PDF.invoice', $data)->render();
 
             $mpdf->WriteHTML($html);
-            
-            return response($mpdf->Output('', 's'))->header('Content-Type', 'application/pdf');
+
+            $pdfName = 'Invoice-' . ($orders_collection[0]->order_id ?? Str::random(8)) . '.pdf';
+
+            return response($mpdf->Output($pdfName, 'I'))
+                        ->header('Content-Type', 'application/pdf');
 
         } catch (\Throwable $th) {
             // return $th->getMessage();

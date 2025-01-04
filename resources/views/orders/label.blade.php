@@ -91,6 +91,7 @@
             $nameParts = explode('/', $item['name']);
             $styledName = '';
 
+            
             foreach ($nameParts as $part) {
                 if (preg_match('/[\x{0B80}-\x{0BFF}]/u', $part)) { 
                     $styledName .= "<span style=\"font-family: 'Noto Sans Tamil';\">$part  /</span> ";

@@ -699,7 +699,7 @@ class OrderController extends Controller
                     
                     $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
 
-                        $item['product_name']   = $item->product_slug;
+                        $item['product_name']   = $item->name;
                         $item['original_cost']  = $item->original_price;
                         $item['price']      = $item->selling_price;
                         $item['discount']   = $item->line_item_discount;
@@ -738,9 +738,22 @@ class OrderController extends Controller
                 'title'  => "Invoice | ".CustomHelper::Get_website_name(),
             );
     
-            $pdf = Pdf::loadView('orders.PDF.invoice', $data);
-    
-            return $pdf->stream('orders-invoice');
+
+            // MPDF
+            $mpdf = new \Mpdf\Mpdf( CustomHelper::Mpdf_font_setup());
+            
+            $data = array(
+                'orders_collection' => $orders_collection,
+                'Get_website_name'  => CustomHelper::Get_website_name(),
+                'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
+                'title'  => "Invoice | ".CustomHelper::Get_website_name(),
+            );
+            
+            $html = view('orders.PDF.invoice', $data)->render();
+
+            $mpdf->WriteHTML($html);
+            
+            return response($mpdf->Output('', 's'))->header('Content-Type', 'application/pdf');
 
         } catch (\Throwable $th) {
             // return $th->getMessage();
@@ -871,7 +884,7 @@ class OrderController extends Controller
                 $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
                 
                 $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
-                    $item['product_name'] = $item->product_slug;
+                    $item['product_name'] = $item->name;
                     $item['total_cost']  = $item->line_item_total_cost;
                     $item['price']      = $item->selling_price;
                     $item['sum_total_cost'] = $totalCostSum; 
@@ -901,22 +914,16 @@ class OrderController extends Controller
         $data = array(
             'orders' => $orders
         );
-        // $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait');
+        
         $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait')->setOption('margin-top', 0)
         ->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);    
         
         return $pdf->download('shipping_labels.pdf');
         
-        // return $orders ;
     }
-
 
     public function addOrderNotes(Request $request)
     {
-        $data = $request->all();
-
-
-        
         $data = $request->all();
         
         $orders = Order::query()->where('order_uuid', $data['order_id'])->first();
@@ -950,7 +957,6 @@ class OrderController extends Controller
     
     public function shipping_label_pdf(Request $request, $order_uuid)
     {
-        $orders = Order::where('order_uuid', $order_uuid)->get();
 
         $orders = Order::where('order_uuid', $order_uuid)->get()->map(function($item){
 
@@ -967,7 +973,7 @@ class OrderController extends Controller
                 $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
                 
                 $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
-                    $item['product_name'] = $item->product_slug;
+                    $item['product_name'] = $item->name;
                     $item['total_cost']  = $item->line_item_total_cost;
                     $item['price']      = $item->selling_price;
                     $item['sum_total_cost'] = $totalCostSum; 
@@ -995,84 +1001,15 @@ class OrderController extends Controller
         });
 
         // MPDF
-        $mpdf = new \Mpdf\Mpdf([ 
-            'unicode' => true, 
-            'fontDir' => [storage_path('fonts')], 
-            'fontdata' => [
-                'notosanstamil' => [
-                    'R' => 'NotoSansTamil-Regular.ttf', 
-                ],
-                'notosansdevanagari' => [
-                    'R' => 'NotoSansDevanagari-Regular.ttf',
-                ],
-                'dejavusans' => [
-                    'R' => 'DejaVuSans.ttf', 
-                ],
-            ],
-            'default_font' => 'dejavusans', 
-        ]);
+        $mpdf = new \Mpdf\Mpdf( CustomHelper::Mpdf_font_setup());
         
-        $mpdf->fontdata['notosanstamil']['embed'] = true;
-        $mpdf->fontdata['notosansdevanagari']['embed'] = true;
-        $mpdf->fontdata['dejavusans']['embed'] = true;
-        
-        // Not Working 
-        $html = '
-            <span style="font-family: \'DejaVuSans\', \'Noto Sans Tamil\', \'Noto Sans Devanagari\', sans-serif;">
-                Homewood Cardamom Tea 500g - ஹோம்வுட் ஏலக்காய் டீ 500 கிராம் - होमवुड इलायची चाय 500 ग्राम
-            </span>
-        ';
-        $mpdf = new \Mpdf\Mpdf([ 
-            'unicode' => true, 
-            'fontDir' => [storage_path('fonts')],
-            'fontdata' => [
-                'notosanstamil' => [
-                    'R' => 'NotoSansTamil-Regular.ttf',
-                ],
-                'notosansdevanagari' => [
-                    'R' => 'NotoSansDevanagari-Regular.ttf', 
-                ],
-                'notosanstelugu' => [
-                    'R' => 'NotoSansTelugu-Regular.ttf', 
-                ],
-                'notosansmalayalam' => [
-                    'R' => 'NotoSansMalayalam-Regular.ttf', 
-                ],
-                'notosanskannada' => [
-                    'R' => 'NotoSansKannada-Regular.ttf', 
-                ],
-                'dejavusans' => [
-                    'R' => 'DejaVuSans.ttf',
-                ],
-            ],
-            'default_font' => 'dejavusans', 
-        ]);
-        
+        $data = array( 'orders' => $orders,);
 
-        // Working 
-        
-        // $html = '
-        //     <h1 style="font-family: \'Noto Sans Tamil\'">ஹோம்வுட் ஏலக்காய் டீ 500 கிராம்</h1>
-        //     <h1 style="font-family: \'Noto Sans Devanagari\'">होमवुड इलायची चाय 500 ग्राम</h1>
-        //     <h1 style="font-family: \'DejaVuSans\'">Homewood Cardamom Tea 500g</h1>
-        // ';
-        
-        // $mpdf->WriteHTML($html);
-        // $mpdf->Output();
-        
-        // $mpdf->WriteHTML($html);
-        // $mpdf->Output();
-        
-        $data = array(
-            'orders' => $orders,
-        );
         $html = view('orders.label', $data)->render();
 
         $mpdf->WriteHTML($html);
-        // return $mpdf->stream('shipping_labels.pdf');
-        return response($mpdf->Output('', 's'))
-        ->header('Content-Type', 'application/pdf');
-        // return $mpdf->stream('shipping_labels.pdf');
+
+        return response($mpdf->Output('', 's'))->header('Content-Type', 'application/pdf');
 
         // $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait')->setOption('margin-top', 0)
         // ->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);    
@@ -1080,6 +1017,4 @@ class OrderController extends Controller
         // return $pdf->stream('shipping_labels.pdf');
         
     }
-
-
 }

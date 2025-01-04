@@ -8,7 +8,7 @@
     
     <style>
         body {
-            font-family: Arial, sans-serif,'DejaVu Sans';
+            font-family: Arial, sans-serif,'DejaVu Sans','notosanstelugu';
             font-size: 14px;
             line-height: 1.6;
             color: #333;
@@ -125,10 +125,33 @@
                 </thead>
                 <tbody>
                     @foreach ($orders->product_details as $item)
+
+                        @php
+                    
+                            $nameParts = explode('/', $item['product_name']);
+                            $Product_styledName = '';
+                            
+                            foreach ($nameParts as $part) {
+                                if (preg_match('/[\x{0B80}-\x{0BFF}]/u', $part)) { 
+                                    $Product_styledName .= "<span style=\"font-family: 'Noto Sans Tamil';\">$part  /</span> ";
+                                } elseif (preg_match('/[\x{0900}-\x{097F}]/u', $part)) { 
+                                    $Product_styledName .= "<span style=\"font-family: 'Noto Sans Devanagari';\">$part / </span> ";
+                                } elseif (preg_match('/[\x{0C00}-\x{0C7F}]/u', $part)) { 
+                                    $Product_styledName .= "<span style=\"font-family: 'Noto Sans Telugu';\">$part / </span> ";
+                                } elseif (preg_match('/[\x{0D00}-\x{0D7F}]/u', $part)) { 
+                                    $Product_styledName .= "<span style=\"font-family: 'Noto Sans Malayalam';\">$part / </span> ";
+                                } elseif (preg_match('/[\x{0C80}-\x{0CFF}]/u', $part)) { 
+                                    $Product_styledName .= "<span style=\"font-family: 'Noto Sans Kannada';\">$part / </span> ";
+                                } else {
+                                    $Product_styledName .= "<span style=\"font-family: 'DejaVuSans';\">$part / </span> ";
+                                }
+                            }
+                        @endphp
+
                         <tr>
                             <td style="text-align: center;"> {{ $item->product_id }} </td>
                             <td style="text-align: left;">
-                                {{ $item['product_name'] }}<br>
+                                {!! $Product_styledName !!}<br>  {{-- product_name --}}
                                 SKU: {{  $item['sku'] ? $item['sku'] : "-"  }}
                             </td>
                             <td style="text-align: center;"> {{ $orders->currency_symbol .$item['price'] }} </td>

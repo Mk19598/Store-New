@@ -960,64 +960,69 @@ class OrderController extends Controller
     
     public function shipping_label_pdf(Request $request, $order_uuid)
     {
+        try {
+            $orders = Order::where('order_uuid', $order_uuid)->get()->map(function($item){
 
-        $orders = Order::where('order_uuid', $order_uuid)->get()->map(function($item){
-
-            $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y H:i:s');
-
-            $generator = new BarcodeGeneratorPNG();
-            
-            $item['barcode'] = base64_encode($generator->getBarcode($item->order_id, $generator::TYPE_CODE_128));
-
-            if ($item->order_vai == "Dukkan" ) {
-
-                $DukaanOrderProducts = DukaanOrderProduct::where('order_uuid', $item->order_uuid)->get();
-
-                $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
+                $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y h:i:s A');
+    
+                $generator = new BarcodeGeneratorPNG();
                 
-                $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
-                    $item['product_name'] = $item->name;
-                    $item['total_cost']  = $item->line_item_total_cost;
-                    $item['price']      = $item->selling_price;
-                    $item['sum_total_cost'] = $totalCostSum; 
-                    return $item;
-                });
-            }
+                $item['barcode'] = base64_encode($generator->getBarcode($item->order_id, $generator::TYPE_CODE_128));
+    
+                if ($item->order_vai == "Dukkan" ) {
+    
+                    $DukaanOrderProducts = DukaanOrderProduct::where('order_uuid', $item->order_uuid)->get();
+    
+                    $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
+                    
+                    $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
+                        $item['product_name'] = $item->name;
+                        $item['total_cost']  = $item->line_item_total_cost;
+                        $item['price']      = $item->selling_price;
+                        $item['sum_total_cost'] = $totalCostSum; 
+                        return $item;
+                    });
+                }
+    
+                if ($item->order_vai == "woocommerce") {
+    
+                    $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_uuid', $item->order_uuid)->get();
+    
+                    $totalCostSum = $WoocommerceOrderProduct->sum('total');
+    
+                    $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
+                        $item['product_name'] = $item->name;
+                        $item['total_cost']   = $item->total;
+                        $item['price']        = $item->price;
+                        $item['sum_total_cost'] = $totalCostSum; 
+                        return $item;
+                    });
+                }
+    
+                return $item;
+            });
+    
+            $data = array(
+                        'orders' => $orders,
+                        'title' => "Shipping Label | ".CustomHelper::Get_website_name() ,
+                        'current_time' => carbon::now()->format('l jS \of F Y h:i:s A'),
+                    );
+                        
+            // MPDF
+    
+            $setup = CustomHelper::Mpdf_font_setup();
+            $setup += ['mode' => 'utf-8', 'format' => 'A4', 'orientation' => 'L'];
+    
+            $mpdf = new \Mpdf\Mpdf( $setup );
+    
+            $html = view('orders.label', $data)->render();
+    
+            $mpdf->WriteHTML($html);
+    
+            return response($mpdf->Output('', 's'))->header('Content-Type', 'application/pdf');
 
-            if ($item->order_vai == "woocommerce") {
-
-                $WoocommerceOrderProduct = WoocommerceOrderProduct::where('order_uuid', $item->order_uuid)->get();
-
-                $totalCostSum = $WoocommerceOrderProduct->sum('total');
-
-                $item['product_details'] = $WoocommerceOrderProduct->map(function($item) use($totalCostSum) {
-                    $item['product_name'] = $item->name;
-                    $item['total_cost'] = $item->total;
-                    $item['price']     = $item->price;
-                    $item['sum_total_cost'] = $totalCostSum; 
-
-                    return $item;
-                });
-            }
-
-            return $item;
-        });
-
-        // MPDF
-        $mpdf = new \Mpdf\Mpdf( CustomHelper::Mpdf_font_setup());
-        
-        $data = array( 'orders' => $orders,);
-
-        $html = view('orders.label', $data)->render();
-
-        $mpdf->WriteHTML($html);
-
-        return response($mpdf->Output('', 's'))->header('Content-Type', 'application/pdf');
-
-        // $pdf = Pdf::loadView('orders.label', $data)->setPaper('a4', 'portrait')->setOption('margin-top', 0)
-        // ->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);    
-        
-        // return $pdf->stream('shipping_labels.pdf');
-        
+        } catch (\Throwable $th) {
+            return view('layouts.error-pages.404-Page');
+        }
     }
 }

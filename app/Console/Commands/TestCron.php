@@ -26,7 +26,7 @@ class TestCron extends Command
      */
     public function handle()
     {
-        $users = DB::table('user_roles')->insert(['role_name' => str()->random()]);
+        // $users = DB::table('user_roles')->insert(['role_name' => str()->random()]);
 
         info('Command run every minute.');
     }

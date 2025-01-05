@@ -40,8 +40,6 @@ class DukkanOrdersCron extends Command
                 'context' => 'dukkan-orders-cron'
             ]);
 
-            $this->info('Dukkan orders updated successfully.');
-
         } catch (\Exception $e) {
           
             Log::create([
@@ -50,7 +48,6 @@ class DukkanOrdersCron extends Command
                 'context' => 'dukkan-orders-cron'
             ]);
 
-            $this->error('An error occurred while updating Dukkan orders.');
         }
     }
 }

@@ -689,7 +689,7 @@ class OrderController extends Controller
     
             $orders_collection = Order::query()->whereIn('order_uuid',$order_uuid)->get()->map(function($item){
 
-                $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
+                $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y h:i:s A');
     
                 if ($item->order_vai == "Dukkan" ) {
     
@@ -753,10 +753,9 @@ class OrderController extends Controller
 
             $mpdf->WriteHTML($html);
 
-            $pdfName = 'Invoice-' . ($orders_collection[0]->order_id ?? Str::random(8)) . '.pdf';
+            $pdfName =  ($orders_collection[0]->order_id ?? Str::random(8)) .'-Invoice' . '.pdf';
 
-            return response($mpdf->Output($pdfName, 'I'))
-                        ->header('Content-Type', 'application/pdf');
+            return response($mpdf->Output($pdfName, 'I'))->header('Content-Type', 'application/pdf');
 
         } catch (\Throwable $th) {
             // return $th->getMessage();
@@ -1018,8 +1017,10 @@ class OrderController extends Controller
             $html = view('orders.label', $data)->render();
     
             $mpdf->WriteHTML($html);
-    
-            return response($mpdf->Output('', 's'))->header('Content-Type', 'application/pdf');
+
+            $ShippingLabel =  ($orders[0]->order_id ?? Str::random(8)). '-Shipping-Label'. '.pdf';
+
+            return response($mpdf->Output($ShippingLabel, 'I'))->header('Content-Type', 'application/pdf');
 
         } catch (\Throwable $th) {
             return view('layouts.error-pages.404-Page');

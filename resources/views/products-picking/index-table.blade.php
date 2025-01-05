@@ -26,7 +26,7 @@
                             <td> {{ ucwords(__( $item->order_vai)) }}  </td>
                             <td> {{ $item->product_id }}  </td>
                             <td> {{ $item->name }}</td>
-                            <td> {{ $item->sku_id }}</td>
+                            <td> {{ $item->sku }}</td>
                             <td> {{ $item->total_quantity }}</td>
                             <td> {{ $item->order_created_at_format }}  </td>
                         </tr>

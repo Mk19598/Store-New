@@ -34,7 +34,7 @@ class OrderController extends Controller
 {
     // Storing the Order form - woocommerce & DUKAAN
 
-    public function dukkan_orders_update(){
+    public function dukkan_orders_update( $days_limit){
         try {
 
             $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
@@ -50,7 +50,7 @@ class OrderController extends Controller
                                             ->get('https://api.mydukaan.io/api/seller-front/order-list/', [
                                                 'ordering' => '-created_at',
                                                 'utm_data' => 'True',
-                                                'created_at_after' => Carbon::now()->subDays(10)->toDateString(),
+                                                'created_at_after' => Carbon::now()->subDays($days_limit)->toDateString(),
                                                 'page' => $page,
                                             ]);
 
@@ -323,7 +323,7 @@ class OrderController extends Controller
         }
     }
 
-    Public function woocommerce_orders_update(){
+    Public function woocommerce_orders_update($days_limit){
 
         try {
             
@@ -339,7 +339,7 @@ class OrderController extends Controller
             $unique_id =  substr(uniqid(mt_rand(), true), 0, 11);
             $orders = [];
 
-            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(10)->toIso8601String(); ; $page++) {
+            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays($days_limit)->toIso8601String(); ; $page++) {
 
                 $orders = $woocommerce->get('orders', [
                     'after' => $thirtyDaysAgo,

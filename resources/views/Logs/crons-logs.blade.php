@@ -32,11 +32,18 @@
                                         <td align="center"> {{ $key+1 }} </td>
                                         <td align="center"> <span>{{ ucwords(@$crons_logs->context) }}</span></td>
                                         <td align="center"> <span>{{ ucwords(@$crons_logs->message) }}</span></td>
-                                        @if ( @$crons_logs->level == 'error')
-                                            <td align="center"> <span class="badge bg-cancelled">{{ ucwords(@$crons_logs->level) }}</span></td>
-                                        @else
-                                            <td align="center"> <span class="badge bg-pending">{{ ucwords(@$crons_logs->level) }}</span></td>
-                                        @endif
+
+                                        @switch(@$crons_logs->level)
+                                            @case('error')
+                                                    <td align="center"> <span class="badge bg-cancelled">{{ ucwords(@$crons_logs->level) }}</span></td>
+                                                @break
+                                            @case('success')
+                                                    <td align="center"> <span class="badge bg-completed">{{ ucwords(@$crons_logs->level) }}</span></td>
+                                                @break
+                                            @default
+                                                <td align="center"> <span class="badge bg-processing">{{ ucwords(@$crons_logs->level) }}</span></td>
+                                        @endswitch
+
                                         <td align="center"> <span>{{ ucwords(@$crons_logs->created_at_format) }}</span></td>
                                     </tr>
                                 @endforeach

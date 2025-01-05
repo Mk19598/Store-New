@@ -93,7 +93,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('update', [App\Http\Controllers\EnvSettingController::class, 'update'])->name('env_settings.Emailupdate');
         Route::post('shipping-update', [App\Http\Controllers\EnvSettingController::class, 'ShippingUpdate'])->name('env_settings.ShippingUpdate');
         Route::post('store-id-update', [App\Http\Controllers\EnvSettingController::class, 'StoreIDUpdate'])->name('env_settings.StoreIDUpdate');
-
         // Route::post('whatsapp-update', [App\Http\Controllers\EnvSettingController::class, 'WhatsAppUpdate'])->name('env_settings.WhatsAppUpdate');
+    });
+
+        // Logs 
+    Route::group(['prefix' => 'Logs' ], function () {
+        Route::get('crons', [App\Http\Controllers\LogController::class, 'crons_log'])->name('logs.crons');
     });
 });

@@ -33,7 +33,36 @@ class SendDailyOrdersCountMail extends Command
     {
         $ordersQuery = Order::query(); 
 
-        $orders_today = $ordersQuery->whereDate('order_created_at', Carbon::now()->toDateString())->get();
+        $orders_today = $ordersQuery->whereDate('order_created_at', Carbon::now()->toDateString())->get()
+                                    ->map(function($item){
+
+                                        $statusMap = [
+                                            'pending'       => 'pending',
+                                            'completed'     => 'completed',
+                                            'cancelled'     => 'cancelled',
+                                            'failed'        => 'cancelled',
+                                            'refunded'      => 'refunded',
+                                            'processing'    => 'processing',
+                                            'order-shipped' => 'shipped',
+                                            'Packed'        => 'Packed',
+                                            -1              => 'ABANDONED / DRAFT',
+                                            0               => 'pending',
+                                            1               => 'Accepted',
+                                            2               => 'Rejected',
+                                            3               => 'shipped',
+                                            4               => 'cancelled',
+                                            5               => 'completed',
+                                            6               => 'cancelled',
+                                            7               => 'cancelled',
+                                            10              => 'refunded',
+                                        ];
+                                
+                                        $current_status = $statusMap[$item->status] ?? null;
+                                        
+                                        $item->current_status = $current_status;
+
+                                        return $item;
+                                    });
 
         $data = [
             'orders_today' => $orders_today,

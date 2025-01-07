@@ -168,8 +168,13 @@ class InventoryManagementController extends Controller
                 }
         
                 $productId = $product->id;
-                $woocommerce->put("products/{$productId}", $data);
-                $message = 'SKU mismatch Failed to update Dukaan inventory.';
+                $productparentId = $product->parent_id;
+
+                if($productparentId > 0 ){
+                    $woocommerce->put("products/{$productparentId}/variations/{$productId}", $data);
+                }else{
+                    $woocommerce->put("products/{$productId}/", $data);
+                }                $message = 'SKU mismatch Failed to update Dukaan inventory.';
                 $validated['dukaan_sku'] = null;
                 
             }
@@ -235,8 +240,12 @@ class InventoryManagementController extends Controller
                 }
         
                 $productId = $product->id;
-                $woocommerce->put("products/{$productId}", $data);
-
+                $productparentId = $product->parent_id;
+                if($productparentId > 0 ){
+                    $woocommerce->put("products/{$productparentId}/variations/{$productId}", $data);
+                }else{
+                    $woocommerce->put("products/{$productId}/", $data);
+                }
                 $sku = null;
                 foreach ($dukaanProduct['skus'] as $item) {
                     if ($item['sku_code'] === $dukaanSkuCode) {
@@ -311,7 +320,7 @@ class InventoryManagementController extends Controller
 
     public function update(Request $request, $id)
     {
-        try {
+        // try {
             $validated = $request->validate([
                 'product_name' => 'required',
                 'weight' => 'required',
@@ -417,7 +426,12 @@ class InventoryManagementController extends Controller
                 }
         
                 $productId = $product->id;
-                $woocommerce->put("products/{$productId}", $data);
+                $productparentId = $product->parent_id;
+                if($productparentId > 0 ){
+                    $woocommerce->put("products/{$productparentId}/variations/{$productId}", $data);
+                }else{
+                    $woocommerce->put("products/{$productId}/", $data);
+                }
                 $message = 'SKU mismatch Failed to update Dukaan inventory.';
                 $validated['dukaan_sku'] = null;
                 
@@ -484,8 +498,13 @@ class InventoryManagementController extends Controller
                 }
         
                 $productId = $product->id;
-                $woocommerce->put("products/{$productId}", $data);
-
+                $productId = $product->id;
+                $productparentId = $product->parent_id;
+                if($productparentId > 0 ){
+                    $woocommerce->put("products/{$productparentId}/variations/{$productId}", $data);
+                }else{
+                    $woocommerce->put("products/{$productId}/", $data);
+                }
                 $sku = null;
                 foreach ($dukaanProduct['skus'] as $item) {
                     if ($item['sku_code'] === $dukaanSkuCode) {
@@ -554,11 +573,11 @@ class InventoryManagementController extends Controller
             return redirect()->route('inventory.index')
                 ->with('success', 'Inventory updated successfully.'.$message);
 
-        }
-        catch(\Throwable $th)
-        {
-            return view('layouts.error-pages.404-Page');
-        }
+        // }
+        // catch(\Throwable $th)
+        // {
+        //     return view('layouts.error-pages.404-Page');
+        // }
     }
 
     public function destroy($id)
@@ -680,7 +699,12 @@ class InventoryManagementController extends Controller
                 }
         
                 $productId = $product->id;
-                $woocommerce->put("products/{$productId}", $data);
+                $productparentId = $product->parent_id;
+                if($productparentId > 0 ){
+                    $woocommerce->put("products/{$productparentId}/variations/{$productId}", $data);
+                }else{
+                    $woocommerce->put("products/{$productId}/", $data);
+                }
                 $message = 'SKU mismatch Failed to update Dukaan inventory.';
                 $validated['dukaan_sku'] = null;
                 
@@ -743,8 +767,12 @@ class InventoryManagementController extends Controller
                 }
         
                 $productId = $product->id;
-                $woocommerce->put("products/{$productId}", $data);
-
+                $productparentId = $product->parent_id;
+                if($productparentId > 0 ){
+                    $woocommerce->put("products/{$productparentId}/variations/{$productId}", $data);
+                }else{
+                    $woocommerce->put("products/{$productId}/", $data);
+                }
                 $sku = null;
                 foreach ($dukaanProduct['skus'] as $item) {
                     if ($item['sku_code'] === $dukaanSkuCode) {

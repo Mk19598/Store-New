@@ -69,11 +69,15 @@
                                     </td>
 
                                     <td>
+                                    <div class="action-icons" style="display: flex; justify-content: center; gap: 10px; align-items: center;">
                                         {{-- Edit button --}}
                                         <a href="{{ route('inventory.edit', $inventory->id) }}">
                                             <i class="bi bi-pencil-square"></i> 
                                         </a>
-
+                                        {{-- Barcode Edit button --}}
+                                        <a href="{{ route('inventory.barcode_edit', $inventory->id) }}">
+                                            <i class="bi bi-printer"></i> 
+                                        </a>
                                         {{-- Delete button --}}
                                         <form action="{{ route('inventory.destroy', $inventory->id) }}" method="POST" style="display:inline;">
                                             @csrf
@@ -82,6 +86,8 @@
                                                 <i class="bi bi-trash"></i> 
                                             </button>
                                         </form>
+                                    </div>
+
                                     </td>
                                 </tr>
                             @endforeach

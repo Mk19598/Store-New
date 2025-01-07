@@ -78,6 +78,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('update/{id}', [App\Http\Controllers\InventoryManagementController::class, 'update'])->name('inventory.update');
         Route::delete('destroy/{id}', [App\Http\Controllers\InventoryManagementController::class, 'destroy'])->name('inventory.destroy');
         Route::post('/update-status', [App\Http\Controllers\InventoryManagementController::class, 'updateStatus'])->name('inventory.updateStatus');
+        Route::get('barcode_edit/{id}', [App\Http\Controllers\InventoryManagementController::class, 'barcode_edit'])->name('inventory.barcode_edit');
+        Route::put('barcode_update/{id}', [App\Http\Controllers\InventoryManagementController::class, 'barcode_update'])->name('inventory.barcode_update');
+        Route::get('autoGenrateBarcode', [App\Http\Controllers\InventoryManagementController::class, 'autoGenrateBarcode'])->name('inventory.autoGenrateBarcode');
     });
     
         // Settings 

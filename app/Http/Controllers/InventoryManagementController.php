@@ -549,7 +549,7 @@ class InventoryManagementController extends Controller
             $inventory = InventoryManagement::findOrFail($id);
 
            
-            if ($inventory->barcode !== $validated['barcode'])
+            if ($inventory->barcode !== $validated['barcode'] || empty($inventory->barcode_image))
             {
 
                 $generator = new BarcodeGeneratorPNG();
@@ -817,4 +817,92 @@ class InventoryManagementController extends Controller
         }
         return response()->json(['success' => false]);
     }
+
+    public function barcode_edit($id)
+    {
+        try{
+
+            $inventory = InventoryManagement::findOrFail($id);
+            return view('inventory.barcode_edit', compact('inventory'));
+        }
+        catch(\Throwable $th)
+        {
+            return view('layouts.error-pages.404-Page');
+        }
+    }
+    
+    public function barcode_update(Request $request, $id)
+    {
+        try {
+            
+            $validated = $request->validate([
+                'barcode' => 'required',
+            ]);
+
+            $inventory = InventoryManagement::findOrFail($id);
+
+           
+            if ($inventory->barcode !== $validated['barcode'] || empty($inventory->barcode_image))
+            {
+
+                $generator = new BarcodeGeneratorPNG();
+                $barcodeData = $generator->getBarcode($validated['barcode'], $generator::TYPE_CODE_128);
+
+                $barcodeFileName = 'barcode-' . $validated['barcode'] . '.png';
+
+                Storage::put('public/barcodes/' . $barcodeFileName, $barcodeData);
+
+                $validated['barcode_image'] = $barcodeFileName;
+
+            }
+            else
+            {
+                $validated['barcode_image'] = $inventory->barcode_image;
+            }
+
+
+            $inventory->update($validated);
+
+            return redirect()->route('inventory.index')
+                ->with('success', 'Inventory updated successfully.');
+
+        }
+        catch(\Throwable $th)
+        {
+            return $th;
+        }
+    }
+
+
+    
+    public function autoGenrateBarcode(Request $request)
+    {
+        try {
+            
+            $inventory = InventoryManagement::where('barcode_image' , null)->where('barcode','!=',null)->get();
+            if ($inventory->isEmpty()) {
+                return redirect()->route('inventory.index')
+                ->with('success', 'No records found that require barcode generation.');
+            }
+
+            $generator = new BarcodeGeneratorPNG();
+
+            foreach ($inventory as $item) {
+                $barcodeData = $generator->getBarcode($item->barcode, $generator::TYPE_CODE_128);
+                $barcodeFileName = 'barcode-' . $item->barcode . '.png';
+                Storage::put('public/barcodes/' . $barcodeFileName, $barcodeData);
+                $item->barcode_image = $barcodeFileName;
+                $item->save();
+            }
+
+            return redirect()->route('inventory.index')
+                ->with('success', 'Inventory Barcode updated successfully.');
+
+        }
+        catch(\Throwable $th)
+        {
+            return $th;
+        }
+    }
+
 }

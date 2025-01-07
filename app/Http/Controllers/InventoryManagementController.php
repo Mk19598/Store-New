@@ -73,23 +73,19 @@ class InventoryManagementController extends Controller
                 ]
             );
 
-            $products = [];
-            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(90)->toIso8601String(); ; $page++) {
+            try {
                 $response = $woocommerce->get('products', [
-                    'after' => $thirtyDaysAgo,
-                    'orderby' => 'date',
-                    'order' => 'desc',
-                    'per_page' => 50,
-                    'page' => $page
+                    'sku' => $validated['sku']
                 ]);
-                $products = array_merge($products, $response);
-                if (count($response) < 10) break;
+            
+            if (!empty($response)) {
+                    $product = $response[0]; 
+                } else {
+                    echo "No product found with SKU";
+                }
+            } catch (HttpClientException $e) {
+                echo "Error: " . $e->getMessage();
             }
-
-            // $products = $woocommerce->get('products');
-            $skuToFind = $validated['sku'];
-            $collection = collect($products);
-            $product = $collection->firstWhere('sku', $skuToFind);
 
             $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
             $storeId =  CustomHelper::StoreId();
@@ -327,41 +323,25 @@ class InventoryManagementController extends Controller
             $woocommerce_Credentials = Credentials::first();
 
             $woocommerce = new Client(
-                $woocommerce_Credentials->woocommerce_url,
-                $woocommerce_Credentials->woocommerce_customer_key,
-                $woocommerce_Credentials->woocommerce_secret_key,
-                [
-                    'wp_api' => true,
-                    'version' => 'wc/v3',
-                ]
-            );
-
-            $woocommerce_Credentials = Credentials::first();
-
-            $woocommerce = new Client(
                 $woocommerce_Credentials->woocommerce_url, 
                 $woocommerce_Credentials->woocommerce_customer_key,       
                 $woocommerce_Credentials->woocommerce_secret_key,    
                 ['wp_api' => true,'version' => 'wc/v3' ]
             );
-            
-            $products = [];
-            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(90)->toIso8601String(); ; $page++) {
+            try {
                 $response = $woocommerce->get('products', [
-                    'after' => $thirtyDaysAgo,
-                    'orderby' => 'date',
-                    'order' => 'desc',
-                    'per_page' => 50,
-                    'page' => $page
+                    'sku' => $validated['sku']
                 ]);
-                $products = array_merge($products, $response);
-                if (count($response) < 10) break;
+            
+            if (!empty($response)) {
+                    $product = $response[0]; 
+                } else {
+                    echo "No product found with SKU";
+                }
+            } catch (HttpClientException $e) {
+                echo "Error: " . $e->getMessage();
             }
-            // $products = $woocommerce->get('products');
-            $skuToFind = $validated['sku'];
-            $collection = collect($products);
-            $product = $collection->firstWhere('sku', $skuToFind);
-
+            
             $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
             $storeId =  CustomHelper::StoreId();
             $dukaanSkuCode = $validated['dukaan_sku'];
@@ -611,22 +591,19 @@ class InventoryManagementController extends Controller
             ]
         );
 
-        $products = [];
-            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(90)->toIso8601String(); ; $page++) {
+            try {
                 $response = $woocommerce->get('products', [
-                    'after' => $thirtyDaysAgo,
-                    'orderby' => 'date',
-                    'order' => 'desc',
-                    'per_page' => 50,
-                    'page' => $page
+                    'sku' => $validated['sku']
                 ]);
-                $products = array_merge($products, $response);
-                if (count($response) < 10) break;
+            
+            if (!empty($response)) {
+                    $product = $response[0]; 
+                } else {
+                    echo "No product found with SKU";
+                }
+            } catch (HttpClientException $e) {
+                echo "Error: " . $e->getMessage();
             }
-            // $products = $woocommerce->get('products');
-            $skuToFind = $validated['sku'];
-            $collection = collect($products);
-            $product = $collection->firstWhere('sku', $skuToFind);
 
             $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
             $storeId =  CustomHelper::StoreId();

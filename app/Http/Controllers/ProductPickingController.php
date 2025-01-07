@@ -36,26 +36,26 @@ class ProductPickingController extends Controller
 
 
         $DukaanOrderProductQuery = DukaanOrderProduct::query()->select('orders.status','dukaan_order_products.*', DB::raw('SUM(quantity) as total_quantity'))
-                                                ->join('orders','orders.order_uuid','=','dukaan_order_products.order_uuid');
+                                                ->join('orders','orders.order_id','=','dukaan_order_products.order_id');
 
         $WoocommerceOrderProductQuery = WoocommerceOrderProduct::query()->select('orders.status','woocommerce_order_products.*', DB::raw('SUM(quantity) as total_quantity'))
-                                                ->join('orders','orders.order_uuid','=','woocommerce_order_products.order_uuid');
+                                                ->join('orders','orders.order_id','=','woocommerce_order_products.order_id');
 
         
         $this->applyFilters($DukaanOrderProductQuery, $request);
         $this->applyFilters($WoocommerceOrderProductQuery, $request);
         
-        $DukaanOrderProducts = $DukaanOrderProductQuery->groupBy('product_id')->get()->map(function($item){
+        $DukaanOrderProducts = $DukaanOrderProductQuery->groupBy('sku')->get()->map(function($item){
 
             $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
-            $item['sku_id'] = $item->product_sku_id;
+            $item['sku'] = $item->sku;
             return $item ;
         });
     
-        $WoocommerceOrderProducts = $WoocommerceOrderProductQuery->groupBy('product_id')->get()->map(function($item){
+        $WoocommerceOrderProducts = $WoocommerceOrderProductQuery->groupBy('sku')->get()->map(function($item){
 
             $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
-            $item['sku_id'] = $item->sku;
+            $item['sku'] = $item->sku;
             return $item ;
         });
         
@@ -87,6 +87,8 @@ class ProductPickingController extends Controller
         if ($request->filled('order_id')) {
             $query->where('orders.order_id', $request->order_id);
         }
+
+        $query->OrderBy('orders.order_created_at');
 
         //From Orders
 

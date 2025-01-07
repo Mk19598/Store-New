@@ -113,7 +113,7 @@
                             },
 
                             dom: '<"top"Bf > rt <"bottom" <"pagination-left"i> <"pagination-right"p> ><"clear">', // Custom layout
-                            buttons: ['pdf', 'print' ]
+                            buttons: ['print' ]
                         });
                     },
                     error: function(xhr, status, error) {

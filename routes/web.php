@@ -38,7 +38,8 @@ Route::group(['middleware' => 'auth'], function () {
         // Orders
     Route::group(['prefix' => 'orders' ], function () {
         Route::get('list', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
-        Route::get('store-update', [App\Http\Controllers\OrderController::class, 'orders_store'])->name('orders.store');
+        Route::get('dukkan-orders-update/{days_limit}', [App\Http\Controllers\OrderController::class, 'dukkan_orders_update'])->name('orders.dukkan_orders_update');
+        Route::get('woocommerce-orders-update/{days_limit}', [App\Http\Controllers\OrderController::class, 'woocommerce_orders_update'])->name('orders.woocommerce_orders_update');
         Route::get('invoice-pdf/{order_uuid}', [App\Http\Controllers\OrderController::class, 'orders_invoice_pdf'])->name('orders.invoice_pdf');
         Route::post('tracking-links', [App\Http\Controllers\OrderController::class, 'tracking_links'])->name('orders.tracking_links');
         Route::get('tracking-links/{orderId}', [App\Http\Controllers\OrderController::class, 'getTrackingLinks']);
@@ -95,7 +96,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('update', [App\Http\Controllers\EnvSettingController::class, 'update'])->name('env_settings.Emailupdate');
         Route::post('shipping-update', [App\Http\Controllers\EnvSettingController::class, 'ShippingUpdate'])->name('env_settings.ShippingUpdate');
         Route::post('store-id-update', [App\Http\Controllers\EnvSettingController::class, 'StoreIDUpdate'])->name('env_settings.StoreIDUpdate');
-
         // Route::post('whatsapp-update', [App\Http\Controllers\EnvSettingController::class, 'WhatsAppUpdate'])->name('env_settings.WhatsAppUpdate');
+    });
+
+        // Logs 
+    Route::group(['prefix' => 'Logs' ], function () {
+        Route::get('crons', [App\Http\Controllers\LogController::class, 'crons_log'])->name('logs.crons');
     });
 });

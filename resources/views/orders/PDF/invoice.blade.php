@@ -8,7 +8,7 @@
     
     <style>
         body {
-            font-family: Arial, sans-serif,'DejaVu Sans';
+            font-family: Arial, sans-serif,'DejaVu Sans','notosanstelugu';
             font-size: 14px;
             line-height: 1.6;
             color: #333;
@@ -58,8 +58,8 @@
                     Near Gandhi Stage, Madurai,<br>
                     TamilNadu – 625009<br>
                     Mobile: +91 96770 63560<br><br>
-                    <strong> GST No - {{ App\Helpers\CustomHelper::Get_GSTNo()}}</strong><br>
-                    <strong> FSSAI License No -  {{ App\Helpers\CustomHelper::Get_FSSAINo()}}</strong><br>
+                    <strong> GSTIN - {{ App\Helpers\CustomHelper::Get_GSTNo()}}</strong><br>
+                    <strong> FSSAI -  {{ App\Helpers\CustomHelper::Get_FSSAINo()}}</strong><br>
                 </p>
                 <h2>INVOICE</h2>
             </header>
@@ -68,7 +68,7 @@
                 <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse; border-spacing: 0;">
                     <tr>
                         <!-- Bill To -->
-                        <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
+                        <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0; line-height: 1.6;">
                             <h3>Bill To:</h3>
                             <p>
                                 {{ @$orders->buyer_first_name ." ". @$orders->buyer_last_name }}<br>
@@ -83,7 +83,7 @@
                         </td>
             
                         <!-- Ship To -->
-                        <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
+                        <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0; line-height: 1.6;">
                             <h3>Ship To:</h3>
                             <p>
                                 {{ @$orders->buyer_shipping_first_name ." ".@$orders->buyer_shipping_last_name }}<br>
@@ -98,11 +98,10 @@
                         </td>
             
                         <!-- Order Details -->
-                        <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0;">
+                        <td style="vertical-align: top; width: 33%; padding-right: 10px; border: 0; line-height: 1.8;">
                             <p>
                                 <strong>Invoice Date:</strong> {{ @$orders->order_created_at_format }}<br>
                                 <strong>Order Number:</strong> {{ @$orders->order_id }} <br>
-                                {{-- <small> {{ "(". @$orders->order_uuid .")" }}</small><br> --}}
                                 <strong>Order Date:</strong> {{ @$orders->order_created_at_format }}<br>
                                 <strong>Payment Method:</strong> {{ @$orders->payment_mode ? $orders->payment_mode : "-" }}<br>
                             </p>
@@ -125,10 +124,33 @@
                 </thead>
                 <tbody>
                     @foreach ($orders->product_details as $item)
+
+                        @php
+                    
+                            $nameParts = explode('/', $item['product_name']);
+                            $Product_styledName = '';
+                            
+                            foreach ($nameParts as $part) {
+                                if (preg_match('/[\x{0B80}-\x{0BFF}]/u', $part)) { 
+                                    $Product_styledName .= "<span style=\"font-family: 'Noto Sans Tamil';\">$part  /</span> ";
+                                } elseif (preg_match('/[\x{0900}-\x{097F}]/u', $part)) { 
+                                    $Product_styledName .= "<span style=\"font-family: 'Noto Sans Devanagari';\">$part / </span> ";
+                                } elseif (preg_match('/[\x{0C00}-\x{0C7F}]/u', $part)) { 
+                                    $Product_styledName .= "<span style=\"font-family: 'Noto Sans Telugu';\">$part / </span> ";
+                                } elseif (preg_match('/[\x{0D00}-\x{0D7F}]/u', $part)) { 
+                                    $Product_styledName .= "<span style=\"font-family: 'Noto Sans Malayalam';\">$part / </span> ";
+                                } elseif (preg_match('/[\x{0C80}-\x{0CFF}]/u', $part)) { 
+                                    $Product_styledName .= "<span style=\"font-family: 'Noto Sans Kannada';\">$part / </span> ";
+                                } else {
+                                    $Product_styledName .= "<span style=\"font-family: 'DejaVuSans';\">$part / </span> ";
+                                }
+                            }
+                        @endphp
+
                         <tr>
                             <td style="text-align: center;"> {{ $item->product_id }} </td>
                             <td style="text-align: left;">
-                                {{ $item['product_name'] }}<br>
+                                {!! $Product_styledName !!}<br>  {{-- product_name --}}
                                 SKU: {{  $item['sku'] ? $item['sku'] : "-"  }}
                             </td>
                             <td style="text-align: center;"> {{ $orders->currency_symbol .$item['price'] }} </td>

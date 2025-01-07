@@ -61,29 +61,10 @@
         <tbody>
             @foreach ($orders_today as $key => $item)
                 <tr>
-                    @php
-
-                        $statusMap = [
-                            'pending'    => ['pending', '0'],
-                            'completed'  => ['completed', 5],
-                            'cancelled'  => ['cancelled', 'failed', 4, 7, 6],
-                            'refunded'   => ['refunded', 10],
-                            'processing' => ['processing'],
-                            'shipped'    => ['order-shipped', 3],
-                            'Packed'     => [ 'Packed'],
-                        ];
-                    
-                        if (isset($statusMap[$item->status])) {
-                            $current_status = in_array($item->status, $statusMap[$item->status]) ? $item->status : null;
-                        } else {
-                            $current_status = $request->status ?? null;
-                        }
-                    @endphp
-
                     <td style="text-align: center;"> {{ $key+1 }} </td>
                     <td style="text-align: center;"> {{ $item->order_vai }} </td>
                     <td style="text-align: center;"> {{ $item->order_id }} </td>
-                    <td style="text-align: center;"> <span class="badge bg-{{ $current_status}}">{{ ucwords(@$current_status) }}</span></td>
+                    <td style="text-align: center;">{{ ucwords( $item->current_status) }}</span></td>
                 </tr>
             @endforeach
         </tbody>

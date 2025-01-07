@@ -63,4 +63,33 @@ class CustomHelper
         $storeId = Credentials::query()->pluck('dukkan_store_id')->first();
         return $storeId;
     }
+
+    public static function Mpdf_font_setup(){
+
+        return [ 
+            'unicode' => true, 
+            'fontDir' => [storage_path('fonts')],
+            'fontdata' => [
+                'notosanstamil' => [
+                    'R' => 'NotoSansTamil-Regular.ttf',
+                ],
+                'notosansdevanagari' => [
+                    'R' => 'NotoSansDevanagari-Regular.ttf', 
+                ],
+                'notosanstelugu' => [
+                    'R' => 'NotoSansTelugu-Regular.ttf', 
+                ],
+                'notosansmalayalam' => [
+                    'R' => 'NotoSansMalayalam-Regular.ttf', 
+                ],
+                'notosanskannada' => [
+                    'R' => 'NotoSansKannada-Regular.ttf', 
+                ],
+                'dejavusans' => [
+                    'R' => 'DejaVuSans.ttf',
+                ],
+            ],
+            'default_font' => 'dejavusans', 
+        ];
+    }
 }

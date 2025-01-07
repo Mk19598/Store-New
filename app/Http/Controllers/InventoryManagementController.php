@@ -320,7 +320,7 @@ class InventoryManagementController extends Controller
 
     public function update(Request $request, $id)
     {
-        // try {
+        try {
             $validated = $request->validate([
                 'product_name' => 'required',
                 'weight' => 'required',
@@ -573,11 +573,11 @@ class InventoryManagementController extends Controller
             return redirect()->route('inventory.index')
                 ->with('success', 'Inventory updated successfully.'.$message);
 
-        // }
-        // catch(\Throwable $th)
-        // {
-        //     return view('layouts.error-pages.404-Page');
-        // }
+        }
+        catch(\Throwable $th)
+        {
+            return view('layouts.error-pages.404-Page');
+        }
     }
 
     public function destroy($id)

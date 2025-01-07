@@ -54,7 +54,8 @@ class CustomHelper
 
     public static function Get_ADMIN_MAIL()
     {
-        return env('ADMIN_MAIL');
+        $ADMIN_MAIL = EnvSetting::query()->pluck('ADMIN_MAIL')->first();
+        return $ADMIN_MAIL;
     }
     
     public static function StoreId()

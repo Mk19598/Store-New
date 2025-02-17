@@ -92,24 +92,51 @@ class ProductPickingController extends Controller
 
         //From Orders
 
-        if ($request->filled('status') && $request->status !== 'all') {
+        // if ($request->filled('status') && $request->status !== 'all') {
 
+        //     $statusMap = [
+        //         'pending'    => ['pending', '0'],
+        //         'processing' => ['processing'],
+        //         'completed'  => ['completed', 5],
+        //         'cancelled'  => ['cancelled', 4, 7 ,7,-1],
+        //         'failed'     => ['failed', 6],
+        //         'refunded'   => ['refunded', 10],
+        //         'shipped'    => [ 'order-shipped'], 
+        //         'Packed'     => [ 'Packed'],
+        //     ];
+        
+        //     if (isset($statusMap[$request->status])) {
+        //         $query->whereIn('orders.status', $statusMap[$request->status]);
+        //     }else{
+        //         $query->where('orders.status', $request->status);
+        //     }
+        // }
+
+        if ($request->filled('status') && !in_array('all', $request->status)) {
             $statusMap = [
                 'pending'    => ['pending', '0'],
                 'processing' => ['processing'],
                 'completed'  => ['completed', 5],
-                'cancelled'  => ['cancelled', 4, 7 ,7,-1],
+                'cancelled'  => ['cancelled', 4, 7, -1],
                 'failed'     => ['failed', 6],
                 'refunded'   => ['refunded', 10],
-                'shipped'    => [ 'order-shipped'], 
-                'Packed'     => [ 'Packed'],
+                'shipped'    => ['order-shipped'], 
+                'packed'     => ['Packed'],
             ];
         
-            if (isset($statusMap[$request->status])) {
-                $query->whereIn('orders.status', $statusMap[$request->status]);
-            }else{
-                $query->where('orders.status', $request->status);
+            $mappedStatuses = [];
+            foreach ($request->status as $status) {
+                if (isset($statusMap[$status])) {
+                    $mappedStatuses = array_merge($mappedStatuses, $statusMap[$status]);
+                } else {
+                    $mappedStatuses[] = $status;
+                }
             }
+        
+            $mappedStatuses = array_unique($mappedStatuses);
+        
+            $query->whereIn('orders.status', $mappedStatuses);
         }
+        
     }
 }

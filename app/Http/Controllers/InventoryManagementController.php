@@ -55,7 +55,6 @@ class InventoryManagementController extends Controller
         try {
             $validated = $request->validate([
                 'product_name' => 'required',
-                'weight' => 'required',
                 'sku' => 'required',
                 'barcode' => 'required',
                 'dukaan_sku' => 'required',
@@ -323,7 +322,6 @@ class InventoryManagementController extends Controller
         try {
             $validated = $request->validate([
                 'product_name' => 'required',
-                'weight' => 'required',
                 'sku' => 'required',
                 'barcode' => 'required',
                 'dukaan_sku' => 'required',

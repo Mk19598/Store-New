@@ -43,7 +43,7 @@
                                 <th>{{ ucwords(__('Inventory')) }}</th>
                                 <th>{{ ucwords(__('BarCode')) }}</th>
                                 <th>{{ ucwords(__('Barcode Image')) }}</th>
-                                <th>{{ ucwords(__('Stock Status')) }}</th>
+                                <!-- <th>{{ ucwords(__('Stock Status')) }}</th> -->
                                 <th>{{ ucwords(__('Actions')) }}</th>
                             </tr>
                         </thead>
@@ -60,13 +60,13 @@
                                     <td>
                                         <img src="{{ URL::to('storage/app/private/public/barcodes/'.$inventory->barcode_image) }}" alt="Barcode Image" width="150" />
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input toggle-inventory-status" type="checkbox" 
                                                 data-id="{{ $inventory->id }}" 
                                                 {{ $inventory->inventory == 1 ? 'checked' : '' }}>
                                         </div>
-                                    </td>
+                                    </td> -->
 
                                     <td>
                                     <div class="action-icons" style="display: flex; justify-content: center; gap: 10px; align-items: center;">

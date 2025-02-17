@@ -24,20 +24,21 @@
 
                         <div class="col-md-4">
                             <label for="status" class="form-label">Order Status</label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="all" > {{ ucwords(__('All Status')) }}</option>
-                                <option value="pending" > {{ ucwords(__('pending')) }} </option>
+                            <select class="form-select" id="status" name="status[]" multiple="multiple">
+                                <option value="all"> {{ ucwords(__('All Status')) }}</option>
+                                <option value="pending"> {{ ucwords(__('pending')) }} </option>
                                 <option value="processing">{{ ucwords(__('processing')) }}  </option>
-                                <option value="shipped" >{{ ucwords(__('shipped')) }}  </option>
-                                <option value="completed" > {{ ucwords(__('completed')) }}  </option>
-                                <option value="cancelled" > {{ ucwords(__('cancelled / failed')) }} </option>
-                                <option value="refunded" >{{ ucwords(__('refunded')) }}  </option>
-                                <option value="on-hold" >{{ ucwords(__('on-hold (woocommerce)')) }} </option>
+                                <option value="shipped">{{ ucwords(__('shipped')) }}  </option>
+                                <option value="completed"> {{ ucwords(__('completed')) }}  </option>
+                                <option value="cancelled"> {{ ucwords(__('cancelled / failed')) }} </option>
+                                <option value="refunded">{{ ucwords(__('refunded')) }}  </option>
+                                <option value="on-hold">{{ ucwords(__('on-hold (woocommerce)')) }} </option>
                                 <option value="-1">{{ ucfirst(__('Abandoned / Draft (Dukkan) ')) }}  </option>
-                                <option value="1" >{{ ucwords(__('accepted (Dukkan)')) }}  </option>
-                                <option value="2" >{{ ucwords(__('rejected (Dukkan)')) }}  </option>
+                                <option value="1">{{ ucwords(__('accepted (Dukkan)')) }}  </option>
+                                <option value="2">{{ ucwords(__('rejected (Dukkan)')) }}  </option>
                             </select>
                         </div>
+
 
                         <div class="col-md-4">
                             <label for="order_vai" class="form-label">Order Origin</label>
@@ -85,6 +86,12 @@
     <script>
         $(document).ready(function() {
 
+
+            $('#status').select2({
+                placeholder: "Select Order Status",
+                allowClear: true
+            });
+
             $('.data').hide();
 
             $('#filter-form').on('submit', function(e) {
@@ -105,7 +112,8 @@
 
                             columnDefs: [                   // Columns
                                 { targets: [1, 2], className: 'dt-body-left' },  
-                                { targets: [0, 3, 4, 5, 6], className: 'dt-body-center' } 
+                                // { targets: [0, 3, 4, 5, 6], className: 'dt-body-center' } 
+                                { targets: [0, 3, 4], className: 'dt-body-center' }
                             ],
 
                             headerCallback: function(thead, data, start, end, display) { // Head

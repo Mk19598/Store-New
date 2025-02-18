@@ -11,19 +11,26 @@
             <div class="card-body">
                 <form id="orderDetailsForm" method="get" action="{{ route('products-packing.index') }}">
                     <div class="row col-md-12 g-3 mx-auto">
-                        <label class="form-label"> Order Details </label>
+                        <label class="form-label">Order Details</label>
                         <hr>
                         <div class="col-md-3"></div>
-
-                        <div class="col-md-5"> 
+                    
+                        <div class="col-md-5">
                             <input type="text" class="form-control" placeholder="eg:123456 (Order ID)" name="order_id" value="{{ request('order_id') }}" required>
                         </div>
-
-                        <div class="col-md-4">
-                            <button type="submit" class="btn app-btn-primary"> {{ __( "Load Order") }} </button>
+                    
+                        <div class="col-md-4 d-flex align-items-center">
+                            <button type="submit" class="btn app-btn-primary me-2">{{ __("Load Order") }}</button>
+                    
+                            <a href="javascript:location.reload();">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="3em" height="2em" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"/>
+                                    <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"/>
+                                </svg>
+                            </a>
                         </div>
-
-                        <div class="col-md-12" style="text-align: -webkit-center;">
+                    
+                        <div class="col-md-12 text-center">
                             <span class="error-message-span"></span>
                         </div>
                     </div>

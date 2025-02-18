@@ -53,15 +53,17 @@
         <div style="{{ $key > 0 ? 'page-break-before: always;' : '' }}">
             <header>
                 <h1>{{ @$Get_website_name }}</h1>
-                <p>
-                    #91, First Floor, Kamarajar Salai,<br>
-                    Near Gandhi Stage, Madurai,<br>
-                    TamilNadu – 625009<br>
-                    Mobile: +91 96770 63560<br><br>
-                    <strong> GSTIN - {{ App\Helpers\CustomHelper::Get_GSTNo()}}</strong><br>
-                    <strong> FSSAI -  {{ App\Helpers\CustomHelper::Get_FSSAINo()}}</strong><br>
+                <p style="text-align: center;">
+                    #91, First Floor, Kamarajar Salai, 
+                    Near Gandhi Stage, Madurai, 
+                    TamilNadu – 625009.<br>
+                    <strong>Mobile: +91 96770 63560</strong> 
                 </p>
-                <h2>INVOICE</h2>
+                <p style="text-align: center;">
+                    <strong>GSTIN: {!! App\Helpers\CustomHelper::Get_GSTNo() !!}&nbsp; &nbsp; &nbsp; &nbsp;
+                    FSSAI: {{ App\Helpers\CustomHelper::Get_FSSAINo() }}</strong>
+                </p>
+                <h3>INVOICE</h3>
             </header>
 
             <section class="invoice-details">

@@ -42,7 +42,7 @@
                     <td align="center">
                         <div class="action-icons" style="display: flex; justify-content: center; gap: 10px; align-items: center;">
                             <a href="{{ $order->status == 'Packed'  ?  route('orders.invoice_pdf',$order->order_uuid) : 'javascript:void(0);' }}"
-                                class="{{  $order->status == 'Packed'  ? '' : 'disabled-link' }}" >
+                                class="{{  $order->status == 'Packed'  ? '' : 'disabled-link' }}" target="_blank">
                                 <i class="bi bi-receipt"></i>
                             </a>
                        

@@ -38,7 +38,7 @@
 
     <div class="header">
         <img src="{{ $message->embed($Get_website_logo) }}" alt="Logo" height="50">
-        <h2>Hey {{ @$Get_website_name }} ,</h2>
+        <h2>Hello {{ @$Get_website_name }} ,</h2>
     </div>
 
     <p>

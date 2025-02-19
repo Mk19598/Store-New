@@ -24,7 +24,7 @@
                             <td> {{ $item->name }}</td>
                             <td> {{ $item->sku }}</td>
                             <td> {{ $item->total_quantity }}</td>
-                            <td> {{ $item->order_created_at_format }}  </td>
+                            <td> {{ $item->order_dates }}  </td>
                         </tr>
                     @endforeach
                 </tbody>

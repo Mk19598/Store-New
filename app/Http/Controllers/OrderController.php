@@ -567,7 +567,7 @@ class OrderController extends Controller
     {
         try {
 
-            $orders = Order::query();
+            $orders = Order::query()->orderBy('order_created_at', 'desc');
 
                     // Apply filters
 
@@ -605,7 +605,7 @@ class OrderController extends Controller
                                 
                                 function ($query){
 
-                                    return $query->orderBy('order_created_at', 'asc');
+                                    return $query->orderBy('order_created_at', 'desc');
 
                                     })->with('trackingLinks')->get()->map(function($item) {
 

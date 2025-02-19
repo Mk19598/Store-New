@@ -35,18 +35,18 @@
 
                         <div class="col-md-3">
                             <label for="status" class="form-label">Order Status</label>
-                            <select class="form-select" id="status" name="status">
-                                <option value="all" > {{ ucwords(__('All Status')) }}</option>
-                                <option value="pending" > {{ ucwords(__('pending')) }} </option>
-                                <option value="processing">{{ ucwords(__('processing')) }}  </option>
-                                <option value="shipped" >{{ ucwords(__('shipped')) }}  </option>
-                                <option value="completed" > {{ ucwords(__('completed')) }}  </option>
-                                <option value="cancelled" > {{ ucwords(__('cancelled / failed')) }} </option>
-                                <option value="refunded" >{{ ucwords(__('refunded')) }}  </option>
-                                <option value="on-hold" >{{ ucwords(__('on-hold (woocommerce)')) }} </option>
-                                <option value="-1">{{ ucfirst(__('Abandoned / Draft (Dukkan) ')) }}  </option>
-                                <option value="1" >{{ ucwords(__('accepted (Dukkan)')) }}  </option>
-                                <option value="2" >{{ ucwords(__('rejected (Dukkan)')) }}  </option>
+                            <select class="form-select" id="status" name="status[]" multiple>
+                                <option value="all" {{ in_array('all', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('All Status')) }}</option>
+                                <option value="pending" {{ in_array('pending', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('pending')) }}</option>
+                                <option value="processing" {{ in_array('processing', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('processing')) }}</option>
+                                <option value="shipped" {{ in_array('shipped', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('shipped')) }}</option>
+                                <option value="completed" {{ in_array('completed', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('completed')) }}</option>
+                                <option value="cancelled" {{ in_array('cancelled', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('cancelled / failed')) }}</option>
+                                <option value="refunded" {{ in_array('refunded', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('refunded')) }}</option>
+                                <option value="on-hold" {{ in_array('on-hold', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('on-hold (woocommerce)')) }}</option>
+                                <option value="-1" {{ in_array('-1', request('status', [])) ? 'selected' : '' }}>{{ ucfirst(__('Abandoned / Draft (Dukkan)')) }}</option>
+                                <option value="1" {{ in_array('1', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('accepted (Dukkan)')) }}</option>
+                                <option value="2" {{ in_array('2', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('rejected (Dukkan)')) }}</option>
                             </select>
                         </div>
                         
@@ -158,6 +158,11 @@
     <script>
             // Datatables
         $(document).ready( function () {
+
+            $('#status').select2({
+                placeholder: "Select Order Status",
+                allowClear: true
+            });
 
             $('#orders-list-table').DataTable({
                 columnDefs: [                   // Columns

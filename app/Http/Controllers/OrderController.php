@@ -581,23 +581,28 @@ class OrderController extends Controller
                     $orders->where('order_created_at', '<=', "{$request->date_to}T{$request->time_to}:00");
                 }
                 
-                if ($request->filled('status') && $request->status !== 'all') {
-
+                if ($request->filled('status') && !in_array('all', $request->status)) {
                     $statusMap = [
                         'pending'    => ['pending', '0'],
                         'completed'  => ['completed', 5],
-                        'cancelled'  => ['cancelled','failed', 4, 7 , 6],
+                        'cancelled'  => ['cancelled', 'failed', 4, 7, 6],
                         'refunded'   => ['refunded', 10],
-                        'processing' => ['processing' ],
-                        'shipped'    => [ 'order-shipped', 3],
-                        'Packed'     => [ 'Packed'],
+                        'processing' => ['processing'],
+                        'shipped'    => ['order-shipped', 3],
+                        'Packed'     => ['Packed'],
                     ];
                 
-                    if (isset($statusMap[$request->status])) {
-                        $orders->whereIn('status', $statusMap[$request->status]);
-                    }else{
-                        $orders->where('status', $request->status);
+                    $statuses = [];
+                
+                    foreach ($request->status as $status) {
+                        if (isset($statusMap[$status])) {
+                            $statuses = array_merge($statuses, $statusMap[$status]);
+                        } else {
+                            $statuses[] = $status;
+                        }
                     }
+                
+                    $orders->whereIn('status', $statuses);
                 }
             }
 

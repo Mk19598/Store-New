@@ -57,16 +57,30 @@ class ProductPickingController extends Controller
         });
 
         $combinedProducts = $DukaanOrderProducts->concat($WoocommerceOrderProducts);
-
+        
         $groupedProducts = $combinedProducts->groupBy('sku')->map(function ($group) {
-            $firstItem = $group->first(); 
-            $totalQuantity = $group->sum('total_quantity'); 
-
+            $firstItem = $group->first(); // Get the first item in the group to retain other fields
+            $totalQuantity = $group->sum('total_quantity'); // Sum the quantities
+        
+            // Collect unique dates and skip duplicates
+            $dates = [];
+            foreach ($group as $item) {
+                $date = $item['order_created_at_format'];
+                if (!in_array($date, $dates)) {
+                    $dates[] = $date;
+                }
+            }
+        
+            // Concatenate dates with a comma
+            $firstItem['order_dates'] = implode(', ', $dates);
             $firstItem['total_quantity'] = $totalQuantity;
+        
             return $firstItem;
         });
-
+        
+        // Convert the grouped collection back to a plain collection
         $query = $groupedProducts->values();
+        
 
         $data = [
             'title' =>  "Product Pickup | " .CustomHelper::Get_website_name() ,

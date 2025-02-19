@@ -35,31 +35,38 @@ class ProductPickingController extends Controller
     public function filter(Request $request) {
 
 
-        $DukaanOrderProductQuery = DukaanOrderProduct::query()->select('orders.status','dukaan_order_products.*', DB::raw('SUM(quantity) as total_quantity'))
-                                                ->join('orders','orders.order_id','=','dukaan_order_products.order_id');
+        $DukaanOrderProductQuery = DukaanOrderProduct::query()->select('orders.status', 'dukaan_order_products.*', DB::raw('SUM(quantity) as total_quantity'))
+                            ->join('orders', 'orders.order_id', '=', 'dukaan_order_products.order_id');
 
-        $WoocommerceOrderProductQuery = WoocommerceOrderProduct::query()->select('orders.status','woocommerce_order_products.*', DB::raw('SUM(quantity) as total_quantity'))
-                                                ->join('orders','orders.order_id','=','woocommerce_order_products.order_id');
+        $WoocommerceOrderProductQuery = WoocommerceOrderProduct::query()->select('orders.status', 'woocommerce_order_products.*', DB::raw('SUM(quantity) as total_quantity'))
+            ->join('orders', 'orders.order_id', '=', 'woocommerce_order_products.order_id');
 
-        
         $this->applyFilters($DukaanOrderProductQuery, $request);
         $this->applyFilters($WoocommerceOrderProductQuery, $request);
-        
-        $DukaanOrderProducts = $DukaanOrderProductQuery->groupBy('sku')->get()->map(function($item){
 
+        $DukaanOrderProducts = $DukaanOrderProductQuery->groupBy('sku')->get()->map(function ($item) {
             $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
             $item['sku'] = $item->sku;
-            return $item ;
+            return $item;
         });
-    
-        $WoocommerceOrderProducts = $WoocommerceOrderProductQuery->groupBy('sku')->get()->map(function($item){
 
+        $WoocommerceOrderProducts = $WoocommerceOrderProductQuery->groupBy('sku')->get()->map(function ($item) {
             $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
             $item['sku'] = $item->sku;
-            return $item ;
+            return $item;
         });
-        
-        $query = $DukaanOrderProducts->concat($WoocommerceOrderProducts);
+
+        $combinedProducts = $DukaanOrderProducts->concat($WoocommerceOrderProducts);
+
+        $groupedProducts = $combinedProducts->groupBy('sku')->map(function ($group) {
+            $firstItem = $group->first(); 
+            $totalQuantity = $group->sum('total_quantity'); 
+
+            $firstItem['total_quantity'] = $totalQuantity;
+            return $firstItem;
+        });
+
+        $query = $groupedProducts->values();
 
         $data = [
             'title' =>  "Product Pickup | " .CustomHelper::Get_website_name() ,

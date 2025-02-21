@@ -67,11 +67,16 @@ class SendDailyOrdersCountMail extends Command
                                             return $item;
                                         });
 
+            $status_counts = $orders_today->groupBy('current_status')->map(fn($group) => $group->count());
+
+            $status_counts = $status_counts->toArray();
+
             $data = [
                 'orders_today' => $orders_today,
                 'orders_count' => $orders_today->count(), 
                 'dukkan_orders_count' => $orders_today->where('order_vai', 'Dukkan')->count(), 
                 'woocommerce_orders_count' => $orders_today->where('order_vai', 'woocommerce')->count(),
+                'status_counts'    => $status_counts ,
                 'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
                 'Get_website_name' => CustomHelper::Get_website_name(),
             ];

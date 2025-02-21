@@ -39,7 +39,7 @@
         <strong>{{ $orders_collection->currency_symbol . $orders_collection->total_cost }}</strong>.
     </p>
 
-    <h3>Here is the Order Details</h3>
+    <h3>Here are the Order Details:</h3>
 
     <table class="order-summary">
         <thead>

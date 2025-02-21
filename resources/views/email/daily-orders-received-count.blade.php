@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,30 +8,65 @@
     <title>Today's Orders Received Count Mail</title>
 
     <style>
-        body {font-family: Arial, sans-serif; line-height: 1.6;}
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
 
-        .header {text-align: center;}
+        .header {
+            text-align: center;
+        }
 
-        .order-summary {width: 100%;border-collapse: collapse;margin-top: 20px;}
+        .order-summary {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
 
         .order-summary th,
-        .order-summary td {border: 1px solid #ddd;padding: 8px;text-align: left;}
+        .order-summary td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
 
-        .order-summary th {background-color: #f4f4f4;}
+        .order-summary th {
+            background-color: #f4f4f4;
+        }
 
-        .badge.bg-completed {background-color: #28a745 !important;}
 
-        .badge.bg-processing {background-color: #0275d8;}
+        .counts {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+        }
 
-        .badge.bg-shipped {background-color: #8051d7;}
+        .status-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
 
-        .badge.bg-cancelled {background-color: #dc3545;}
+        .status-columns p {
+            margin: 0;
+            font-size: 16px;
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            unicode-bidi: isolate;
+        }
 
-        .badge.bg-pending {background-color: #abab32;}
+        @media (max-width: 768px) {
+            .counts {
+                flex-direction: column;
+                gap: 20px;
+            }
 
-        .badge.bg-refunded {background-color: #A52A2A;}
-
-        .badge.bg-Packed {background-color: #2471a3;}
+            .status-columns {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 
@@ -41,11 +77,29 @@
         <h2>Hello {{ @$Get_website_name }} ,</h2>
     </div>
 
-    <p>
-        <strong>{{ 'Dukkan Orders Count - ' . $dukkan_orders_count }}</strong> <br>
-        <strong>{{ 'Woocommerce Orders Count - '. $woocommerce_orders_count }}</strong> <br>
-        <strong>{{ 'Orders Count - ' . $orders_count }}</strong>
-    </p>
+    <div class="counts">
+        <!-- First column (Order Counts) -->
+        <p>
+            <strong>{{ 'Dukkan Orders Count - ' . $dukkan_orders_count }}</strong> <br>
+            <strong>{{ 'Woocommerce Orders Count - ' . $woocommerce_orders_count }}</strong> <br>
+            <strong>{{ 'Total Orders Count - ' . $orders_count }}</strong>
+        </p>
+
+        <div class="status-columns">
+            @php
+                $chunks = array_chunk($status_counts, 3, true);
+            @endphp
+
+            @foreach ($chunks as $chunk)
+                <p>
+                    @foreach ($chunk as $key => $item)
+                        <strong>{{ ucwords($key) . ' - ' . $item }}</strong> <br>
+                    @endforeach
+                </p>
+            @endforeach
+        </div>
+    </div>
+
 
     <h3>Here is the Order Details,</h3>
 
@@ -61,13 +115,14 @@
         <tbody>
             @foreach ($orders_today as $key => $item)
                 <tr>
-                    <td style="text-align: center;"> {{ $key+1 }} </td>
+                    <td style="text-align: center;"> {{ $key + 1 }} </td>
                     <td style="text-align: center;"> {{ $item->order_vai }} </td>
                     <td style="text-align: center;"> {{ $item->order_id }} </td>
-                    <td style="text-align: center;">{{ ucwords( $item->current_status) }}</span></td>
+                    <td style="text-align: center;">{{ ucwords($item->current_status) }}</span></td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </body>
+
 </html>

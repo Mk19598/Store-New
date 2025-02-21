@@ -19,7 +19,7 @@
     
                         <div class="mb-3">
                             <label for="weight" class="form-label">{{ __('Weight') }}</label>
-                            <input type="text" class="form-control" id="weight" name="weight" value="{{ old('weight') }}" required>
+                            <input type="text" class="form-control" id="weight" name="weight" value="{{ old('weight') }}">
                         </div>
                     </div>
 

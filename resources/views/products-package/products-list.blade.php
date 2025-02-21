@@ -27,21 +27,21 @@
             </div>
         @elseif ( @$orders_collection['packed_count'] < @$orders_collection['product_details_count']  )
 
-            <form method="get" id="MarkProductForm" action="{{ route('products-packing.mark-Pdt-packed') }}" >
+            <form method="get" id="MarkProductForm" action="{{ route('products-packing.mark-Pdt-packed') }}">
                 <div class="row col-md-12 g-3 mx-auto">
                     <div class="col-md-3"></div>
-
+            
                     <div class="col-md-5">
-                        <input type="text" class="form-control" placeholder="Enter the Barcode" name="barcode" required>
+                        <input type="text" class="form-control" id="barcode-input" placeholder="Enter the Barcode" name="barcode" required>
                     </div>
-        
-                    <input  class="form-control" type="hidden" name="order_id" value="{{ @$orders_collection->order_id }}">
-                    <input  class="form-control" type="hidden" name="order_vai" value="{{ @$orders_collection->order_vai }}">
-
+            
+                    <input class="form-control" type="hidden" name="order_id" value="{{ @$orders_collection->order_id }}">
+                    <input class="form-control" type="hidden" name="order_vai" value="{{ @$orders_collection->order_vai }}">
+            
                     <div class="col-md-4">
-                        <button type="submit" class="btn app-btn-primary"> {{ __( "Mark as Packed ") }} </button> <br>
+                        <button type="submit" id="submit-btn" class="btn app-btn-primary"> {{ __( "Mark as Packed ") }} </button> <br>
                     </div>
-
+            
                     <div class="col-md-12" style="text-align: -webkit-center;">
                         <span id="error-message-span"></span>
                     </div>
@@ -113,6 +113,12 @@
 @endif
 
 <script>
+
+    document.getElementById("barcode-input").addEventListener("input", function () {
+        if (this.value.length === 13) {
+            document.getElementById("submit-btn").click(); 
+        }
+    });
     
     $(document).ready(function() {
 

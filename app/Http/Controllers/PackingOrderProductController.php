@@ -224,7 +224,7 @@ class PackingOrderProductController extends Controller
 
             if ($request->order_vai == "woocommerce") {
 
-                Order::where('order_id', $request->order_id)->first()->update(['status' => "order-shipped" , 'shipped_created_at' => Carbon::now(), ]);
+                Order::where('order_id', $request->order_id)->first()->update(['status' => "Packed" ]);
 
                 WoocommerceOrder::where( 'order_id', $request->order_id )->first()->update(['status' => "Packed" ]);
             }

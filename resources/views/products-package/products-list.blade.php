@@ -22,9 +22,14 @@
 
         @elseif( @$orders_collection['status'] == "Packed"  )
 
+            <script>
+                alert("All products in this order are packed !!");
+            </script>
+
             <div class="col-md-12" style="text-align: -webkit-center;">
                 <span class="product-qty" style="background-color: #abebc6; color: #1d8348;"> &#10004; Products Packed Fully</span>
             </div>
+            
         @elseif ( @$orders_collection['packed_count'] < @$orders_collection['product_details_count']  )
 
             <form method="get" id="MarkProductForm" action="{{ route('products-packing.mark-Pdt-packed') }}">
@@ -114,13 +119,13 @@
 
 <script>
 
-    document.getElementById("barcode-input").addEventListener("input", function () {
-        if (this.value.length === 13) {
-            document.getElementById("submit-btn").click(); 
-        }
-    });
-    
     $(document).ready(function() {
+        
+        $("#barcode-input").on("input", function () {
+            if ($(this).val().length === 13) {
+                $("#submit-btn").click();
+            }
+        });
 
         $('#MarkProductForm').on('submit', function(event) {
             event.preventDefault(); 

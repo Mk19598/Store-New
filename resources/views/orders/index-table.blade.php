@@ -45,6 +45,10 @@
                                 class="{{  $order->status == 'Packed'  ? '' : 'disabled-link' }}" target="_blank">
                                 <i class="bi bi-receipt"></i>
                             </a>
+
+                            <a href="{{ route('orders.invoice_pdf',$order->order_uuid) }}">
+                                <i class="bi bi-receipt"></i>
+                            </a>
                        
                             <a href="{{  $order->status == 'Packed'  ? route('orders.shipping_label_pdf', $order->order_uuid) : 'javascript:void(0);' }}"
                                 class="{{  $order->status == 'Packed'  ? '' : 'disabled-link' }}">

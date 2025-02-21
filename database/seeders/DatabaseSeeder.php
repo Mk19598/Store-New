@@ -16,15 +16,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Store',
-            'email' => 'support@standardstore.in',
-            'password' => Hash::make(1234),
-            'role' => 1,
-            'active' => 1,
-        ]);
+      
 
         $this->call([
+            UserSeeder::class,
             SiteSettingSeeder::class,
             CredentialsSeeder::class,
             ContentTemplateSeeder::class,

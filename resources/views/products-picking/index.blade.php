@@ -24,7 +24,7 @@
 
                         <div class="col-md-4">
                             <label for="status" class="form-label">Order Status</label>
-                            <select class="form-select" id="status" name="status[]" multiple="multiple">
+                            <select class="form-select" class="form-control" id="status" name="status[]" multiple="multiple">
                                 <option value="all"> {{ ucwords(__('All Status')) }}</option>
                                 <option value="pending"> {{ ucwords(__('pending')) }} </option>
                                 <option value="processing">{{ ucwords(__('processing')) }}  </option>

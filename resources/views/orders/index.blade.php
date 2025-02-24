@@ -35,7 +35,7 @@
 
                         <div class="col-md-3">
                             <label for="status" class="form-label">Order Status</label>
-                            <select class="form-select" id="status" name="status[]" multiple>
+                            <select class="form-select" class="form-control"  id="status" name="status[]" multiple>
                                 <option value="all" {{ in_array('all', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('All Status')) }}</option>
                                 <option value="pending" {{ in_array('pending', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('pending')) }}</option>
                                 <option value="processing" {{ in_array('processing', request('status', [])) ? 'selected' : '' }}>{{ ucwords(__('processing')) }}</option>
@@ -58,29 +58,37 @@
             </div>
         </div>
 
-                 {{-- Order Count --}}
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="stats">
-                   
-                    <div class="stat-item">
-                        <div class="order-badge" style="background: #20c997">{{ @$order_count }}</div>
-                        <span>{{  ucwords(__('total Order count')) }}</span>
-                    </div>
+           {{-- Order Count Details --}}
 
-                    <div class="stat-item">
-                        <div class="order-badge blue" style="background: hsl(39deg 74% 73%) !important;">{{ @$woocommerce_order_count }}</div>
-                        <span>{{  ucwords(__('total woocommerce Order count')) }}</span>
+           <div class="row g-4 mb-4">
+            <div class="col-6 col-lg-4">
+                <div class="app-card app-card-stat shadow-sm h-100">
+                    <div class="app-card-body p-3 p-lg-4">
+                        <h4 class="stats-type mb-3" >{{  ucwords(__('Total Orders')) }} </h4>
+                        <div class="stats-figure order-badge" style="background: hsl(39deg 74% 73%) !important; font-size:1.50rem">{{ @$order_count }}</div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="stat-item">
-                        <div class="order-badge" style="background: #17a2b8 !important;">{{ @$Dukkan_order_count }}</div>
-                        <span>{{  ucwords(__('total Dukkan Order count')) }}</span>
+            <div class="col-6 col-lg-4">
+                <div class="app-card app-card-stat shadow-sm h-100">
+                    <div class="app-card-body p-3 p-lg-4">
+                        <h4 class="stats-type mb-3"> {{  ucwords(__('total Dukkan Orders')) }} </h4>
+                        <div class="stats-figure order-badge"  style="background: #20c997;  font-size:1.50rem">{{ @$Dukkan_order_count }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-4">
+                <div class="app-card app-card-stat shadow-sm h-100">
+                    <div class="app-card-body p-3 p-lg-4">
+                        <h4 class="stats-type mb-3"> {{  ucwords(__('total Woocommerce Orders')) }} </h4>
+                        <div class="stats-figure order-badge" style="background: #17a2b8 !important;  font-size:1.50rem">{{ @$woocommerce_order_count }}</div>
                     </div>
                 </div>
             </div>
         </div>
-
+        
                 {{-- Table Card --}}
         <div class="card">
             <div class="card-body">

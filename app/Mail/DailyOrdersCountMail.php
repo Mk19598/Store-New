@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\SiteSetting;
+use Carbon\Carbon;
 
 class DailyOrdersCountMail extends Mailable
 {
@@ -30,8 +31,12 @@ class DailyOrdersCountMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        $Carbon_now = Carbon::now()->format('M d, Y H:i:s');
+
+        $subject =  "Today's Order - " . $Carbon_now ;
+
         return new Envelope(
-            subject: 'Daily Orders Received Count Mail',
+            subject: $subject,
         );
     }
 

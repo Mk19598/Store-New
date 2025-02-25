@@ -19,6 +19,7 @@
                 <th align="center">{{ ucwords(__('mobile number')) }} </th>
                 <th align="center">{{ ucwords(__('Date & Time')) }} </th>
                 <th align="center">{{ ucwords(__('Status')) }}  </th>
+                <th align="center">{{ ucwords(__('Payment Status')) }}  </th>
                 <th align="center">{{ ucwords(__('Total')) }}   </th>
                 <th align="center">{{ ucwords(__('Actions')) }} </th>
             </tr>
@@ -38,6 +39,13 @@
                     <td align="center">{{ @$order->buyer_mobile_number }}</td>
                     <td align="center"> {{ @$order->order_created_at_format }}</td>
                     <td align="center"> <span class="badge bg-{{ $order->status_color }}">{{ ucwords(@$order->status) }}</span></td>
+                    <td align="center">
+                        {!! (!empty($order->PaymentId) && $order->payment_mode == 'razorpay' && $order->PaymentId !== 'processing') 
+                            ? '<a href="javascript:void(0);" class="verify-payment" data-payment-id="'.$order->PaymentId.'">
+                                    <i class="bi bi-credit-card"></i> Verify
+                            </a>' 
+                            : '—' !!}
+                    </td>
                     <td align="center"> {{ @$order->currency_symbol.number_format(@$order->total_cost, 2) }}</td>
                     <td align="center">
                         <div class="action-icons" style="display: flex; justify-content: center; gap: 10px; align-items: center;">
@@ -366,6 +374,42 @@ toastr.options = {
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
 };
+
+$(document).on("click", ".verify-payment", function() {
+    let paymentId = $(this).data("payment-id");
+    let baseURL = "{{ URL::to('/') }}"; 
+
+    $.ajax({
+        url: `${baseURL}/orders/verify-payment/${paymentId}`,
+        method: 'GET',
+        success: function (response) {
+            if (response.status) {
+                Swal.fire({
+                    title: "Payment Verified",
+                    text: "Payment Status: " + response.status,
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            } else {
+                Swal.fire({
+                    title: "Verification Failed",
+                    text: "Unable to verify the payment status.",
+                    icon: "error",
+                    confirmButtonText: "Retry"
+                });
+            }
+        },
+        error: function (error) {
+            Swal.fire({
+                title: "Error",
+                text: "Error verifying payment. Please try again.",
+                icon: "error",
+                confirmButtonText: "Close"
+            });
+        }
+    });
+});
+
 
 
 </script>

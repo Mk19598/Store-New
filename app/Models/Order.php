@@ -20,4 +20,9 @@ class Order extends Model
         return $this->hasMany(ShippingLink::class, 'order_id', 'order_uuid');
     }
 
+    public function PaymentId()
+    {
+        return $this->hasMany(WoocommerceOrder::class, 'order_id', 'order_id');
+    }
+
 }

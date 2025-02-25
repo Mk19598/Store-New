@@ -660,6 +660,8 @@ class OrderController extends Controller
 
                                         $item['tracking_links'] = $item->trackingLinks->pluck('tracking_link');
 
+                                        $item['PaymentId'] = optional($item->PaymentId->first())->transaction_id ?? 'processing';
+
                                         return $item;
                                 });
 
@@ -1031,4 +1033,16 @@ class OrderController extends Controller
             return view('layouts.error-pages.404-Page');
         }
     }
+
+    public function verifyPayment(Request $request,$paymentId)
+    {
+
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', "https://api.razorpay.com/v1/payments/{$paymentId}", [
+            'auth' => [env('RAZORPAY_KEY_ID'), env('RAZORPAY_SECRET')]
+        ]);
+
+        return response()->json(json_decode($response->getBody(), true));
+    }
+
 }

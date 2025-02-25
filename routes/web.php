@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/notes', [App\Http\Controllers\OrderController::class, 'addOrderNotes'])->name('orders.add_notes');
         Route::get('/notes/{orderId}', [App\Http\Controllers\OrderController::class, 'getOrderNotes'])->name('orders.get_notes');
         Route::get('shipping-label/{order_uuid}', [App\Http\Controllers\OrderController::class, 'shipping_label_pdf'])->name('orders.shipping_label_pdf');
+        Route::get('verify-payment/{paymentId}', [App\Http\Controllers\OrderController::class, 'verifyPayment']);
 
     });
 

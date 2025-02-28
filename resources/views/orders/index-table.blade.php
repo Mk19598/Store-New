@@ -39,13 +39,22 @@
                     <td align="center">{{ @$order->buyer_mobile_number }}</td>
                     <td align="center"> {{ @$order->order_created_at_format }}</td>
                     <td align="center"> <span class="badge bg-{{ $order->status_color }}">{{ ucwords(@$order->status) }}</span></td>
-                    <td align="center">
+                    <!-- <td align="center">
                         {!! (!empty($order->PaymentId) && $order->payment_mode == 'razorpay' && $order->PaymentId !== 'processing') 
                             ? '<a href="javascript:void(0);" class="verify-payment" data-payment-id="'.$order->PaymentId.'">
                                     <i class="bi bi-credit-card"></i> Verify
                             </a>' 
                             : '—' !!}
+                    </td> -->
+                    <td align="center">
+                    {!! (!empty($order->PaymentId) && $order->payment_mode == 'razorpay' && $order->PaymentId !== 'processing' 
+                        || !empty($order->PaymentId) && $order->payment_mode == 'PhonePe Payment Solutions' && $order->PaymentId !== 'processing' ) 
+                        ? '<a href="javascript:void(0);" class="verify-payment"  data-payment-id="'.$order->PaymentId.'"   data-payment-mode="'.$order->payment_mode.'">
+                                <i class="bi bi-credit-card"></i> Verify
+                        </a>' 
+                        : '—' !!} 
                     </td>
+
                     <td align="center"> {{ @$order->currency_symbol.number_format(@$order->total_cost, 2) }}</td>
                     <td align="center">
                         <div class="action-icons" style="display: flex; justify-content: center; gap: 10px; align-items: center;">
@@ -349,16 +358,34 @@ toastr.options = {
 
 $(document).on("click", ".verify-payment", function() {
     let paymentId = $(this).data("payment-id");
-    let baseURL = "{{ URL::to('/') }}"; 
+    let paymentMode = $(this).data("payment-mode"); 
+    let baseURL; 
+
+    if (paymentMode === "razorpay") {
+        baseURL = "{{ URL::to('/orders/razorpay/verify-payment') }}";
+    } else if (paymentMode === "PhonePe Payment Solutions") {
+        baseURL = "{{ URL::to('/orders/phonepe/verify-payment') }}";
+    }else{
+        baseURL = "{{ URL::to('/orders/verify-payment') }}";
+    }
 
     $.ajax({
-        url: `${baseURL}/orders/verify-payment/${paymentId}`,
+        url: `${baseURL}/${paymentId}`,
         method: 'GET',
         success: function (response) {
-            if (response.status) {
+
+            let status;
+            
+            if (paymentMode == "razorpay") {
+                status = response.status;
+            } else if (paymentMode == "PhonePe Payment Solutions") {
+                status = response.code;
+            }
+
+            if (status) {
                 Swal.fire({
                     title: "Payment Verified",
-                    text: "Payment Status: " + response.status,
+                    text: "Payment Status: " + status,
                     icon: "success",
                     confirmButtonText: "OK"
                 });

@@ -375,17 +375,23 @@ $(document).on("click", ".verify-payment", function() {
         success: function (response) {
 
             let status;
+            let type;
             
             if (paymentMode == "razorpay") {
                 status = response.status;
+                type = 'Razorpay';
             } else if (paymentMode == "PhonePe Payment Solutions") {
                 status = response.code;
+                type = 'PhonePe';
             }
 
             if (status) {
                 Swal.fire({
                     title: "Payment Verified",
                     text: "Payment Status: " + status,
+                    html: `<b>Payment Status:</b> ${status} <br> 
+                        <b>Payment Mode :</b> ${type} <br> 
+                        `,
                     icon: "success",
                     confirmButtonText: "OK"
                 });

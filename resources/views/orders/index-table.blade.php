@@ -384,14 +384,12 @@ $(document).on("click", ".verify-payment", function() {
                 status = response.code;
                 type = 'PhonePe';
             }
-
+            // <b>Payment Mode :</b> ${type} <br> 
             if (status) {
                 Swal.fire({
-                    title: "Payment Verified",
+                    title: "Payment API " + type + " Called",
                     text: "Payment Status: " + status,
-                    html: `<b>Payment Status:</b> ${status} <br> 
-                        <b>Payment Mode :</b> ${type} <br> 
-                        `,
+                    html: `<b>Payment Status:</b> ${status} <br>`,
                     icon: "success",
                     confirmButtonText: "OK"
                 });

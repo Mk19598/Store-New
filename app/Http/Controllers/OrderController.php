@@ -1039,7 +1039,7 @@ class OrderController extends Controller
 
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', "https://api.razorpay.com/v1/payments/{$paymentId}", [
-            'auth' => ['rzp_live_qOSdc8wR4FZpCj', 'TUWcDeoYuceLqOjIaL5O47Ph']
+            'auth' => ['rzp_live_fyIy9tjgCfzcC5', 'ERV0ZVnwR6Sq3mInp6270kgf']
         ]);
 
         return response()->json(json_decode($response->getBody(), true));

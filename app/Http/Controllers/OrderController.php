@@ -662,9 +662,9 @@ class OrderController extends Controller
 
                                         $item['PaymentId'] = optional($item->PaymentId->first())->transaction_id ?? 'processing';
 
-                                        return $item;
+                                    return $item;
                                 });
-
+                                
             $data = array( 'orders' => $orders, 
                             'title'  => "Orders | ".CustomHelper::Get_website_name()  ,
                             'order_count' => $orders->count(),
@@ -1034,16 +1034,37 @@ class OrderController extends Controller
         }
     }
 
-    public function verifyPayment(Request $request,$paymentId)
+    public function verifyPaymentrazorpay(Request $request,$paymentId)
     {
 
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', "https://api.razorpay.com/v1/payments/{$paymentId}", [
-            // 'auth' => [env('RAZORPAY_KEY_ID'), env('RAZORPAY_SECRET')]
-            'auth' => ['rzp_live_qOSdc8wR4FZpCj', 'TUWcDeoYuceLqOjIaL5O47Ph']
+            'auth' => ['rzp_live_fyIy9tjgCfzcC5', 'ERV0ZVnwR6Sq3mInp6270kgf']
         ]);
 
         return response()->json(json_decode($response->getBody(), true));
     }
 
+    
+    public function verifyPaymentphonepe(Request $request,$paymentId)
+    {
+        $MERCHANTID = "M2218WRV65YMP";  
+        $paymentId = $paymentId; 
+        
+        $concatenatedString = "/pg/v1/status/{$MERCHANTID}/{$paymentId}" . "86bdbfab-3af1-4ae2-a8f8-42dd52c40fce";
+        
+        $hash = hash('sha256', $concatenatedString);
+        
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', "https://api.phonepe.com/apis/hermes/pg/v1/status/{$MERCHANTID}/{$paymentId}", [
+            'headers' => [
+                'Content-Type' => 'application/json',  
+                'X-VERIFY' => $hash.'###1',
+                'X-MERCHANT-ID' => $MERCHANTID
+            ]
+        ]);
+        
+        return response()->json(json_decode($response->getBody(), true));
+    }
+    
 }

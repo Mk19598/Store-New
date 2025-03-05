@@ -54,11 +54,17 @@ class StroageWipeOrdersCron extends Command
                     WoocommerceOrderProduct::where('order_id', $order->order_id)->delete();
                 }
             
-                Log::info('Orders deleted successfully for records older than 2 months.', [
+                Log::create([
+                    'level' => 'success',
+                    'message' => 'Orders deleted successfully for records older than 2 months.',
                     'context' => 'storage-wipe-orders-cron',
                 ]);
+                
             } else {
-                Log::info('No orders found older than 2 months.', [
+
+                Log::create([
+                    'level' => 'success',
+                    'message' => 'No orders found older than 2 months.',
                     'context' => 'storage-wipe-orders-cron',
                 ]);
             }

@@ -48,7 +48,7 @@ class DailyOrdersCountMail extends Mailable
         $website_logo = SiteSetting::pluck('website_logo')->first();
 
         $logoPath = public_path("uploads/logos/{$website_logo}");
-        
+     
         return new Content(
             view: 'email.daily-orders-received-count', 
             with: [
@@ -58,6 +58,7 @@ class DailyOrdersCountMail extends Mailable
                 'orders_count' =>  $this->data['orders_count'],
                 'dukkan_orders_count' =>  $this->data['dukkan_orders_count'],
                 'woocommerce_orders_count' => $this->data['woocommerce_orders_count'],
+                'status_counts'    => $this->status_counts ,
             ],
         );
     }

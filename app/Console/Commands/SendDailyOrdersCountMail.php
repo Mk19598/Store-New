@@ -93,7 +93,7 @@ class SendDailyOrdersCountMail extends Command
 
             Log::create([
                 'level' => 'error',
-                'message' => 'Error updating Woocommerence orders: ' . $th->getMessage(),
+                'message' => 'Send a daily orders received email at 11:00 PM: ' . $th->getMessage(),
                 'context' => 'email:daily-orders-count'
             ]);
         }

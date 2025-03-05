@@ -58,7 +58,7 @@ class DailyOrdersCountMail extends Mailable
                 'orders_count' =>  $this->data['orders_count'],
                 'dukkan_orders_count' =>  $this->data['dukkan_orders_count'],
                 'woocommerce_orders_count' => $this->data['woocommerce_orders_count'],
-                'status_counts'    => $this->status_counts ,
+                'status_counts' => $this->data['status_counts'],
             ],
         );
     }

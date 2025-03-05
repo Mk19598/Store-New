@@ -32,7 +32,7 @@ class DukkanOrdersCron extends Command
         try {
             
             $orderController = app(OrderController::class);
-            // $orderController->dukkan_orders_update($daysLimit);
+            $orderController->dukkan_orders_update($daysLimit);
 
             Log::create([
                 'level' => 'success',

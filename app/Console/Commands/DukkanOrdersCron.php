@@ -13,7 +13,7 @@ class DukkanOrdersCron extends Command
      *
      * @var string
      */
-    protected $signature = 'app:dukkan-orders-cron {days_limit}';
+    protected $signature = 'app:dukkan-orders-cron';
 
     /**
      * The console command description.
@@ -27,16 +27,14 @@ class DukkanOrdersCron extends Command
      */
     public function handle()
     {
-        $daysLimit = $this->argument('days_limit');
-
         try {
             
             $orderController = app(OrderController::class);
-            $orderController->dukkan_orders_update($daysLimit);
+            $orderController->dukkan_orders_update();
 
             Log::create([
                 'level' => 'success',
-                'message' => 'Dukkan orders updated successfully with days_limit: ' . $daysLimit,
+                'message' => 'Dukkan orders updated successfully' ,
                 'context' => 'dukkan-orders-cron'
             ]);
 

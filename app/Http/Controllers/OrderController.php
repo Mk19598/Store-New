@@ -34,12 +34,15 @@ class OrderController extends Controller
 {
     // Storing the Order form - woocommerce & DUKAAN
 
-    public function dukkan_orders_update( $days_limit){
+    public function dukkan_orders_update( ){
         try {
 
             $Dukaan_API_TOKEN = Credentials::pluck('dukkan_api_token')->first();
             $Dukaan_store_Id =  CustomHelper::StoreId();
             $unique_id =  substr(uniqid(mt_rand(), true), 0, 11);
+
+            $carbon_today = Carbon::today()->toDateString();
+            $carbon_suboneday = Carbon::now()->subDays(1)->toDateString();
 
             $orders = []; 
             $hasNextPage = true;
@@ -50,14 +53,15 @@ class OrderController extends Controller
                                             ->get('https://api.mydukaan.io/api/seller-front/order-list/', [
                                                 'ordering' => '-created_at',
                                                 'utm_data' => 'True',
-                                                'created_at_after' => Carbon::now()->subDays($days_limit)->toDateString(),
+                                                'created_at_after' => $carbon_suboneday,
+                                                'created_at_before' => $carbon_today,
                                                 'page' => $page,
                                             ]);
 
                 if ($response->successful()) {
 
                     $orders = $response->json();
-            
+
                     if (isset($orders['results'])) {
 
                         foreach ($orders['results'] as $key => $order) {
@@ -323,7 +327,7 @@ class OrderController extends Controller
         }
     }
 
-    Public function woocommerce_orders_update($days_limit){
+    Public function woocommerce_orders_update(){
 
         try {
             
@@ -339,7 +343,7 @@ class OrderController extends Controller
             $unique_id =  substr(uniqid(mt_rand(), true), 0, 11);
             $orders = [];
 
-            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays($days_limit)->toIso8601String(); ; $page++) {
+            for ($page = 1, $thirtyDaysAgo = Carbon::now()->subDays(1)->toIso8601String(); ; $page++) {
 
                 $orders = $woocommerce->get('orders', [
                     'after' => $thirtyDaysAgo,

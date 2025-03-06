@@ -55,14 +55,14 @@ class StroageWipeOrdersCron extends Command
 
                 Log::create([
                     'level' => 'success',
-                    'message' => 'Orders deleted successfully for records older than 2 months.',
+                    'message' => 'Orders deleted successfully for records older than 1 months.',
                     'context' => 'storage-wipe-orders-cron',
                 ]);
             } else {
                 
                 Log::create([
                     'level' => 'success',
-                    'message' => 'No orders found older than 2 months.',
+                    'message' => 'No orders found older than 1 months.',
                     'context' => 'storage-wipe-orders-cron',
                 ]);
             }

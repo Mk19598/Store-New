@@ -13,7 +13,7 @@ class WoocommerenceOrdersCron extends Command
      *
      * @var string
      */
-    protected $signature = 'app:woocommerence-orders-cron';
+    protected $signature = 'app:woocommerence-orders-cron {days_limit}';
 
     /**
      * The console command description.
@@ -27,14 +27,16 @@ class WoocommerenceOrdersCron extends Command
      */
     public function handle()
     {
+        $daysLimit = $this->argument('days_limit');
+
         try {
             
             $orderController = app(OrderController::class);
-            $orderController->woocommerce_orders_update();
+            $orderController->woocommerce_orders_update($daysLimit);
 
             Log::create([
                 'level' => 'success',
-                'message' => 'Woocommerence orders updated successfully',
+                'message' => 'Woocommerence orders updated successfully with days_limit: ' . $daysLimit,
                 'context' => 'Woocommerence-orders-cron'
             ]);
 

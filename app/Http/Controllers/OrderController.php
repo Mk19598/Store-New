@@ -41,10 +41,12 @@ class OrderController extends Controller
             $Dukaan_store_Id =  CustomHelper::StoreId();
             $unique_id =  substr(uniqid(mt_rand(), true), 0, 11);
 
-            $carbon_today = Carbon::today()->toDateString();
-            $carbon_suboneday = Carbon::now()->subDays(1)->toDateString();
+            $now = Carbon::now();
+            $today = $now->toDateString();
+            $subOneDay = $now->subDays(1)->toDateString();
 
             $orders = []; 
+
             $hasNextPage = true;
             
             for ($page = 1; $hasNextPage ; $page++) {
@@ -53,8 +55,8 @@ class OrderController extends Controller
                                             ->get('https://api.mydukaan.io/api/seller-front/order-list/', [
                                                 'ordering' => '-created_at',
                                                 'utm_data' => 'True',
-                                                'created_at_after' => $carbon_suboneday,
-                                                'created_at_before' => $carbon_today,
+                                                'created_at_after' => $subOneDay,
+                                                'created_at_before' => $today,
                                                 'page' => $page,
                                             ]);
 
@@ -65,248 +67,258 @@ class OrderController extends Controller
 
                     if (isset($orders['results'])) {
 
-                        foreach ($orders['results'] as $key => $order) {
+                        $chunks = array_chunk($orders['results'], 50); 
 
-                            $order_id = $order['display_order_id'];
-                    
-                            if (Order::where('order_id', $order_id)->exists()) {
-                                continue; // Skip this order if it already exists
-                            }
+                        foreach ($chunks as $chunk) {
 
-                            $order_respond = Http::withHeaders(['Authorization' => 'Bearer ' . $Dukaan_API_TOKEN, 'Accept' => 'application/json',])
-                                                        ->get("https://api.mydukaan.io/api/order/seller/{$order['uuid']}/order/");
-                            
-            
-                            $order_response = $order_respond->json(); 
-            
-                            $orders_data = [
-                                'order_vai' => 'Dukkan',
-                                'order_id'  => $order_response['data']['display_order_id'],
-                                'order_uuid'  => $order_response['data']['uuid'],
-                                'order_created_at' => $order_response['data']['created_at'], 
-                                'modified_at'  => $order_response['data']['modified_at'], 
-                                'uuid'         => $order_response['data']['uuid'], 
-                                'status'       => $order_response['data']['status'], 
-                                'payment_mode' => $order_response['data']['payment_mode'], 
-        
-                                'total_cost'        => $order_response['data']['total_cost'], 
-                                'coupon_discount'   => $order_response['data']['coupon_discount'], 
-                                'delivery_cost'     => $order_response['data']['delivery_cost'], 
-        
-                                'product_count'   => $order_response['data']['product_count'], 
-        
-                                'currency_code'     =>  $order_response['data']['store_data']['currency']['cc'] , 
-                                'currency_symbol'   =>  $order_response['data']['store_data']['currency']['symbol'] , 
-                                'currency_name'     =>  $order_response['data']['store_data']['currency']['name'] , 
+                            $ordersData = [];
+                            $dukaanOrders = [];
+                            $dukaanBuyers = [];
+                            $dukaanOrderProducts = [];
+
+                            foreach ($chunk as $key => $order) {
+
+                                $order_id = $order['display_order_id'];
+                        
+                                if (Order::where('order_id', $order_id)->exists()) {
+                                    continue; // Skip this order if it already exists
+                                }
+
+                                $order_respond = Http::withHeaders(['Authorization' => 'Bearer ' . $Dukaan_API_TOKEN, 'Accept' => 'application/json',])
+                                                            ->get("https://api.mydukaan.io/api/order/seller/{$order['uuid']}/order/");
                                 
-                                'store_id'     =>  $order_response['data']['store_data']['id'] , 
-                                'store_name'   =>  $order_response['data']['store_data']['name'] , 
-                                'store_link'   =>  $order_response['data']['store_data']['link'] , 
-                                'store_image'  =>  $order_response['data']['store_data']['image'] , 
-        
-        
-                                'buyer_first_name'   => $order_response['data']['order_meta']['buyer_address']['buyer']['name'], 
-                                'buyer_last_name'    => null, 
-                                'buyer_email'        => $order_response['data']['order_meta']['buyer_address']['buyer']['email'], 
-                                'buyer_mobile_number'=> $order_response['data']['order_meta']['buyer_address']['buyer']['mobile'], 
-        
-                                'buyer_line'   => $order_response['data']['order_meta']['buyer_address']['line'], 
-                                'buyer_area'   => $order_response['data']['order_meta']['buyer_address']['line_1'], 
-                                'buyer_city'   => $order_response['data']['order_meta']['buyer_address']['city'], 
-                                'buyer_state'  => $order_response['data']['order_meta']['buyer_address']['state'], 
-                                'buyer_county' => $order_response['data']['order_meta']['buyer_address']['country'], 
-                                'buyer_pin'    => $order_response['data']['order_meta']['buyer_address']['pin'], 
-                                'buyer_landmark' => $order_response['data']['order_meta']['buyer_address']['landmark'], 
+                
+                                $order_response = $order_respond->json(); 
+                
+                                $orders_data[] = [
+                                    'order_vai' => 'Dukkan',
+                                    'order_id'  => $order_response['data']['display_order_id'],
+                                    'order_uuid'  => $order_response['data']['uuid'],
+                                    'order_created_at' => $order_response['data']['created_at'], 
+                                    'modified_at'  => $order_response['data']['modified_at'], 
+                                    'uuid'         => $order_response['data']['uuid'], 
+                                    'status'       => $order_response['data']['status'], 
+                                    'payment_mode' => $order_response['data']['payment_mode'], 
+            
+                                    'total_cost'        => $order_response['data']['total_cost'], 
+                                    'coupon_discount'   => $order_response['data']['coupon_discount'], 
+                                    'delivery_cost'     => $order_response['data']['delivery_cost'], 
+            
+                                    'product_count'   => $order_response['data']['product_count'], 
+            
+                                    'currency_code'     =>  $order_response['data']['store_data']['currency']['cc'] , 
+                                    'currency_symbol'   =>  $order_response['data']['store_data']['currency']['symbol'] , 
+                                    'currency_name'     =>  $order_response['data']['store_data']['currency']['name'] , 
+                                    
+                                    'store_id'     =>  $order_response['data']['store_data']['id'] , 
+                                    'store_name'   =>  $order_response['data']['store_data']['name'] , 
+                                    'store_link'   =>  $order_response['data']['store_data']['link'] , 
+                                    'store_image'  =>  $order_response['data']['store_data']['image'] , 
+            
+            
+                                    'buyer_first_name'   => $order_response['data']['order_meta']['buyer_address']['buyer']['name'], 
+                                    'buyer_last_name'    => null, 
+                                    'buyer_email'        => $order_response['data']['order_meta']['buyer_address']['buyer']['email'], 
+                                    'buyer_mobile_number'=> $order_response['data']['order_meta']['buyer_address']['buyer']['mobile'], 
+            
+                                    'buyer_line'   => $order_response['data']['order_meta']['buyer_address']['line'], 
+                                    'buyer_area'   => $order_response['data']['order_meta']['buyer_address']['line_1'], 
+                                    'buyer_city'   => $order_response['data']['order_meta']['buyer_address']['city'], 
+                                    'buyer_state'  => $order_response['data']['order_meta']['buyer_address']['state'], 
+                                    'buyer_county' => $order_response['data']['order_meta']['buyer_address']['country'], 
+                                    'buyer_pin'    => $order_response['data']['order_meta']['buyer_address']['pin'], 
+                                    'buyer_landmark' => $order_response['data']['order_meta']['buyer_address']['landmark'], 
+                                    
+                                    'buyer_shipping_first_name' => $order_response['data']['order_meta']['buyer_address']['buyer']['name'],
+                                    'buyer_shipping_last_name'  => null,
+                                    'buyer_shipping_address_1' => $order_response['data']['order_meta']['buyer_address']['line'], 
+                                    'buyer_shipping_address_2' => $order_response['data']['order_meta']['buyer_address']['line_1'], 
+                                    'buyer_shipping_city'   => $order_response['data']['order_meta']['buyer_address']['city'], 
+                                    'buyer_shipping_state'  => $order_response['data']['order_meta']['buyer_address']['state'], 
+                                    'buyer_shipping_county' => $order_response['data']['order_meta']['buyer_address']['country'], 
+                                    'buyer_shipping_pin'    => $order_response['data']['order_meta']['buyer_address']['pin'], 
+                                    'buyer_shipping_mobile_number' => $order_response['data']['order_meta']['buyer_address']['buyer']['mobile'],
+                                    'unique_id' => $unique_id,
+                                ];
+            
+                                $DukaanOrder[] = [
+                                    'order_id'          => $order['display_order_id'],
+                                    'order_uuid'        => $order_response['data']['uuid'],
+                                    'order_created_at'  => $order['created_at'],
+                                    'created_at_utc'    => $order['created_at_utc'],
+                                    'modified_at'       => $order['modified_at'],
+                                    'modified_at_utc'   => $order['modified_at_utc'],
+                                    'uuid'              => $order['uuid'],
+                                    'status'            => $order['status'],
+                                    'type'              => $order['type'],
+                                    'return_status'     => $order['return_status'],
+                                    'return_type'       => $order['return_type'],
+                                    'payment_mode'      => $order['payment_mode'],
+                                    'table_uuid'        => $order['table_uuid'],
+                                    'reseller_commission' => $order['reseller_commission'],
+                                    'is_new'              => $order['is_new'],
+                                    'total_cost'          => $order['total_cost'],
+                                    'channel'             => $order['channel'],
+                                    'source'              => $order['source'],
+                                    'image'               => $order['image'],
+                                    'store_table_data'    => $order['store_table_data'],
+                                    'product_count'       => $order['product_count'],
+                                    'table_id'            => $order['table_id'],
+                                    'seller_marked_prepaid' => $order['seller_marked_prepaid'],
+                                    'sort_order_delivered'  => $order['sort_order_delivered'],
+                                    'sort_order_pending'    => $order['sort_order_pending'],
+                                    'utm_source'            => $order['utm_source'],
+                                    'utm_medium'            => $order['utm_medium'],
+                                    'utm_campaign'          => $order['utm_campaign'],
+                                    'utm_term'              => $order['utm_term'],
+                                    'utm_query'             => $order['utm_query'],
+                                    'utm_content'           => $order['utm_content'],
+                                    'unique_id'             => $unique_id,
+                                ];
                                 
-                                'buyer_shipping_first_name' => $order_response['data']['order_meta']['buyer_address']['buyer']['name'],
-                                'buyer_shipping_last_name'  => null,
-                                'buyer_shipping_address_1' => $order_response['data']['order_meta']['buyer_address']['line'], 
-                                'buyer_shipping_address_2' => $order_response['data']['order_meta']['buyer_address']['line_1'], 
-                                'buyer_shipping_city'   => $order_response['data']['order_meta']['buyer_address']['city'], 
-                                'buyer_shipping_state'  => $order_response['data']['order_meta']['buyer_address']['state'], 
-                                'buyer_shipping_county' => $order_response['data']['order_meta']['buyer_address']['country'], 
-                                'buyer_shipping_pin'    => $order_response['data']['order_meta']['buyer_address']['pin'], 
-                                'buyer_shipping_mobile_number' => $order_response['data']['order_meta']['buyer_address']['buyer']['mobile'],
-                                'unique_id' => $unique_id,
-                            ];
-        
-                            $DukaanOrder = [
-                                'order_id'          => $order['display_order_id'],
-                                'order_uuid'        => $order_response['data']['uuid'],
-                                'order_created_at'  => $order['created_at'],
-                                'created_at_utc'    => $order['created_at_utc'],
-                                'modified_at'       => $order['modified_at'],
-                                'modified_at_utc'   => $order['modified_at_utc'],
-                                'uuid'              => $order['uuid'],
-                                'status'            => $order['status'],
-                                'type'              => $order['type'],
-                                'return_status'     => $order['return_status'],
-                                'return_type'       => $order['return_type'],
-                                'payment_mode'      => $order['payment_mode'],
-                                'table_uuid'        => $order['table_uuid'],
-                                'reseller_commission' => $order['reseller_commission'],
-                                'is_new'              => $order['is_new'],
-                                'total_cost'          => $order['total_cost'],
-                                'channel'             => $order['channel'],
-                                'source'              => $order['source'],
-                                'image'               => $order['image'],
-                                'store_table_data'    => $order['store_table_data'],
-                                'product_count'       => $order['product_count'],
-                                'table_id'            => $order['table_id'],
-                                'seller_marked_prepaid' => $order['seller_marked_prepaid'],
-                                'sort_order_delivered'  => $order['sort_order_delivered'],
-                                'sort_order_pending'    => $order['sort_order_pending'],
-                                'utm_source'            => $order['utm_source'],
-                                'utm_medium'            => $order['utm_medium'],
-                                'utm_campaign'          => $order['utm_campaign'],
-                                'utm_term'              => $order['utm_term'],
-                                'utm_query'             => $order['utm_query'],
-                                'utm_content'           => $order['utm_content'],
-                                'unique_id'             => $unique_id,
-                            ];
-                            
-                            $DukaanBuyer = [
-                                'order_id'    => $order_response['data']['display_order_id'],
-                                'order_uuid'  => $order_response['data']['uuid'],
-                                'pin'       => $order_response['data']['order_meta']['buyer_address']['pin'],
-                                'area'      => $order_response['data']['order_meta']['buyer_address']['area'],
-                                'city'      => $order_response['data']['order_meta']['buyer_address']['city'],
-                                'line'      => $order_response['data']['order_meta']['buyer_address']['line'],
-                                'name'      => $order_response['data']['order_meta']['buyer_address']['buyer']['name'],
-                                'email'     => $order_response['data']['order_meta']['buyer_address']['buyer']['email'],
-                                'mobile'    => $order_response['data']['order_meta']['buyer_address']['buyer']['mobile'],
-                                'state'     => $order_response['data']['order_meta']['buyer_address']['state'],
-                                'county'    => $order_response['data']['order_meta']['buyer_address']['country'],
-                                'line_1'    => $order_response['data']['order_meta']['buyer_address']['line_1'],
-                                'region'    => $order_response['data']['order_meta']['buyer_address']['region'],
-                                'emirate'   => $order_response['data']['order_meta']['buyer_address']['emirate'],
-                                'landmark'  => $order_response['data']['order_meta']['buyer_address']['landmark'],
-                                'province'  => $order_response['data']['order_meta']['buyer_address']['province'],
-                                'prefecture'    => $order_response['data']['order_meta']['buyer_address']['prefecture'],
-                                'governorate'   => $order_response['data']['order_meta']['buyer_address']['governorate'],
-                                'unique_id'     => $unique_id,
-                            ];
-
-                            Order::create($orders_data);
-                            DukaanOrder::create( $DukaanOrder );
-                            DukaanBuyer::create( $DukaanBuyer );
-
-                            foreach ($order_response['data']['products'] as $key => $orders_products) {
-        
-                                $skuCode = collect(Http::withHeaders([
-                                    'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
-                                    'Accept' => 'application/json',
-                                ])
-                                ->get("https://api.mydukaan.io/api/product/seller/{$Dukaan_store_Id}/product/{$orders_products['product_uuid']}/v2/")
-                                ->json()['data']['sku_data'] ?? [])->firstWhere('id', $orders_products['product_sku_id'])['sku_code'] ?? 'SKU not found';
-        
-                                $inventoryData = InventoryManagement::where('sku', $skuCode)->first(['barcode', 'barcode_image']);
-
-                                $DukaanOrderProduct = [ 
+                                $DukaanBuyer[] = [
                                     'order_id'    => $order_response['data']['display_order_id'],
                                     'order_uuid'  => $order_response['data']['uuid'],
-                                    'order_vai'   => 'Dukkan',
-                                    "product_id"     =>  $orders_products['product_id'],
-                                    "quantity"       => $orders_products['quantity'],
-                                    "is_sku_edited"  => $orders_products['is_sku_edited'],
-                                    "quantity_freed" => $orders_products['quantity_freed'],
-                                    "product_slug"   => $orders_products['product_slug'],
-                                    "line_item_id"   => $orders_products['line_item_id'],
-                                    "line_item_state" => $orders_products['line_item_state'],
-                                    "status"          => $orders_products['status'],
-                                    "new_line_time"   => $orders_products['new_line_time'],
-                                    "line_item_uuid"  => $orders_products['line_item_uuid'],
-                                    "old_quantity"    => $orders_products['old_quantity'],
-                                    "quantity_returned"   => $orders_products['quantity_returned'],
-                                    "product_sku_id"      => $orders_products['product_sku_id'],
-                                    "shipping_weight_kgs" => $orders_products['shipping_weight_kgs'],
-                                    "default_staff_id"    => $orders_products['default_staff_id'],
-                                    "default_staff_name"  => $orders_products['default_staff_name'],
-                                    "shipment_id"         => $orders_products['line_item_tax'],
-                                    "line_item_tax"       => $orders_products['line_item_discount'],
-                                    "line_item_discount"  => $orders_products['line_item_discount'],
-                                    "line_item_service_charges" => $orders_products['line_item_service_charges'],
-                                    "line_item_delivery_cost"   => $orders_products['line_item_delivery_cost'],
-                                    "selling_price"  => $orders_products['selling_price'],
-                                    "original_price" => $orders_products['original_price'],
-                                    "line_item_total_cost"    => $orders_products['line_item_total_cost'],
-                                    "line_item_group"         => $orders_products['line_item_group'],
-                                    "is_membership_line_item" => $orders_products['is_membership_line_item'],
-                                    "gift_wrap_message"       => $orders_products['gift_wrap_message'],
-                                    "name"  => $orders_products['name'],
-                                    "image" => $orders_products['image'],
-                                    "unit"  => $orders_products['unit'],
-                                    "base_qty" => $orders_products['base_qty'],
-                                    "product_uuid" => $orders_products['product_uuid'],
-                                                        
-                                    "barcode" => $inventoryData->barcode ?? null,
-                                    "barcode_image" => $inventoryData->barcode_image ?? null,
-
-                                    "sku"          =>  $skuCode , 
-                                    "sku_weight_unit" =>  $orders_products['sku_weight_unit'] ?? null,
-                                    "variant_size"    => $orders_products['variant_size'] ?? null,
-        
-                                    "gst_rate"        => $orders_products['gst_rate'],
-                                    "item_gst_charge" => $orders_products['item_gst_charge'],
-                                    "discount_per_unit" => $orders_products['discount_per_unit'],
-                                    "return_enabled"    => $orders_products['return_enabled'],
-                                    "replacement_enabled"   => $orders_products['replacement_enabled'],
-                                    "return_duration_days"  => $orders_products['return_duration_days'],
-                                    'order_created_at'      => $order_response['data']['created_at'], 
+                                    'pin'       => $order_response['data']['order_meta']['buyer_address']['pin'],
+                                    'area'      => $order_response['data']['order_meta']['buyer_address']['area'],
+                                    'city'      => $order_response['data']['order_meta']['buyer_address']['city'],
+                                    'line'      => $order_response['data']['order_meta']['buyer_address']['line'],
+                                    'name'      => $order_response['data']['order_meta']['buyer_address']['buyer']['name'],
+                                    'email'     => $order_response['data']['order_meta']['buyer_address']['buyer']['email'],
+                                    'mobile'    => $order_response['data']['order_meta']['buyer_address']['buyer']['mobile'],
+                                    'state'     => $order_response['data']['order_meta']['buyer_address']['state'],
+                                    'county'    => $order_response['data']['order_meta']['buyer_address']['country'],
+                                    'line_1'    => $order_response['data']['order_meta']['buyer_address']['line_1'],
+                                    'region'    => $order_response['data']['order_meta']['buyer_address']['region'],
+                                    'emirate'   => $order_response['data']['order_meta']['buyer_address']['emirate'],
+                                    'landmark'  => $order_response['data']['order_meta']['buyer_address']['landmark'],
+                                    'province'  => $order_response['data']['order_meta']['buyer_address']['province'],
+                                    'prefecture'    => $order_response['data']['order_meta']['buyer_address']['prefecture'],
+                                    'governorate'   => $order_response['data']['order_meta']['buyer_address']['governorate'],
                                     'unique_id'     => $unique_id,
                                 ];
-                                DukaanOrderProduct::create($DukaanOrderProduct);
-                            }
-                            
-                            // DukaanShipping::create([]);
-        
-                            // Mail Sending
-                            try {
+
+                                foreach ($order_response['data']['products'] as $key => $orders_products) {
+            
+                                    $skuCode = collect(Http::withHeaders([
+                                        'Authorization' => 'Bearer ' . $Dukaan_API_TOKEN,
+                                        'Accept' => 'application/json',
+                                    ])
+                                    ->get("https://api.mydukaan.io/api/product/seller/{$Dukaan_store_Id}/product/{$orders_products['product_uuid']}/v2/")
+                                    ->json()['data']['sku_data'] ?? [])->firstWhere('id', $orders_products['product_sku_id'])['sku_code'] ?? 'SKU not found';
+            
+                                    $inventoryData = InventoryManagement::where('sku', $skuCode)->first(['barcode', 'barcode_image']);
+
+                                    $DukaanOrderProduct[] = [ 
+                                        'order_id'    => $order_response['data']['display_order_id'],
+                                        'order_uuid'  => $order_response['data']['uuid'],
+                                        'order_vai'   => 'Dukkan',
+                                        "product_id"     =>  $orders_products['product_id'],
+                                        "quantity"       => $orders_products['quantity'],
+                                        "is_sku_edited"  => $orders_products['is_sku_edited'],
+                                        "quantity_freed" => $orders_products['quantity_freed'],
+                                        "product_slug"   => $orders_products['product_slug'],
+                                        "line_item_id"   => $orders_products['line_item_id'],
+                                        "line_item_state" => $orders_products['line_item_state'],
+                                        "status"          => $orders_products['status'],
+                                        "new_line_time"   => $orders_products['new_line_time'],
+                                        "line_item_uuid"  => $orders_products['line_item_uuid'],
+                                        "old_quantity"    => $orders_products['old_quantity'],
+                                        "quantity_returned"   => $orders_products['quantity_returned'],
+                                        "product_sku_id"      => $orders_products['product_sku_id'],
+                                        "shipping_weight_kgs" => $orders_products['shipping_weight_kgs'],
+                                        "default_staff_id"    => $orders_products['default_staff_id'],
+                                        "default_staff_name"  => $orders_products['default_staff_name'],
+                                        "shipment_id"         => $orders_products['line_item_tax'],
+                                        "line_item_tax"       => $orders_products['line_item_discount'],
+                                        "line_item_discount"  => $orders_products['line_item_discount'],
+                                        "line_item_service_charges" => $orders_products['line_item_service_charges'],
+                                        "line_item_delivery_cost"   => $orders_products['line_item_delivery_cost'],
+                                        "selling_price"  => $orders_products['selling_price'],
+                                        "original_price" => $orders_products['original_price'],
+                                        "line_item_total_cost"    => $orders_products['line_item_total_cost'],
+                                        "line_item_group"         => $orders_products['line_item_group'],
+                                        "is_membership_line_item" => $orders_products['is_membership_line_item'],
+                                        "gift_wrap_message"       => $orders_products['gift_wrap_message'],
+                                        "name"  => $orders_products['name'],
+                                        "image" => $orders_products['image'],
+                                        "unit"  => $orders_products['unit'],
+                                        "base_qty" => $orders_products['base_qty'],
+                                        "product_uuid" => $orders_products['product_uuid'],
+                                                            
+                                        "barcode" => $inventoryData->barcode ?? null,
+                                        "barcode_image" => $inventoryData->barcode_image ?? null,
+
+                                        "sku"          =>  $skuCode , 
+                                        "sku_weight_unit" =>  $orders_products['sku_weight_unit'] ?? null,
+                                        "variant_size"    => $orders_products['variant_size'] ?? null,
+            
+                                        "gst_rate"        => $orders_products['gst_rate'],
+                                        "item_gst_charge" => $orders_products['item_gst_charge'],
+                                        "discount_per_unit" => $orders_products['discount_per_unit'],
+                                        "return_enabled"    => $orders_products['return_enabled'],
+                                        "replacement_enabled"   => $orders_products['replacement_enabled'],
+                                        "return_duration_days"  => $orders_products['return_duration_days'],
+                                        'order_created_at'      => $order_response['data']['created_at'], 
+                                        'unique_id'     => $unique_id,
+                                    ];
+                                }
                                 
-                                $orders_collection = Order::query()->where('order_id',$order_response['data']['display_order_id'],)->get()->map(function($item){
-        
-                                    $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
-                                    $item['order_vai'] = 'Dukkan';
-                        
-                                    $DukaanOrderProducts = DukaanOrderProduct::where('order_id', $item->order_id)->get();
-                        
-                                    $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
+                                // DukaanShipping::create([]);
+            
+                                // Mail Sending
+                                try {
                                     
-                                    $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
-                        
-                                        $item['product_name']   = $item->product_slug;
-                                        $item['original_cost']  = $item->original_price;
-                                        $item['price']      = $item->selling_price;
-                                        $item['discount']   = $item->line_item_discount;
-                                        $item['product_delivery_cost']  = $item->line_item_delivery_cost ;
-                                        $item['product_total_cost']  = $item->line_item_total_cost ;
-                                        $item['sum_total_cost'] = $totalCostSum; 
+                                    $orders_collection = Order::query()->where('order_id',$order_response['data']['display_order_id'],)->get()->map(function($item){
+            
+                                        $item['order_created_at_format'] = Carbon::parse($item->order_created_at)->format('M d, Y');
+                                        $item['order_vai'] = 'Dukkan';
+                            
+                                        $DukaanOrderProducts = DukaanOrderProduct::where('order_id', $item->order_id)->get();
+                            
+                                        $totalCostSum = $DukaanOrderProducts->sum('line_item_total_cost');
+                                        
+                                        $item['product_details'] = $DukaanOrderProducts->map(function($item) use ($totalCostSum){
+                            
+                                            $item['product_name']   = $item->product_slug;
+                                            $item['original_cost']  = $item->original_price;
+                                            $item['price']      = $item->selling_price;
+                                            $item['discount']   = $item->line_item_discount;
+                                            $item['product_delivery_cost']  = $item->line_item_delivery_cost ;
+                                            $item['product_total_cost']  = $item->line_item_total_cost ;
+                                            $item['sum_total_cost'] = $totalCostSum; 
+                                            return $item;
+                                        });
+                            
                                         return $item;
-                                    });
-                        
-                                    return $item;
-                                })->first();
-                        
-                                $data = [
-                                    'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
-                                    'Get_website_name' => CustomHelper::Get_website_name(),
-                                    'orders_collection'  => $orders_collection,
-                                ];
-                        
-                                // Mail::to(CustomHelper::Get_ADMIN_MAIL())->queue(new OrderSendEmail($data));
-        
-                            } catch (\Illuminate\Mail\TransportException $e) {
-                        
-                                Log::error('Mail Transport Error: ' . $e->getMessage());
+                                    })->first();
                             
-                            } catch (\Exception $e) {
+                                    $data = [
+                                        'Get_website_logo_url'  => CustomHelper::Get_website_logo_url(),
+                                        'Get_website_name' => CustomHelper::Get_website_name(),
+                                        'orders_collection'  => $orders_collection,
+                                    ];
                             
-                                Log::error('Failed to send email: ' . $e->getMessage());
+                                    // Mail::to(CustomHelper::Get_ADMIN_MAIL())->queue(new OrderSendEmail($data));
+            
+                                } catch (\Illuminate\Mail\TransportException $e) {
                             
-                            } catch (\Throwable $th) {
+                                    Log::error('Mail Transport Error: ' . $e->getMessage());
                                 
-                                Log::critical('Critical Error while sending mail: ' . $th->getMessage());
+                                } catch (\Exception $e) {
+                                
+                                    Log::error('Failed to send email: ' . $e->getMessage());
+                                
+                                } catch (\Throwable $th) {
+                                    
+                                    Log::critical('Critical Error while sending mail: ' . $th->getMessage());
+                                }
                             }
+
+                            Order::insert($ordersData);
+                            DukaanOrder::insert($dukaanOrders);
+                            DukaanBuyer::insert($dukaanBuyers);
+                            DukaanOrderProduct::insert($dukaanOrderProducts);
                         }
                     }
             

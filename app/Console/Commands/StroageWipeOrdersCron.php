@@ -12,7 +12,7 @@ use App\Models\WoocommerceOrder;
 use App\Models\WoocommerceBuyer;
 use App\Models\WoocommerceShipping;
 use App\Models\WoocommerceOrderProduct;
-use Illuminate\Support\Facades\Log;
+use App\Models\Log;
 
 class StroageWipeOrdersCron extends Command
 {
@@ -36,14 +36,14 @@ class StroageWipeOrdersCron extends Command
     public function handle()
     {
         try {
-            
-            $twoMonthsAgo = Carbon::now()->subMonths(2)->toDateTimeString();
-            
-            $orders = Order::where('order_created_at', '<', $twoMonthsAgo)->get();
-            
-            if ($orders->isNotEmpty()) {
 
+            $twoMonthsAgo = Carbon::now()->subMonths(2)->toDateString();
+
+            $orders = Order::whereDate('order_created_at', '<', $twoMonthsAgo)->get();
+
+            if ($orders->isNotEmpty()) {
                 foreach ($orders as $order) {
+                    Order::where('order_id', $order->order_id)->delete();
                     DukaanOrder::where('order_id', $order->order_id)->delete();
                     DukaanBuyer::where('order_id', $order->order_id)->delete();
                     DukaanOrderProduct::where('order_id', $order->order_id)->delete();
@@ -52,28 +52,26 @@ class StroageWipeOrdersCron extends Command
                     WoocommerceShipping::where('order_id', $order->order_id)->delete();
                     WoocommerceOrderProduct::where('order_id', $order->order_id)->delete();
                 }
-            
+
                 Log::create([
                     'level' => 'success',
                     'message' => 'Orders deleted successfully for records older than 2 months.',
                     'context' => 'storage-wipe-orders-cron',
                 ]);
-                
             } else {
-
+                
                 Log::create([
                     'level' => 'success',
                     'message' => 'No orders found older than 2 months.',
                     'context' => 'storage-wipe-orders-cron',
                 ]);
             }
-
         } catch (\Exception $e) {
-          
+        
             Log::create([
                 'level' => 'error',
                 'message' => 'Error while deleting the orders: ' . $e->getMessage(),
-                'context' => 'stroage-wipe-orders-cron'
+                'context' => 'storage-wipe-orders-cron',
             ]);
         }
     }

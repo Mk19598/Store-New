@@ -35,7 +35,6 @@ class StroageWipeOrdersCron extends Command
      */
     public function handle()
     {
-
         try {
             
             $twoMonthsAgo = Carbon::now()->subMonths(2)->toDateTimeString();

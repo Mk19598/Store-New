@@ -14,7 +14,7 @@ class LogController extends Controller
     {
         try {
 
-            $crons_log = Log::get()->map(function($item){
+            $crons_log = Log::query()->latest()->get()->map(function($item){
                 $item['created_at_format'] = Carbon::parse($item->created_at)->format('M d, Y h:i:s A');
                 return  $item ;
             });

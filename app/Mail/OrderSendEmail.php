@@ -42,7 +42,7 @@ class OrderSendEmail extends Mailable
 
         $website_logo = SiteSetting::pluck('website_logo')->first();
 
-        $logoPath = public_path("uploads/logos/{$website_logo}");
+        $logoPath = public_path("uploads/Logos/{$website_logo}");
         
         return new Content(
             view: 'email.orders-received', 

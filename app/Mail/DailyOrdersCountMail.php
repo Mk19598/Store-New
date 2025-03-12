@@ -23,7 +23,6 @@ class DailyOrdersCountMail extends Mailable
     public function __construct($data)
     {
         $this->data = $data;
-
     }
 
     /**
@@ -47,7 +46,7 @@ class DailyOrdersCountMail extends Mailable
     {
         $website_logo = SiteSetting::pluck('website_logo')->first();
 
-        $logoPath = public_path("uploads/logos/{$website_logo}");
+        $logoPath = public_path("uploads/Logos/{$website_logo}");
      
         return new Content(
             view: 'email.daily-orders-received-count', 

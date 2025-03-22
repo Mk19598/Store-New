@@ -167,16 +167,16 @@ $(document).ready(function() {
                     trackingLinks.forEach((link, index) => {
                         modalBody.append(`
                             <div class="mb-3 tracking-item">
-                                <label for="tracking-link-${index + 1}" class="form-label">Tracking Link ${index + 1}</label>
-                                <input type="text" class="form-control" id="tracking-link-${index + 1}" name="tracking_links[]" value="${link}" placeholder="Enter tracking link">
+                                <label for="tracking-link-${index + 1}" class="form-label">Tracking Number ${index + 1}</label>
+                                <input type="text" class="form-control" id="tracking-link-${index + 1}" name="tracking_links[]" value="${link}" placeholder="Enter tracking number">
                             </div>
                         `);
                     });
                 } else {
                     modalBody.append(`
                         <div class="mb-3 tracking-item">
-                            <label for="tracking-link-1" class="form-label">Tracking Link</label>
-                            <input type="text" class="form-control" id="tracking-link-1" name="tracking_links[]" placeholder="Enter tracking link">
+                            <label for="tracking-link-1" class="form-label">Tracking Number</label>
+                            <input type="text" class="form-control" id="tracking-link-1" name="tracking_links[]" placeholder="Enter tracking number">
                         </div>
                     `);
                     trackingLinkCount = 1;
@@ -189,8 +189,8 @@ $(document).ready(function() {
                 $("#trackingLinksModal").modal("show");
             },
             error: function(error) {
-                console.error("Error fetching tracking links:", error);
-                alert("An error occurred while fetching tracking links.");
+                console.error("Error fetching tracking number:", error);
+                alert("An error occurred while fetching tracking numbers.");
             }
         });
     });
@@ -203,8 +203,8 @@ $(document).ready(function() {
 
         trackingContainer.append(`
             <div class="mb-3 tracking-item">
-                <label for="tracking-link-${trackingLinkCount}" class="form-label">Tracking Link ${trackingLinkCount}</label>
-                <input type="text" class="form-control" id="tracking-link-${trackingLinkCount}" name="tracking_links[]" placeholder="Enter tracking link">
+                <label for="tracking-link-${trackingLinkCount}" class="form-label">Tracking Number ${trackingLinkCount}</label>
+                <input type="text" class="form-control" id="tracking-link-${trackingLinkCount}" name="tracking_links[]" placeholder="Enter tracking number">
             </div>
         `);
 

@@ -38,13 +38,13 @@
         .counts {
             display: flex;
             align-items: flex-start;
-            gap: 40px;
+            column-gap: 40px;
         }
 
         .status-columns {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            column-gap: 20px;
         }
 
         .status-columns p {
@@ -60,7 +60,7 @@
         @media (max-width: 768px) {
             .counts {
                 flex-direction: column;
-                gap: 20px;
+                column-gap: 20px;
             }
 
             .status-columns {
@@ -77,29 +77,25 @@
         <h2>Hello {{ @$Get_website_name }} ,</h2>
     </div>
 
-    <div class="counts">
-        <!-- First column (Order Counts) -->
+    <div class="counts" style="justify-content: flex-start !important;">
         <p>
             <strong>{{ 'Dukkan Orders Count - ' . $dukkan_orders_count }}</strong> <br>
             <strong>{{ 'Woocommerce Orders Count - ' . $woocommerce_orders_count }}</strong> <br>
             <strong>{{ 'Total Orders Count - ' . $orders_count }}</strong>
         </p>
 
-        <div class="status-columns">
-            @php
-                $chunks = array_chunk($status_counts, 3, true);
-            @endphp
+        @php
+            $chunks = array_chunk($status_counts, 3, true);
+        @endphp
 
-            @foreach ($chunks as $chunk)
-                <p>
-                    @foreach ($chunk as $key => $item)
-                        <strong>{{ ucwords($key) . ' - ' . $item }}</strong> <br>
-                    @endforeach
-                </p>
-            @endforeach
-        </div>
+        @foreach ($chunks as $chunk)
+            <p>
+                @foreach ($chunk as $key => $item)
+                    <strong>{{ ucwords($key) . ' - ' . $item }}</strong> <br>
+                @endforeach
+            </p>
+        @endforeach
     </div>
-
 
     <h3>Here is the Order Details,</h3>
 

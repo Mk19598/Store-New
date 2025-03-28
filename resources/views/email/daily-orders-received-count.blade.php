@@ -77,25 +77,25 @@
         <h2>Hello {{ @$Get_website_name }} ,</h2>
     </div>
 
-    <div class="counts" style="justify-content: flex-start !important;">
+    <div class="counts">
         <p>
             <strong>{{ 'Dukkan Orders Count - ' . $dukkan_orders_count }}</strong> <br>
             <strong>{{ 'Woocommerce Orders Count - ' . $woocommerce_orders_count }}</strong> <br>
             <strong>{{ 'Total Orders Count - ' . $orders_count }}</strong>
         </p>
+    </div>
 
-        @php
-            $chunks = array_chunk($status_counts, 3, true);
-        @endphp
+    @php  $chunks = array_chunk($status_counts, 3, true);@endphp
 
-        @foreach ($chunks as $chunk)
+    @foreach ($chunks as $chunk)
+        <div class="counts">
             <p>
                 @foreach ($chunk as $key => $item)
                     <strong>{{ ucwords($key) . ' - ' . $item }}</strong> <br>
                 @endforeach
             </p>
-        @endforeach
-    </div>
+        </div>
+    @endforeach
 
     <h3>Here is the Order Details,</h3>
 
